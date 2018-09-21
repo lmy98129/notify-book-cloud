@@ -1,5 +1,6 @@
 //index.js
 const app = getApp()
+const avatar = require("../../utils/avatar");
 
 Page({
   data: {
@@ -25,8 +26,12 @@ Page({
           // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
           wx.getUserInfo({
             success: res => {
+              let avatarUrl = res.userInfo.avatarUrl;
+              avatar.check(this, avatarUrl).then(res => {
+                console.log("用户头像检测: ", res.msg);
+              })
               this.setData({
-                avatarUrl: res.userInfo.avatarUrl,
+                avatarUrl: avatarUrl,
                 userInfo: res.userInfo
               })
             }
