@@ -8,7 +8,8 @@ Page({
     userInfo: {},
     logged: false,
     takeSession: false,
-    requestResult: ''
+    requestResult: '',
+    sideBar: false,
   },
 
   onLoad: function() {
@@ -122,4 +123,10 @@ Page({
     })
   },
 
+  switchSideBar: function() {
+    let sideBar = !this.data.sideBar;
+    this.setData({
+      sideBar: sideBar
+    })
+  }
 })

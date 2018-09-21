@@ -1,7 +1,153 @@
 /**app.wxss**/
+page {
+  background: #f6f6f6;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 100%;
+}
+
+.root {
+  height: 100%;
+  width: 100%;
+}
+
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
+  z-index: 4;
+  background: #f6f6f6;
+  min-height: 100%;
+  transform: scale(1) translate(0%, 0%);
+  -webkit-transform: scale(1) translate(0%, 0%);
+  transition: all 0.4s;
+  -webkit-transition: all 0.4s;
 } 
+
+.container.left {
+  transform: scale(.9) translate(-45%, 0%);
+  -webkit-transform: scale(.9) translate(-45%, 0%);
+  transition: all 0.4s;
+  -webkit-transition: all 0.4s;
+}
+
+.side-bar {
+  position: fixed;
+  top: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  background: #222;
+}
+
+.side-bar .content {
+  position: fixed;
+  top: 400rpx;
+  right: 30rpx;
+  color: #fff;
+}
+
+.cover {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 40;
+  display: none;
+}
+
+.cover.left {
+  display: block;
+  transform: scale(.9) translate(-45%, 0%);
+  -webkit-transform: scale(.9) translate(-45%, 0%);
+  transition: all 0.4s;
+  -webkit-transition: all 0.4s;
+}
+
+.top-widget {
+  position: relative;
+  width: 100%;
+}
+
+.top-widget .top-bg {
+  z-index: 5;
+  width: 100%;
+  height: 350rpx;
+}
+
+.top-widget .title {
+  position: absolute;
+  top: 126rpx;
+  left: 30rpx;
+  z-index: 10;
+}
+
+.top-widget .title .img{
+  width: 320rpx;
+  height: 100rpx;
+}
+
+.top-widget .title .text {
+  color: #fff;
+  font-size: 49rpx;
+}
+
+@font-face {
+  font-family: 'iconfont';  /* project id 848790 */
+  src: url('//at.alicdn.com/t/font_848790_addxh3w89bl.eot');
+  src: url('//at.alicdn.com/t/font_848790_addxh3w89bl.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_848790_addxh3w89bl.woff') format('woff'),
+  url('//at.alicdn.com/t/font_848790_addxh3w89bl.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_848790_addxh3w89bl.svg#iconfont') format('svg');
+}
+
+.iconfont {
+  font-family:"iconfont" !important;
+  font-size:16px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-tianjiahaoyou:before { content: "\e638"; }
+
+.icon-optio3:before { content: "\e60b"; }
+
+.top-widget .btn-wrap {
+  position: absolute;
+  top: 200rpx;
+  right: 30rpx;
+  z-index: 10;
+  display: flex;
+  flex-direction: row;
+}
+
+.top-widget .btn-wrap .settings,
+.top-widget .btn-wrap .add {
+  width: 90rpx;
+  height: 90rpx;
+  border-radius: 45rpx;
+  background: rgba(254, 254, 254, .9);
+  margin-left: 15rpx;
+}
+
+
+.top-widget .btn-wrap view:first-child {
+  margin-left: 0!important;
+}
+
+.top-widget .btn-wrap .settings .icon{
+  transform: scale(-1, 1);
+  -webkit-transform: scale(-1, 1);
+  font-size: 38rpx;
+  text-align: center;
+  line-height: 88rpx;
+}
+
+.top-widget .btn-wrap .add .icon {
+  font-size: 50rpx;
+  text-align: center;
+  line-height: 88rpx;
+}
