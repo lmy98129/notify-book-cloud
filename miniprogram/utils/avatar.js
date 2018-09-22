@@ -9,7 +9,26 @@ const app = getApp();
  */
 const checkAvatar = (that, avatarUrl) => {
   let msg = {};
-  
+
+  let oldTimeStamp = wx.getStorageSync("shortTimer"),
+    curTimeStamp = Date.parse(new Date());
+
+  // 拉长查询周期，减少API调用次数
+  if (!oldTimeStamp) {
+    // 首次查询
+    wx.setStorageSync("shortTimer", curTimeStamp);
+  } else if (curTimeStamp - oldTimeStamp < 900000) {
+    // 查询时间未到
+    msg = {
+      code: 0,
+      msg: "not checking time"
+    }
+    return Promise.resolve(msg);
+  } else {
+    // 更新时间，并执行下方的查询
+    wx.setStorageSync("shortTimer", curTimeStamp);
+  }
+
   // 查询用户的openid 
   return (wx.cloud.callFunction({
     name: "login",

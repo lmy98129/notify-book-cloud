@@ -1,6 +1,7 @@
 //index.js
 const app = getApp()
 const avatar = require("../../utils/avatar");
+const localData = require("../../test/local-data");
 
 Page({
   data: {
@@ -10,6 +11,8 @@ Page({
     takeSession: false,
     requestResult: '',
     sideBar: false,
+    moveY: 0,
+    randRecList: []
   },
 
   onLoad: function() {
@@ -28,7 +31,8 @@ Page({
           wx.getUserInfo({
             success: res => {
               let avatarUrl = res.userInfo.avatarUrl;
-              avatar.check(this, avatarUrl).then(res => {
+              avatar.check(this, avatarUrl)
+              .then(res => {
                 console.log("用户头像检测: ", res.msg);
               })
               this.setData({
@@ -39,6 +43,17 @@ Page({
           })
         }
       }
+    })
+
+    // 导入可能认识的人信息
+    let rand = localData.rand;
+    if (rand.length < 13) {
+      for (var i=rand.length; i<13; i++) {
+        rand[i] = {avatarUrl: "/pages/index/user-unlogin.png"}
+      }
+    }
+    this.setData({
+      randRecList: localData.rand
     })
   },
 
@@ -128,5 +143,6 @@ Page({
     this.setData({
       sideBar: sideBar
     })
-  }
+  },
+
 })

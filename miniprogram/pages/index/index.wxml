@@ -1,24 +1,50 @@
 <!--index.wxml-->
 <view class="root">
   <view class="container {{sideBar ? 'left' : ''}}">
+
     <view class="top-widget">
       <image class="top-bg" src="cloud://test-5c133c.7465-test-5c133c/tvs-bg.jpg"></image>
-      <view class="title">
-        <image class="img" src="cloud://test-5c133c.7465-test-5c133c/tvs-logo.jpg"></image>
-        <view class="text">中国传媒大学</view>
+      <view class="user-info">
+        <image class="user-avatar" src="{{avatarUrl}}"></image>
+        <open-data type="userNickName" class="user-nickname"></open-data>
       </view>
       <view class="btn-wrap">
         <view class="add">
           <view class="iconfont icon-tianjiahaoyou icon"></view>
         </view>
         <view class="settings" bindtap="switchSideBar">
-          <view class="iconfont icon-optio3 icon"></view>
+          <view class="iconfont .icon-option2 icon"></view>
         </view>
       </view>
     </view>
 
+    <view class="main">
+
+      <view class="recommend">
+      <scroll-view class="scroll" scroll-x style="width: 100%; height: 240rpx;">
+        <view class="list">
+          <block wx:for="{{randRecList}}" wx:key="{{index}}">
+            <view class="people">
+              <image src="{{item.avatarUrl}}"></image>
+            </view>
+          </block>
+        </view>
+      </scroll-view>
+        <view class="change-btn">
+          换一批
+        </view>
+      </view>
+      
+      <view class="recommend">
+        <view class="title">同届校友</view>
+        <swiper>
+        
+        </swiper>
+      </view>
+    </view>
+
     <!-- 用户 openid -->
-    <view class="userinfo">
+    <!-- <view class="userinfo">
       <button 
         open-type="getUserInfo" 
         bindgetuserinfo="onGetUserInfo"
@@ -28,18 +54,18 @@
       <view>
         <button class="userinfo-nickname" bindtap="onGetOpenid">点击获取 openid</button>
       </view>
-    </view>
+    </view> -->
 
 
     <!-- 上传图片 -->
-    <view class="uploader">
+    <!-- <view class="uploader">
       <view class="uploader-text" bindtap="doUpload">
         <text>上传图片</text>
       </view>
       <view class="uploader-container" wx:if="{{imgUrl}}">
         <image class="uploader-image" src="{{imgUrl}}" mode="aspectFit" bindtap="previewImg"></image>
       </view>
-    </view>
+    </view> -->
 
 
     <!-- 操作数据库 -->
@@ -60,7 +86,24 @@
 
   <view class="side-bar">
     <view class="content">
-      I am here
+      <!-- <button 
+        open-type="getUserInfo" 
+        bindgetuserinfo="onGetUserInfo"
+        class="user-avatar"
+        style="background-image: url({{avatarUrl}})"
+      ></button>
+      <open-data type="userNickName" class="user-nickname"></open-data> -->
+      <view class="btn-wrap">
+        <view class="btn">个人资料</view>
+        <view class="btn">通讯录</view>
+        <view class="btn">消息</view>
+        <view class="btn">设置</view>
+        <view class="btn">关于</view>
+      </view>
+      <view class="close"  bindtap="switchSideBar">
+        <view class="iconfont .icon-fanhui1 icon"></view>
+        <view class="text">收起</view>
+      </view>
     </view>
   </view>
 
