@@ -1,5 +1,10 @@
 /**index.wxss**/
 
+.container.fixed {
+  transform: none;
+  -webkit-transform: none;
+}
+
 .userinfo, .uploader, .tunnel {
   margin-top: 40rpx;
   height: 140rpx;

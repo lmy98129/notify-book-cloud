@@ -1,6 +1,5 @@
 /**app.wxss**/
 page {
-  background: #f6f6f6;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -19,7 +18,7 @@ page {
   align-items: center;
   box-sizing: border-box;
   z-index: 4;
-  background: #f6f6f6;
+  background: #fff;
   min-height: 100%;
   transform: scale(1) translate(0%, 0%);
   -webkit-transform: scale(1) translate(0%, 0%);
@@ -32,6 +31,13 @@ page {
   -webkit-transform: scale(.9) translate(-35%, 0%);
   transition: all 0.4s;
   -webkit-transition: all 0.4s;
+}
+
+.container.fixed {
+  transform: none;
+  -webkit-transform: none;
+  transition: none;
+  -webkit-transition: none;
 }
 
 .side-bar {
@@ -112,6 +118,9 @@ page {
   height: 320rpx;
 }
 
+.top-widget.fixed {
+  visibility: hidden;
+}
 
 .top-widget .user-info {
   position: absolute;
@@ -244,6 +253,93 @@ top-widget.mode-2 .btn-wrap {
   line-height: 88rpx;
 }
 
+.top-widget-fixed {
+  display: none;
+}
+
+.top-widget-fixed.fixed {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  position: fixed;
+  top: 0rpx;
+  width: 100%;
+  background: #fff;
+  z-index: 50;
+  padding-top: 70rpx;
+  padding-bottom: 20rpx;
+}
+
+.fixed.ip5 {
+  padding-top: 70rpx;
+}
+
+.fixed.ip6 {
+  padding-top: 60rpx;
+}
+
+.fixed.ip6p {
+  padding-top: 50rpx;
+}
+
+.fixed.ipx {
+  padding-top: 105rpx;
+}
+
+.top-widget-fixed.fixed .user-info{
+  display: flex;
+  flex-direction: row;
+  margin-left: 30rpx;
+}
+
+.top-widget-fixed.fixed .user-info .user-avatar{
+  width: 60rpx;
+  height: 60rpx;
+  border: 1rpx solid #aaa;
+  background-size: cover;
+  background-color: white;
+  border-radius: 50%;
+}
+
+.top-widget-fixed.fixed .user-info .user-nickname {
+  text-align: center;
+  font-size: 35rpx;
+  line-height: 66rpx;
+  margin-left: 15rpx;
+  max-width: 300rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.top-widget-fixed.fixed .btn-wrap {
+  display: flex;
+  flex-direction: row;
+  padding-right: 240rpx;
+}
+
+.top-widget-fixed.fixed .btn-wrap view:nth-child(2) {
+  margin-left: 30rpx;
+}
+
+.top-widget-fixed.fixed .btn-wrap .add .icon {
+  font-size: 45rpx;
+  text-align: center;
+  line-height: 60rpx;
+}
+
+.top-widget-fixed.fixed .btn-wrap .settings {
+  z-index: 60;
+}
+
+.top-widget-fixed.fixed .btn-wrap .settings .icon {
+  transform: scale(-1, 1);
+  -webkit-transform: scale(-1, 1);
+  font-size: 35rpx;
+  text-align: center;
+  line-height: 60rpx;
+}
+
 .main {
   width: 100%;
   margin-top: 40rpx;
@@ -256,7 +352,21 @@ top-widget.mode-2 .btn-wrap {
   height: auto;
   margin-right: 30rpx;
   margin-left: 30rpx;
-  margin-top: 50rpx;
+  margin-top: 40rpx;
+  margin-bottom: 30rpx;
+}
+
+.main .recommend:nth-child(1) {
+  margin-top: 40rpx;
+  margin-bottom: 10rpx;
+}
+
+.main .recommend:nth-child(2) {
+  margin-top: 20rpx;
+}
+
+.main .recommend:last-child {
+  margin-bottom: 160rpx;
 }
 
 .main .recommend .list {
@@ -267,7 +377,7 @@ top-widget.mode-2 .btn-wrap {
   float: left;
   height: 120rpx;
   width: 120rpx;
-  border: .5rpx solid #f6f6f6;
+  border: .5rpx solid #fff;
 }
 
 .main .recommend .list .people:nth-child(1) {
@@ -281,25 +391,74 @@ top-widget.mode-2 .btn-wrap {
   max-width: 100%;
 }
 
+.main .recommend .list .people .total {
+  position: absolute;
+  top: 90rpx;
+  left: 20rpx;
+  width: 120rpx;
+  height: 115rpx;
+  background: rgba(255, 255, 255, .7);
+  font-size: 30rpx;
+  padding-bottom: 20rpx;
+  padding-left: 10rpx;
+}
+
+.main .recommend .list .people .total text {
+  font-weight: bold;
+  font-size: 33rpx;
+}
+
 .main .recommend .change-btn {
   background: rgb(179, 179, 179);
   color: #fff;
-  font-size: 36rpx;
-  width: 200rpx;
-  height: 100rpx;
+  font-size: 32rpx;
+  width: 150rpx;
+  height: 70rpx;
   border-radius: 5%;
   text-align: center;
-  line-height: 100rpx;
+  line-height: 70rpx;
   float: right;
   margin-top: 20rpx;
 }
 
 .main .recommend .title {
-  width: 200rpx;
-  height: 90rpx;
+  width: 180rpx;
+  height: 82rpx;
   background: rgb(149, 149, 149);
   color: #fff;
   text-align: center;
   font-size: 38rpx;
   line-height: 85rpx;
+}
+
+.main .recommend .swiper-wrap {
+  margin-top: 50rpx;
+  height: 230rpx;
+}
+
+.main .recommend .swiper-wrap .people {
+  display: flex;
+  flex-direction: column;
+}
+
+.main .recommend .swiper-wrap .people .avatar {
+  width: 170rpx;
+  height: 170rpx;
+  margin: 0 auto;
+}
+
+.main .recommend .swiper-wrap .people .name {
+  text-align: center;
+  font-size: 32rpx;
+  margin-top: 20rpx;
+}
+
+.main .recommend .swiper-wrap .more {
+  width: 170rpx;
+  height: 170rpx;
+  text-align: center;
+  line-height: 170rpx;
+  border: 1rpx solid #aaa;
+  margin: 0 auto;
+  font-size: 35rpx;
 }

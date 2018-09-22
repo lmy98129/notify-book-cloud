@@ -12,7 +12,12 @@ Page({
     requestResult: '',
     sideBar: false,
     moveY: 0,
-    randRecList: []
+    randRecList: [],
+    sameYearRecList: [],
+    randListLength: 0,
+    fixTop: false,
+    fixVeryTop: false,
+    specialPhone: ''
   },
 
   onLoad: function() {
@@ -47,14 +52,58 @@ Page({
 
     // 导入可能认识的人信息
     let rand = localData.rand;
+    this.setData({
+      randListLength: rand.length
+    })
     if (rand.length < 13) {
       for (var i=rand.length; i<13; i++) {
         rand[i] = {avatarUrl: "/pages/index/user-unlogin.png"}
       }
     }
+    let year = localData.year;
     this.setData({
-      randRecList: localData.rand
+      randRecList: rand,
+      sameYearRecList: year
     })
+
+    // 获取系统信息
+    let sysInfo = wx.getSystemInfoSync();
+    switch (sysInfo.model) {
+      case "iPhone 5":
+      case "iPhone 4":
+      case "iPhone 5s":
+      case "iPhone se":
+        this.setData({
+          specialPhone: "ip5"
+        });
+        break;
+      case "iPhone 6":
+      case "iPhone 6s":
+      case "iPhone 7":
+      case "iPhone 8":
+        this.setData({
+          specialPhone: "ip6"
+        });
+        break;
+      case "iPhone 6 Plus":
+      case "iPhone 6s Plus":
+      case "iPhone 7 Plus":
+      case "iPhone 8 Plus":
+        this.setData({
+          specialPhone: "ip6p"
+        });
+        break;
+      case "iPhone X":
+      case "iPhone Xs":
+      case "iPhone Xs Max":
+      case "iPhone Xr":
+        this.setData({
+          specialPhone: "ipx"
+        });
+        break;
+      default:
+        break;
+    }
   },
 
   onGetUserInfo: function(e) {
@@ -139,10 +188,39 @@ Page({
   },
 
   switchSideBar: function() {
+    if (this.data.fixVeryTop) {
+      this.setData({
+        fixVeryTop: false,
+      })
+    }
     let sideBar = !this.data.sideBar;
     this.setData({
       sideBar: sideBar
     })
   },
+  
+  onPageScroll: function(e) {
+    if (e.scrollTop > 0) {
+      this.setData({
+        fixVeryTop: true
+      })
+    } 
+    if (e.scrollTop > 80) {
+      this.setData({
+        fixTop: true
+      })
+    } else {
+      this.setData({
+        fixTop: false,
+        fixVeryTop: false
+      })
+    }
+  },
+
+  goProfile() {
+    wx.navigateTo({
+      url: '../profile/profile',
+    })
+  }
 
 })

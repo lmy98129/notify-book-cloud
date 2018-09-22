@@ -32,8 +32,9 @@
 			"list": [
 				{
 					"id": -1,
-					"name": "db guide",
-					"pathName": "pages/databaseGuide/databaseGuide"
+					"name": "个人资料",
+					"pathName": "pages/profile/profile",
+					"query": ""
 				}
 			]
 		}

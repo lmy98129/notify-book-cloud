@@ -1,11 +1,11 @@
 <!--index.wxml-->
 <view class="root">
-  <view class="container {{sideBar ? 'left' : ''}}">
+  <view class="container {{sideBar ? 'left' : ''}}  {{fixVeryTop ? 'fixed':''}}">
 
-    <view class="top-widget">
+    <view class="top-widget {{fixTop ? 'fixed':''}}">
       <image class="top-bg" src="cloud://test-5c133c.7465-test-5c133c/tvs-bg.jpg"></image>
       <view class="user-info">
-        <image class="user-avatar" src="{{avatarUrl}}"></image>
+        <image class="user-avatar {{fixTop ? 'fixed':''}}" src="{{avatarUrl}}" bindtap="goProfile"></image>
         <open-data type="userNickName" class="user-nickname"></open-data>
       </view>
       <view class="btn-wrap">
@@ -18,18 +18,33 @@
       </view>
     </view>
 
+    <view class="top-widget-fixed {{fixTop ? 'fixed':''}} {{specialPhone}}">
+      <view class="user-info">
+        <image class="user-avatar" src="{{avatarUrl}}"></image>
+        <open-data type="userNickName" class="user-nickname"></open-data>
+      </view>
+    </view>
+    
     <view class="main">
 
       <view class="recommend">
-      <scroll-view class="scroll" scroll-x style="width: 100%; height: 240rpx;">
-        <view class="list">
-          <block wx:for="{{randRecList}}" wx:key="{{index}}">
-            <view class="people">
-              <image src="{{item.avatarUrl}}"></image>
-            </view>
-          </block>
-        </view>
-      </scroll-view>
+        <scroll-view class="scroll" scroll-x style="width: 100%; height: 240rpx;" scroll-with-animation="true">
+          <view class="list">
+            <block wx:for="{{randRecList}}" wx:key="{{index}}">
+              <view class="people">
+                <image src="{{item.avatarUrl}}"></image>
+                <block wx:if="{{index === 0}}">
+                  <view class="total">
+                    <text decode="true" style="font-weight: bold;">
+                      +{{randListLength}}&nbsp;
+                    </text>
+                      Friends
+                  </view>
+                </block>
+              </view>
+            </block>
+          </view>
+        </scroll-view>
         <view class="change-btn">
           换一批
         </view>
@@ -37,10 +52,38 @@
       
       <view class="recommend">
         <view class="title">同届校友</view>
-        <swiper>
-        
-        </swiper>
+          <swiper display-multiple-items="3" class="swiper-wrap" autoplay="true">
+            <block wx:for="{{sameYearRecList}}" wx:key="{{index}}">
+              <swiper-item>
+                <view class="people">
+                  <image src="{{item.avatarUrl}}" class="avatar"></image>
+                  <view class="name">{{item.name}}</view>
+                </view>
+              </swiper-item>
+            </block>
+            <swiper-item>
+              <view class="more">更多</view>
+            </swiper-item>
+          </swiper>
       </view>
+
+      <view class="recommend">
+        <view class="title">同班同学</view>
+          <swiper display-multiple-items="3" class="swiper-wrap" autoplay="true">
+            <block wx:for="{{sameYearRecList}}" wx:key="{{index}}">
+              <swiper-item>
+                <view class="people">
+                  <image src="{{item.avatarUrl}}" class="avatar"></image>
+                  <view class="name">{{item.name}}</view>
+                </view>
+              </swiper-item>
+            </block>
+            <swiper-item>
+              <view class="more">更多</view>
+            </swiper-item>
+          </swiper>
+      </view>
+
     </view>
 
     <!-- 用户 openid -->
@@ -95,7 +138,6 @@
       <open-data type="userNickName" class="user-nickname"></open-data> -->
       <view class="btn-wrap">
         <view class="btn">个人资料</view>
-        <view class="btn">通讯录</view>
         <view class="btn">消息</view>
         <view class="btn">设置</view>
         <view class="btn">关于</view>

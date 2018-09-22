@@ -7,14 +7,32 @@
     "pages/databaseGuide/databaseGuide",
     "pages/addFunction/addFunction",
     "pages/deployFunctions/deployFunctions",
-    "pages/chooseLib/chooseLib"
+    "pages/chooseLib/chooseLib",
+    "pages/contact/contact",
+    "pages/profile/profile"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",
     "navigationStyle": "custom",
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#F6F6F6",
-    "navigationBarTitleText": "云开发 QuickStart",
+    "navigationBarTitleText": "",
     "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#bbbbbb",
+    "selectedColor": "#515151",
+    "borderStyle": "#bbbbbb",
+    "list": [{
+      "selectedIconPath": "images/discover-hl.png",
+      "iconPath": "images/discover.png",
+      "pagePath": "pages/index/index",
+      "text": "发现"
+    }, {
+      "selectedIconPath": "images/contact-hl.png",
+      "iconPath": "images/contact.png",
+      "pagePath": "pages/contact/contact",
+      "text": "通讯录"
+    }]
   }
 }
