@@ -1,7 +1,5 @@
-// pages/profile/profile.js
+// pages/login/login.js
 const app = getApp();
-const sys = require("../../utils/system");
-const login = require("../../utils/login.js");
 
 Page({
 
@@ -9,20 +7,14 @@ Page({
    * 页面的初始数据
    */
   data: {
-    specialPhone: '',
-    avatarUrl: '../index/user-unlogin.png',
-    userInfo: ""
+
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    // if (options.isOtherUser) {
-      
-    // }
-    sys.checkPhone(this);
-    login.getUserInfo(this);
+
   },
 
   /**
@@ -72,9 +64,10 @@ Page({
    */
   onShareAppMessage: function () {
 
-  }, 
+  },
 
-  goBack() {
+  backIndex() {
+    app.globalData.isLogged = true;
     wx.navigateBack({
       delta: 1
     })

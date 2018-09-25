@@ -1,0 +1,7 @@
+<!--pages/login/login.wxml-->
+<view class="root">
+  <view class="container">
+    <view class="hint">点击下方按钮即表示您同意登录小程序</view>
+    <button open-type="getUserInfo" bindgetuserinfo="backIndex">登录</button>
+  </view>
+</view>

@@ -70,7 +70,7 @@
       <view class="recommend">
         <view class="title">同班同学</view>
           <swiper display-multiple-items="3" class="swiper-wrap" autoplay="true">
-            <block wx:for="{{sameYearRecList}}" wx:key="{{index}}">
+            <block wx:for="{{sameClassRecList}}" wx:key="{{index}}">
               <swiper-item>
                 <view class="people">
                   <image src="{{item.avatarUrl}}" class="avatar"></image>

@@ -2,6 +2,8 @@
 const app = getApp()
 const avatar = require("../../utils/avatar");
 const localData = require("../../test/local-data");
+const sys = require("../../utils/system");
+const login = require("../../utils/login");
 
 Page({
   data: {
@@ -14,6 +16,7 @@ Page({
     moveY: 0,
     randRecList: [],
     sameYearRecList: [],
+    sameClassRecList: [],
     randListLength: 0,
     fixTop: false,
     fixVeryTop: false,
@@ -28,81 +31,33 @@ Page({
       return
     }
 
-    // 获取用户信息
-    wx.getSetting({
-      success: res => {
-        if (res.authSetting['scope.userInfo']) {
-          // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
-          wx.getUserInfo({
-            success: res => {
-              let avatarUrl = res.userInfo.avatarUrl;
-              avatar.check(this, avatarUrl)
-              .then(res => {
-                console.log("用户头像检测: ", res.msg);
-              })
-              this.setData({
-                avatarUrl: avatarUrl,
-                userInfo: res.userInfo
-              })
-            }
-          })
-        }
-      }
-    })
+    login.getUserInfo(this);
 
     // 导入可能认识的人信息
     let rand = localData.rand;
     this.setData({
       randListLength: rand.length
     })
-    if (rand.length < 13) {
-      for (var i=rand.length; i<13; i++) {
+    if (rand.length < 9) {
+      for (var i=rand.length; i<9; i++) {
         rand[i] = {avatarUrl: "/pages/index/user-unlogin.png"}
       }
     }
-    let year = localData.year;
+    let year = localData.year, classmate = localData.classmate;
     this.setData({
       randRecList: rand,
-      sameYearRecList: year
+      sameYearRecList: year, 
+      sameClassRecList: classmate
     })
 
-    // 获取系统信息
-    let sysInfo = wx.getSystemInfoSync();
-    switch (sysInfo.model) {
-      case "iPhone 5":
-      case "iPhone 4":
-      case "iPhone 5s":
-      case "iPhone se":
-        this.setData({
-          specialPhone: "ip5"
-        });
-        break;
-      case "iPhone 6":
-      case "iPhone 6s":
-      case "iPhone 7":
-      case "iPhone 8":
-        this.setData({
-          specialPhone: "ip6"
-        });
-        break;
-      case "iPhone 6 Plus":
-      case "iPhone 6s Plus":
-      case "iPhone 7 Plus":
-      case "iPhone 8 Plus":
-        this.setData({
-          specialPhone: "ip6p"
-        });
-        break;
-      case "iPhone X":
-      case "iPhone Xs":
-      case "iPhone Xs Max":
-      case "iPhone Xr":
-        this.setData({
-          specialPhone: "ipx"
-        });
-        break;
-      default:
-        break;
+    sys.checkPhone(this);
+
+  },
+
+  onShow: function() {
+    if (app.globalData.isLogged == true) {
+      login.getUserInfo(this);
+      app.globalData.isLogin = false;
     }
   },
 
@@ -219,7 +174,7 @@ Page({
 
   goProfile() {
     wx.navigateTo({
-      url: '../profile/profile',
+      url: '../profile/profile?isOtherUser=false',
     })
   }
 

@@ -192,11 +192,11 @@ top-widget.mode-2 .btn-wrap {
 
 @font-face {
   font-family: 'iconfont';  /* project id 848790 */
-  src: url('//at.alicdn.com/t/font_848790_ry6vqwl9lcn.eot');
-  src: url('//at.alicdn.com/t/font_848790_ry6vqwl9lcn.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_848790_ry6vqwl9lcn.woff') format('woff'),
-  url('//at.alicdn.com/t/font_848790_ry6vqwl9lcn.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_848790_ry6vqwl9lcn.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_848790_su11xrdouph.eot');
+  src: url('//at.alicdn.com/t/font_848790_su11xrdouph.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_848790_su11xrdouph.woff') format('woff'),
+  url('//at.alicdn.com/t/font_848790_su11xrdouph.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_848790_su11xrdouph.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -214,6 +214,8 @@ top-widget.mode-2 .btn-wrap {
 .icon-optio3:before { content: "\e60b"; }
 
 .icon-option2:before { content: "\e60c"; }
+
+.icon-fanhui:before { content: "\e661"; }
 
 
 .top-widget .btn-wrap {
@@ -251,6 +253,13 @@ top-widget.mode-2 .btn-wrap {
   font-size: 50rpx;
   text-align: center;
   line-height: 88rpx;
+}
+
+.top-widget .back-icon {
+  font-size: 48rpx;
+  color: #fff;
+  position: fixed;
+  left: 30rpx;
 }
 
 .top-widget-fixed {
@@ -370,7 +379,7 @@ top-widget.mode-2 .btn-wrap {
 }
 
 .main .recommend .list {
-  width: 140%;
+  width: 120%;
 }
 
 .main .recommend .list .people {
@@ -451,6 +460,10 @@ top-widget.mode-2 .btn-wrap {
   text-align: center;
   font-size: 32rpx;
   margin-top: 20rpx;
+  max-width: 230rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .main .recommend .swiper-wrap .more {
