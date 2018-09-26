@@ -1,29 +1,10 @@
 <!--index.wxml-->
 <view class="root">
   <view class="container {{sideBar ? 'left' : ''}}  {{fixVeryTop ? 'fixed':''}}">
-
-    <view class="top-widget {{fixTop ? 'fixed':''}}">
-      <image class="top-bg" src="cloud://test-5c133c.7465-test-5c133c/tvs-bg.jpg"></image>
-      <view class="user-info">
-        <image class="user-avatar {{fixTop ? 'fixed':''}}" src="{{avatarUrl}}" bindtap="goProfile"></image>
-        <open-data type="userNickName" class="user-nickname"></open-data>
-      </view>
-      <view class="btn-wrap">
-        <view class="add">
-          <view class="iconfont icon-tianjiahaoyou icon"></view>
-        </view>
-        <view class="settings" bindtap="switchSideBar">
-          <view class="iconfont .icon-option2 icon"></view>
-        </view>
-      </view>
-    </view>
-
-    <view class="top-widget-fixed {{fixTop ? 'fixed':''}} {{specialPhone}}">
-      <view class="user-info">
-        <image class="user-avatar" src="{{avatarUrl}}"></image>
-        <open-data type="userNickName" class="user-nickname"></open-data>
-      </view>
-    </view>
+    <top-widget avatarUrl="{{avatarUrl}}" fixTop="{{fixTop}}" class="top-widget-wrapper">
+      <nav-btn slot="add" btnType="add" iconType="icon-tianjiahaoyou"/>
+      <nav-btn slot="settings" btnType="settings" iconType="icon-option2" bind:tapBtn="switchSideBar"/>
+    </top-widget>
     
     <view class="main">
 

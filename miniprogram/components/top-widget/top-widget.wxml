@@ -1,0 +1,23 @@
+<!--components/top-widget/top-widget.wxml-->
+    <view class="top-widget {{fixTop ? 'fixed':''}}">
+      <block wx:if="{{isBack}}">
+        <view class="iconfont icon-fanhui back-icon fixed {{specialPhone}}" bindtap="goBack"></view>
+      </block>
+      <image class="top-bg" src="cloud://test-5c133c.7465-test-5c133c/tvs-bg.jpg"></image>
+      <view class="user-info">
+        <image class="user-avatar {{fixTop ? 'fixed':''}}" src="{{avatarUrl}}" bindtap="goProfile"></image>
+        <open-data type="userNickName" class="user-nickname"></open-data>
+      </view>
+      <view class="btn-wrap">
+        <slot name="add"></slot>        
+        <slot name="settings"></slot>
+        <slot name="edit"></slot>
+      </view>
+    </view>
+
+    <view class="top-widget-fixed {{fixTop ? 'fixed':''}} {{specialPhone}}">
+      <view class="user-info">
+        <image class="user-avatar" src="{{avatarUrl}}"></image>
+        <open-data type="userNickName" class="user-nickname"></open-data>
+      </view>
+    </view>  

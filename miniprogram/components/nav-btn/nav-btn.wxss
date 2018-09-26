@@ -1,0 +1,23 @@
+/* components/nav-btn/nav-btn.wxss */
+@import "/style/iconfont.wxss";
+.settings,
+.add {
+  width: 90rpx;
+  height: 90rpx;
+  border-radius: 45rpx;
+  background: rgba(254, 254, 254, .9);
+  margin-left: 15rpx;
+}
+
+.settings .icon{
+  transform: scale(-1, 1);
+  -webkit-transform: scale(-1, 1);
+  font-size: 38rpx;
+  text-align: center;
+  line-height: 88rpx;
+}
+.add .icon {
+  font-size: 50rpx;
+  text-align: center;
+  line-height: 88rpx;
+}

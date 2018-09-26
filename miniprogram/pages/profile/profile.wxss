@@ -1,4 +1,1 @@
 /* pages/profile/profile.wxss */
-.top-widget.fixed {
-  visibility: visible!important;
-}

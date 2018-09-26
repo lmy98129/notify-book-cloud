@@ -7,7 +7,7 @@ const login = require("../../utils/login");
 
 Page({
   data: {
-    avatarUrl: './user-unlogin.png',
+    avatarUrl: '/images/user-unlogin.png',
     userInfo: {},
     logged: false,
     takeSession: false,
@@ -40,7 +40,7 @@ Page({
     })
     if (rand.length < 9) {
       for (var i=rand.length; i<9; i++) {
-        rand[i] = {avatarUrl: "/pages/index/user-unlogin.png"}
+        rand[i] = {avatarUrl: "/images/user-unlogin.png"}
       }
     }
     let year = localData.year, classmate = localData.classmate;
@@ -171,11 +171,5 @@ Page({
       })
     }
   },
-
-  goProfile() {
-    wx.navigateTo({
-      url: '../profile/profile?isOtherUser=false',
-    })
-  }
 
 })

@@ -1,0 +1,4 @@
+<!--components/nav-btn/nav-btn.wxml-->
+<view class="{{btnType}}">
+  <view class="iconfont {{iconType}} icon" bindtap="tapBtn"></view>
+</view>
