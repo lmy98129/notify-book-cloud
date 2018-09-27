@@ -1,7 +1,7 @@
 <!--index.wxml-->
-<view class="root">
+<view class="root {{sideBar ? 'left' : ''}}">
   <view class="container {{sideBar ? 'left' : ''}}  {{fixVeryTop ? 'fixed':''}}">
-    <top-widget avatarUrl="{{avatarUrl}}" fixTop="{{fixTop}}" class="top-widget-wrapper">
+    <top-widget avatarUrl="{{avatarUrl}}" fixTop="{{fixTop}}" class="top-widget-wrapper" isNavigateToProfile="true">
       <nav-btn slot="add" btnType="add" iconType="icon-tianjiahaoyou"/>
       <nav-btn slot="settings" btnType="settings" iconType="icon-option2" bind:tapBtn="switchSideBar"/>
     </top-widget>
@@ -118,7 +118,9 @@
       ></button>
       <open-data type="userNickName" class="user-nickname"></open-data> -->
       <view class="btn-wrap">
-        <view class="btn">个人资料</view>
+        <navigator url="../profile/profile?isOtherUser=false">
+          <view class="btn">个人资料</view>
+        </navigator>
         <view class="btn">消息</view>
         <view class="btn">设置</view>
         <view class="btn">关于</view>

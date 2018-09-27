@@ -11,6 +11,14 @@ Component({
    * 组件的属性列表
    */
   properties: {
+    mode: {
+      type: String,
+      value: "main"
+    },
+    title: {
+      type: String,
+      value: ""
+    },
     avatarUrl: {
       type: String,
       value: ""
@@ -20,6 +28,10 @@ Component({
       value: false
     },
     isBack: {
+      type: Boolean,
+      value: false
+    },
+    isNavigateToProfile: {
       type: Boolean,
       value: false
     }
@@ -45,9 +57,12 @@ Component({
     },
 
     goProfile() {
-      wx.navigateTo({
-        url: '../profile/profile?isOtherUser=false',
-      })
+      let prop = this.properties;
+      if (prop.isNavigateToProfile) {
+        wx.navigateTo({
+          url: '../profile/profile?isOtherUser=false',
+        })
+      }
     },
 
     goBack() {

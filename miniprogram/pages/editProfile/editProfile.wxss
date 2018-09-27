@@ -1,0 +1,93 @@
+/* pages/editProfile/editProfile.wxss */
+page {
+  background: rgb(203,203,203);
+}
+.main {
+  margin: 20rpx;
+  background: #fff;
+  width: auto;
+  text-align: center;
+  border-radius: 4%;
+  height: 100%;
+  padding-top: 50rpx;
+}
+
+.avatar image {
+  width: 170rpx;
+  height: 170rpx;
+  border: 1rpx solid #aaa;
+  background-size: cover;
+  background-color: white;
+  border-radius: 50%;
+  margin: 0 auto;
+}
+
+.avatar .change {
+  font-size: 35rpx;
+  color: #777;
+  margin-top: 25rpx;
+  margin-bottom: 18rpx;
+}
+
+.item {
+  display: flex;
+  flex-direction: row;
+  width: 80%;
+  margin: 35rpx auto;
+  background: rgb(220, 220, 220);
+  padding-left: 25rpx;
+  text-align: left;
+  font-size: 35rpx;
+}
+
+.item view {
+  padding-top: 6rpx;
+}
+
+.item .title {
+  width: 30%;  
+  padding-bottom: 6rpx;
+  border-right: 4rpx solid rgb(155, 155, 155);
+  font-size: 35rpx;
+  color: rgb(110, 110, 110);
+}
+
+.item .input {
+  width: 80%;
+}
+
+.item .input input {
+  width: auto;
+  margin-left: 30rpx;
+  color: rgb(110, 110, 110);
+  padding-right: 25rpx;
+}
+
+.item .select {
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  padding-top: 0;
+}
+
+.item .select .option {
+  width: 50%;
+  color: rgb(153, 153, 153);
+  text-align: center;
+  padding-top: 6rpx;
+}
+
+.item .select .option.selected {
+  background: rgb(160, 160, 160);
+  color: #fff;
+}
+
+.item .input .picker {
+  width: auto;
+  color: rgb(110, 110, 110);
+  margin-left: 30rpx;  
+}
+
+.phone-number-getter {
+  padding: 0;
+}

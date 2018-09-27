@@ -1,5 +1,6 @@
 /* components/top-widget/top-widget.wxss */
 @import "/style/iconfont.wxss";
+@import "/style/specialPhone.wxss";
 
 .top-widget {
   position: relative;
@@ -94,12 +95,45 @@
   flex-direction: row;
 }
 
-.top-widget .back-icon {
+.top-widget .back-icon{
   font-size: 48rpx;
   color: #fff;
   position: fixed;
   left: 30rpx;
   padding-top:50rpx;
+}
+
+.top-widget-title .back-icon {
+  position: fixed;
+  padding-top: 10rpx;
+  font-size: 42rpx;
+  left: 35rpx;
+  z-index: 60;
+}
+
+.top-widget-title {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: rgb(81, 81, 81);
+  padding-bottom: 85rpx;
+  padding-top: 60rpx;
+  color: #fff;
+  display: flex;
+  flex-direction: row;
+}
+
+.top-widget-title .title {
+  position: fixed;
+  width: 100%;
+  text-align: center;
+  font-size: 40rpx;
+  padding-top: 5rpx
+}
+
+.top-widget-title-holder {
+  padding-top: 50rpx;
+  padding-bottom: 85rpx;
 }
 
 .top-widget.fixed .back-icon{
@@ -121,22 +155,6 @@
   z-index: 50;
   padding-top: 70rpx;
   padding-bottom: 20rpx;
-}
-
-.fixed.ip5 {
-  padding-top: 70rpx;
-}
-
-.fixed.ip6 {
-  padding-top: 60rpx;
-}
-
-.fixed.ip6p {
-  padding-top: 50rpx;
-}
-
-.fixed.ipx {
-  padding-top: 105rpx;
 }
 
 .top-widget-fixed.fixed .user-info{

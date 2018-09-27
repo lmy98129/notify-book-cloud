@@ -10,8 +10,8 @@ Page({
    */
   data: {
     specialPhone: '',
-    avatarUrl: '../index/user-unlogin.png',
-    userInfo: ""
+    avatarUrl: '/images/user-unlogin.png',
+    userInfo: {},
   },
 
   /**
@@ -22,7 +22,10 @@ Page({
       
     // }
     sys.checkPhone(this);
-    login.getUserInfo(this);
+    this.setData({
+      avatarUrl: wx.getStorageSync("userInfo").avatarUrl,
+      userInfo: wx.getStorageSync("userInfo")
+    })
   },
 
   /**
@@ -74,4 +77,10 @@ Page({
 
   }, 
 
+
+  editProfile: function() {
+    wx.navigateTo({
+      url: '../editProfile/editProfile',
+    })
+  }
 })

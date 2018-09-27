@@ -1,0 +1,15 @@
+.fixed.ip5 {
+  padding-top: 70rpx!important;
+}
+
+.fixed.ip6 {
+  padding-top: 60rpx!important;
+}
+
+.fixed.ip6p {
+  padding-top: 50rpx!important;
+}
+
+.fixed.ipx {
+  padding-top: 105rpx!important;
+}

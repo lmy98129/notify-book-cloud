@@ -1,0 +1,94 @@
+<!--pages/editProfile/editProfile.wxml-->
+<top-widget mode="title" title="资料填写">
+</top-widget>
+<view class="main">
+  <scroll-view scroll-y="true" style="height: 90%" scroll-with-animation="true">
+    <view class="avatar">
+      <image src="{{avatarUrl}}"></image>
+      <view class="change">修改头像</view>
+    </view>
+    <view class="item">
+      <view class="title">昵称</view>
+      <view class="input">
+        <input bindinput="getNickname" value="{{userInfo.nickName}}"></input>
+      </view>
+    </view>
+    <view class="item">
+      <view class="title">真实姓名</view>
+      <view class="input">
+        <input bindinput="getRealName" placeholder="请输入您的姓名"></input>
+      </view>
+    </view>
+    <view class="item">
+      <view class="title">性别</view>
+      <view class="select">
+        <view class="option {{gender === 2 ? 'selected' : ''}}" data-gender='2' bindtap="getGender" >女</view>
+        <view class="option {{gender === 1 ? 'selected' : ''}}" data-gender='1' bindtap="getGender" >男</view>
+      </view>
+    </view>
+    <view class="item">
+      <view class="title">出生年月</view>
+      <view class="input">
+        <picker mode="date" class="picker" bindchange="getBirthDate">
+          {{birthDate}}
+        </picker>
+      </view>
+    </view>
+    <view class="item">
+      <view class="title">籍贯</view>
+      <view class="input">
+        <picker mode="region" class="picker" bindchange="getHomeTown">
+          {{homeTown}}
+        </picker>
+      </view>
+    </view>
+    <view class="item">
+      <view class="title">学历</view>
+      <view class="input">
+        <picker class="picker" bindchange="getDegree" range="{{degreeArray}}">
+            {{degree}}
+        </picker>
+      </view>
+    </view>
+    <view class="item">
+      <view class="title">专业</view>
+      <view class="input">
+        <input bindinput="getMajor" placeholder="请输入您的专业"></input>
+      </view>
+    </view>
+    <view class="item">
+      <view class="title">现住址</view>
+      <view class="input">
+        <input bindinput="getAddress" placeholder="请输入您的现住址"></input>
+      </view>
+    </view>
+    <view class="item">
+      <view class="title">入校时间</view>
+      <view class="input">
+        <picker mode="date" class="picker" bindchange="getEnterSchoolTime" fields="month">
+          {{enterSchoolTime}}
+        </picker>
+      </view>
+    </view>
+    <view class="item">
+      <view class="title">离校时间</view>
+      <view class="input">
+        <picker mode="date" class="picker" bindchange="getLeaveSchoolTime" fields="month">
+          {{leaveSchoolTime}}
+        </picker>
+      </view>
+    </view>
+    <view class="item">
+      <view class="title">微信号</view>
+      <view class="input">
+        <input bindinput="getWechatNumber" placeholder="请输入微信号（非昵称）"></input>
+      </view>
+    </view>
+    <view class="item">
+      <view class="title">手机号</view>
+      <view class="input phone-number">
+        <input bindinput="getPhoneNumber" placeholder="与微信绑定的手机号"></input>
+      </view>
+    </view>
+  </scroll-view>
+</view>

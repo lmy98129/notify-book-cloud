@@ -1,7 +1,6 @@
 /* components/nav-btn/nav-btn.wxss */
 @import "/style/iconfont.wxss";
-.settings,
-.add {
+.btn-wrap {
   width: 90rpx;
   height: 90rpx;
   border-radius: 45rpx;
@@ -9,15 +8,26 @@
   margin-left: 15rpx;
 }
 
+.btn-wrap:active {
+  background: rgba(230, 230, 230, .9);
+}
+
+.icon {
+  text-align: center;
+  line-height: 88rpx;
+}
+
 .settings .icon{
   transform: scale(-1, 1);
   -webkit-transform: scale(-1, 1);
   font-size: 38rpx;
-  text-align: center;
-  line-height: 88rpx;
 }
+
 .add .icon {
   font-size: 50rpx;
-  text-align: center;
-  line-height: 88rpx;
 }
+
+.edit .icon {
+  font-size: 45rpx;
+}
+
