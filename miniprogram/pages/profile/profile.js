@@ -82,5 +82,6 @@ Page({
     wx.navigateTo({
       url: '../editProfile/editProfile',
     })
-  }
+  },
+
 })

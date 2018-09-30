@@ -1,6 +1,7 @@
 {
   "usingComponents": {
     "top-widget": "/components/top-widget/top-widget",
-    "nav-btn": "/components/nav-btn/nav-btn"
+    "nav-btn": "/components/nav-btn/nav-btn",
+    "profile-input": "/components/profile-input/profile-input"
   }
 }

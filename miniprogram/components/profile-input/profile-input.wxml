@@ -1,0 +1,30 @@
+<!--components/profile-input/profile-input.wxml-->
+<block wx:if="{{mode === 'normal'}}">
+  <view class="item">
+    <view class="title">{{title}}<text wx:if="{{asterisk}}" class="asterisk">*</text></view>
+    <view class="input">
+      <input bindinput="bindInput" value="{{value}}" placeholder="{{placeHolder}}" ></input>
+    </view>
+  </view>
+</block>
+
+<block wx:if="{{mode === 'gender'}}">
+  <view class="item">
+    <view class="title">{{title}}<text wx:if="{{asterisk}}" class="asterisk">*</text></view>
+    <view class="select">
+      <view class="option {{gender === 2 ? 'selected' : ''}}" data-gender='2' bindtap="getGender" >女</view>
+      <view class="option {{gender === 1 ? 'selected' : ''}}" data-gender='1' bindtap="getGender" >男</view>
+    </view>
+  </view>
+</block>
+
+<block wx:if="{{mode === 'picker'}}">
+  <view class="item">
+    <view class="title">{{title}}<text wx:if="{{asterisk}}" class="asterisk">*</text></view>
+    <view class="input">
+      <picker mode="{{pickerMode}}" class="picker" bindchange="bindInput" fields="{{pickerFields}}" range="{{pickerRange}}">
+        {{value}}
+      </picker>
+    </view>
+  </view>
+</block>

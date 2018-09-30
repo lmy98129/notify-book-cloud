@@ -5,6 +5,7 @@
     <block wx:if="{{isBack}}">
       <view class="iconfont icon-fanhui back-icon fixed {{specialPhone}}" bindtap="goBack"></view>
     </block>
+    <!-- <view class="top-bg"></view> -->
     <image class="top-bg" src="cloud://test-5c133c.7465-test-5c133c/tvs-bg.jpg"></image>
     <view class="user-info">
       <image class="user-avatar {{fixTop ? 'fixed':''}}" src="{{avatarUrl}}" bindtap="goProfile"></image>
@@ -28,7 +29,9 @@
 
 <block wx:if="{{mode === 'title'}}">
   <view class="top-widget-title fixed {{specialPhone}}">
-    <view class="iconfont icon-fanhui back-icon fixed" bindtap="goBack"></view>
+    <block wx:if="{{!isBack}}">    
+      <view class="iconfont icon-fanhui back-icon fixed" bindtap="goBack"></view>
+    </block>
     <view class="title">{{title}}</view>
   </view>
   <view class="top-widget-title-holder fixed {{specialPhone}}"></view>

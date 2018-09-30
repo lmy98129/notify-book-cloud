@@ -1,6 +1,6 @@
 <!--pages/login/login.wxml-->
-<top-widget mode="title" title="登录授权">
-</top-widget>
+<top-widget mode="title" title="登录授权" isBack="false">
+</top-widget> 
 <view class="container">
   <view class="upper">
     <image src="/images/contact-hl.png"></image>

@@ -34,7 +34,7 @@ Component({
     isNavigateToProfile: {
       type: Boolean,
       value: false
-    }
+    },
   },
 
   /**

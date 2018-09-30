@@ -1,0 +1,83 @@
+/* components/profile-input/profile-input.wxss */
+
+.item {
+  display: flex;
+  flex-direction: row;
+  width: 88%;
+  margin: 35rpx auto;
+  background: rgb(220, 220, 220);
+  padding-left: 25rpx;
+  text-align: left;
+  font-size: 35rpx;
+}
+
+.item view {
+  padding-top: 6rpx;
+}
+
+.item .title {
+  width: 30%;  
+  padding-bottom: 6rpx;
+  border-right: 4rpx solid rgb(155, 155, 155);
+  font-size: 35rpx;
+  color: rgb(110, 110, 110);
+}
+
+.item .title .asterisk {
+  color: #e30;
+}
+
+.item .input {
+  width: 80%;
+}
+
+.item .input input {
+  width: auto;
+  margin-left: 30rpx;
+  color: rgb(110, 110, 110);
+  padding-right: 25rpx;
+}
+
+.item .select {
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  padding-top: 0;
+}
+
+.item .select .option {
+  width: 50%;
+  color: rgb(153, 153, 153);
+  text-align: center;
+  padding-top: 6rpx;
+}
+
+.item .select .option.selected {
+  background: rgb(160, 160, 160);
+  color: #fff;
+}
+
+.item .input .picker {
+  width: auto;
+  color: rgb(110, 110, 110);
+  margin-left: 30rpx;  
+}
+
+.item.add-wrap {
+  text-align: center;
+  padding-left: 0;
+  width: 92%;
+}
+
+.item.add-wrap .add-btn {
+  width: 100%;
+  color: rgb(110, 110, 110);
+  font-size: 35rpx;
+  padding-top: 10rpx;
+  padding-bottom: 10rpx;
+}
+
+.item.add-wrap:active {
+  color: #fff;
+  background: rgb(160, 160, 160);
+}
