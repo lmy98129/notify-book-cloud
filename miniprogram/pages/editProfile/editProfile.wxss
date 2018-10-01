@@ -72,7 +72,7 @@ page {
 }
 
 .submit:active,
-.item.add-wrap:active {
+.item.add-wrap .add-btn:active {
   color: #fff;
   background: rgb(160, 160, 160);
 }

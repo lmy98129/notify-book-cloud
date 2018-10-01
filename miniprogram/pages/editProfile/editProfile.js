@@ -1,30 +1,12 @@
 // pages/editProfile/editProfile.js
 const app = getApp();
 const login = require("../../utils/login");
-let newUserInfo = {
-  nickName: "",
-  realName: "",
-  gender: "",
-  birthDate: "请选择日期",
-  homeTown: "请选择籍贯",
-  degree: "请选择学历",
-  major: "",
-  address: "",
-  enterSchoolTime: "请选择入校时间",
-  leaveSchoolTime: "请选择离校时间",
-  wechatId: "",
-  phoneNumber: "",
-  jobArray: [{
-    institution: "",
-    job: "",
-    jobStartTime: "请选择入职时间",
-    jobEndTime: "请选择离职时间"
-  }],
-  contactArray: [{
-    contactType: "",
-    content: ""
-  }],
-}
+const profile = require("../../utils/profile");
+const profModel = require("../../utils/profile-model.js");
+const comfirmOnly = require("../../utils/show-modal.js").comfirmOnly;
+
+const initValue = profModel.initValue;
+let newUserInfo = profModel.userInfo;
 
 Page({
 
@@ -55,6 +37,7 @@ Page({
       contactType: "",
       content: ""
     }],
+    // intro: "",
     degreeArray: ["本科", "硕士", "博士", "其他"],
     pagePos: "请向上滑动页面继续填写",
     canSubmit: false
@@ -65,10 +48,47 @@ Page({
    */
   onLoad: function (options) {
     let userInfo = wx.getStorageSync("userInfo");
-    this.setData({
-      avatarUrl: userInfo.avatarUrl,
-      gender: userInfo.gender,
-      nickName: userInfo.nickName
+    profile.download().then(res => {
+      if (res.code === 1) {
+        this.setData({
+          avatarUrl: userInfo.avatarUrl,
+          gender: userInfo.gender,
+          nickName: userInfo.nickName
+        })
+        newUserInfo.nickName = userInfo.nickName;
+        newUserInfo.gender = userInfo.gender;
+      } else if (res.code === 2) {
+        newUserInfo = res.data;
+        this.setData({
+          avatarUrl: userInfo.avatarUrl
+        })
+        for (let item in newUserInfo) {
+          switch(item) {
+            case "leaveSchoolTime":
+              if (newUserInfo[item] === undefined || newUserInfo[item] === "") {
+                this.setData({
+                  [item]: initValue[item].default
+                });
+              }
+              break;
+            case "jobArray":
+              let tmpArray = JSON.parse(JSON.stringify(newUserInfo[item]));
+              for(let i=0; i<tmpArray.length; i++) {
+                if (tmpArray[i].jobEndTime === undefined || tmpArray[i].jobEndTime === "") {
+                  tmpArray[i].jobEndTime === initValue.jobEndTime.default;
+                }
+              }
+              break;
+            default:
+              this.setData({
+                [item]: newUserInfo[item]
+              });
+              break;
+          }
+        }
+      }
+    }).catch(err => {
+      console.log("获取用户资料出错：", err);
     })
   },
 
@@ -143,7 +163,7 @@ Page({
     this.setData({
       gender: parseInt(gender)
     })
-    console.log(newUserInfo);
+    // console.log(newUserInfo);
   },
 
   inputHandler(e) {
@@ -205,14 +225,14 @@ Page({
         this.setData({
           [arrayType]: tmpArray
         })
-        console.log("stored: ", newUserInfo[arrayType]);
-        console.log("pages': ", this.data[arrayType]);
+        // console.log("stored: ", newUserInfo[arrayType]);
+        // console.log("pages': ", this.data[arrayType]);
         break;
       default:
         newUserInfo[inputType] = value
         break;
     }
-    console.log("current userInfo: ", newUserInfo);    
+    // console.log("current userInfo: ", newUserInfo);    
   },
 
   addBtn(e) {
@@ -262,16 +282,11 @@ Page({
       arrayType = e.detail.arrayType;
     }
 
+    tmpValue = initValue[inputType].default;
+    
     switch(inputType) {
       case "jobStartTime":
       case "jobEndTime":
-        switch(inputType) {
-          case "jobStartTime":
-            tmpValue = "请选择入职时间";
-            break;
-          case "jobEndTime":
-            tmpValue = "请选择离职时间";
-        }
         newUserInfo[arrayType][index][inputType] = tmpValue;
         tmpArray = this.data[arrayType];
         tmpArray[index][inputType] = tmpValue;
@@ -280,28 +295,93 @@ Page({
         });
         break;
       default:
-        switch(inputType) {
-          case "birthDate":
-            tmpValue = "请选择日期"
-            break;
-          case "homeTown":
-            tmpValue = "请选择籍贯"
-            break;
-          case "degree": 
-            tmpValue = "请选择学历";
-            break;
-          case "enterSchoolTime":
-            tmpValue = "请选择入校时间";
-            break;
-          case "leaveSchoolTime":
-            tmpValue = "请选择离校时间";
-            break;
-        }
         newUserInfo[inputType] = tmpValue;
         this.setData({
           [inputType]: tmpValue
         })
     }
-    console.log("current userInfo: ", newUserInfo);
+    // console.log("current userInfo: ", newUserInfo);
+  },
+
+  submit() {
+    if (!this.data.canSubmit) return;
+    let tmpJobArray, tmpContentArray;
+    for(let item in newUserInfo) {
+      switch(item) {
+        case "nickName":
+        case "realName":
+        case "major":
+        case "address":
+          if (newUserInfo[item] === undefined || newUserInfo[item] === "") {
+            comfirmOnly(initValue[item].name + "为空，此项为必填项");
+            return;
+          }
+          break;
+        case "birthDate":
+        case "homeTown":
+        case "degree":
+        case "enterSchoolTime":
+          if(newUserInfo[item] === initValue[item].default) {
+            comfirmOnly(initValue[item].name + "为空，此项为必填项");
+            return;
+          }
+          break;
+        case "leaveSchoolTime": 
+          if (newUserInfo[item] === initValue[item].default) {
+            newUserInfo[item] = "";
+          }
+          break;
+        case "contactArray":
+          tmpContentArray = newUserInfo[item];
+          for (let i=0; i<tmpContentArray.length; i++) {
+            for (let subItem in tmpContentArray[i]) {
+              if (tmpContentArray[i][subItem] === undefined || tmpContentArray[i][subItem] === "") {
+                comfirmOnly("“联系方式" + (i + 1) + "”的"+ initValue[subItem].name + "为空，此项为必填项");
+                return;
+              }
+            }
+          }
+          break;          
+        case "jobArray":
+          tmpJobArray = newUserInfo[item];
+          for (let i=0; i<tmpJobArray.length; i++) {
+            for (let subItem in tmpJobArray[i]) {
+              switch(subItem) {
+                case "institution":
+                case "job":
+                  if (tmpJobArray[i][subItem] === undefined || tmpJobArray[i][subItem] === "") {
+                    comfirmOnly("“工作职务" + (i + 1) + "”的" + initValue[subItem].name + "为空，此项为必填项");
+                    return;
+                  }
+                  break;
+                case "jobStartTime":
+                  if (tmpJobArray[i][subItem] === initValue[subItem].default) {
+                    comfirmOnly("“工作职务" + (i + 1) + "”的" + initValue[subItem].name + "为空，此项为必填项");
+                    return;
+                  }
+                  break;
+                case "jobEndTime": 
+                  if (tmpJobArray[i][subItem] === initValue[subItem].default) {
+                    newUserInfo[item][i][subItem] = "";
+                  }
+                  break;
+              }
+            }
+          }
+          break;
+        case "phoneNumber": 
+          if (newUserInfo[item] !== "" && isNaN(newUserInfo[item])) {
+            comfirmOnly(initValue[item].name + "应为数字");
+            return;
+          }
+          break;
+      }
+    }
+    console.log("submit userInfo: ", newUserInfo);
+    profile.upload(newUserInfo).then(res => {
+      console.log("上传用户资料成功：", res);
+    }).catch(err => {
+      console.log("上传用户资料失败：", err);
+    })
   }
 })

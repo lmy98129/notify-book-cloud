@@ -14,7 +14,7 @@
 
     <profile-input title="性别" mode="gender" bind:gender="getGender" input-type="gender" gender="{{gender}}"/>
 
-    <profile-input title="出生年月" mode="picker" picker-fields="day" value="{{birthDate}}" bind:input="inputHandler" input-type="birthDate" bind:del="pickerDel"/>
+    <profile-input title="生日" mode="picker" picker-fields="day" value="{{birthDate}}" bind:input="inputHandler" input-type="birthDate" bind:del="pickerDel"/>
 
     <profile-input title="籍贯" mode="picker" picker-mode="region" value="{{homeTown}}" bind:input="inputHandler" input-type="homeTown" bind:del="pickerDel"/>
 
@@ -32,11 +32,11 @@
       <view class="item-wrapper">
         <view class="item-title">工作职务 {{index + 1}}</view>
 
-        <profile-input title="工作单位" asterisk="{{index === 0 ? true : false}}" place-holder="请输入所属工作单位" value="{{item.institution}}" bind:input="inputHandler" input-type="institution" index="{{index}}" array-type="jobArray"/>
+        <profile-input title="工作单位" place-holder="请输入所属工作单位" value="{{item.institution}}" bind:input="inputHandler" input-type="institution" index="{{index}}" array-type="jobArray"/>
         
-        <profile-input title="职务名称" asterisk="{{index === 0 ? true : false}}" place-holder="请输入职务名称" value="{{item.job}}" bind:input="inputHandler" input-type="job" index="{{index}}" array-type="jobArray"/>
+        <profile-input title="职务名称" place-holder="请输入职务名称" value="{{item.job}}" bind:input="inputHandler" input-type="job" index="{{index}}" array-type="jobArray"/>
 
-        <profile-input title="入职时间" asterisk="{{index === 0 ? true : false}}" mode="picker" picker-fields="month" value="{{item.jobStartTime}}" bind:input="inputHandler" input-type="jobStartTime" index="{{index}}" array-type="jobArray" bind:del="pickerDel"/>
+        <profile-input title="入职时间" mode="picker" picker-fields="month" value="{{item.jobStartTime}}" bind:input="inputHandler" input-type="jobStartTime" index="{{index}}" array-type="jobArray" bind:del="pickerDel"/>
 
         <profile-input title="离职时间" asterisk="{{false}}" mode="picker" picker-fields="month" value="{{item.jobEndTime}}" bind:input="inputHandler" input-type="jobEndTime" index="{{index}}" array-type="jobArray" bind:del="pickerDel"/>
 
@@ -52,9 +52,9 @@
       <view class="item-wrapper">
         <view class="item-title">联系方式 {{index + 1}}</view>
 
-        <profile-input title="类型" asterisk="{{index === 0 ? true : false}}" place-holder="请输入联系方式的类型" value="{{item.contactType}}" bind:input="inputHandler" input-type="contactType" index="{{index}}" array-type="contactArray"/>
+        <profile-input title="类型" place-holder="请输入联系方式的类型" value="{{item.contactType}}" bind:input="inputHandler" input-type="contactType" index="{{index}}" array-type="contactArray"/>
         
-        <profile-input title="内容" asterisk="{{index === 0 ? true : false}}" place-holder="请输入联系方式内容" value="{{item.content}}" bind:input="inputHandler" input-type="content" index="{{index}}" array-type="contactArray"/>
+        <profile-input title="内容" place-holder="请输入联系方式内容" value="{{item.content}}" bind:input="inputHandler" input-type="content" index="{{index}}" array-type="contactArray"/>
 
         <view wx:if="{{index !== 0 || contactArray.length !== 1}}" class="del-btn" data-type="contactArray" bindtap="delBtn" data-index="{{index}}">删除</view>
       </view>
@@ -67,9 +67,14 @@
     <profile-input title="微信号" asterisk="{{false}}" place-holder="请输入微信号（非昵称）" value="{{wechatId}}" bind:input="inputHandler" input-type="wechatId"/>
 
     <profile-input title="手机号" asterisk="{{false}}" place-holder="推荐填写微信绑定的号码" value="{{phoneNumber}}" bind:input="inputHandler" input-type="phoneNumber"/>
+    
+    <!-- <view class="item-wrapper">
+      <view class="item-title">自我介绍：</view>
+      <profile-input mode="textarea" value="{{intro}}" bind:input="inputHandler" input-type="intro" />
+    </view> -->
 
-    <view class="hint"><text>1. 标注<text class="asterisk">*</text>的选项为必填项。\n2. 对于一些弹出选择框的选项，可以通过长按该项内容的方式清空原有的输入项目。\n3. 如需撤销当前更改，请退出本页面后重新操作。</text></view>
+    <view class="hint"><text>1. 标注<text class="asterisk">*</text>的选项为必填项。\n2. 对于一些弹出选择框的选项，可以通过长按该选项右侧内容的方式清空原有的输入内容。\n3. 点击“修改头像”并上传的新头像将立即生效，无需点击“提交”按钮。\n4. 如需撤销当前更改，请退出本页面后重新操作。</text></view>
 
   </scroll-view>
-  <view class="submit {{canSubmit ? '': 'disabled'}}">{{pagePos}}</view>
+  <view class="submit {{canSubmit ? '': 'disabled'}}" bindtap="submit">{{pagePos}}</view>
 </view>

@@ -28,3 +28,11 @@
     </view>
   </view>
 </block>
+
+<block wx:if="{{mode === 'textarea'}}">
+  <view class="item textarea">
+    <view class="input textarea">
+      <textarea placeholder="{{placeHolder}}" show-confirm-bar="{{false}}" bindinput="bindInput" maxlength="-1" fixed="{{true}}"></textarea>
+    </view>
+  </view>
+</block>

@@ -38,6 +38,25 @@
   padding-right: 25rpx;
 }
 
+.item.textarea {
+  padding-left: 0;
+}
+
+.item .input textarea {
+  width: auto;
+  color: rgb(100, 100, 100);
+  font-size: 37rpx;
+  margin-left: 25rpx;
+  margin-right: 25rpx;
+}
+
+.item .input.textarea {
+  width: 100%;
+  padding-top: 15rpx;
+  padding-bottom: 15rpx;
+  height: 235rpx;
+}
+
 .item .select {
   width: 80%;
   display: flex;
