@@ -82,5 +82,14 @@ Component({
         inputType: props.inputType
       })
     },
+
+    bindDel() {
+      let props = this.properties;
+      this.triggerEvent("del", {
+        inputType: props.inputType,
+        index: props.index,
+        arrayType: props.arrayType
+      })
+    }
   }
 })

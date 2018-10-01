@@ -108,3 +108,15 @@ page {
   top:20rpx;
   right:32rpx;
 }
+
+.asterisk {
+  color: #e30;
+}
+
+.hint {
+  font-size: 28rpx;
+  color: rgb(110,110,110);
+  width: 90%;
+  margin: 10rpx auto;
+  text-align: left;
+}

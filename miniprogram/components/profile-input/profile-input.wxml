@@ -22,7 +22,7 @@
   <view class="item">
     <view class="title">{{title}}<text wx:if="{{asterisk}}" class="asterisk">*</text></view>
     <view class="input">
-      <picker mode="{{pickerMode}}" class="picker" bindchange="bindInput" fields="{{pickerFields}}" range="{{pickerRange}}">
+      <picker mode="{{pickerMode}}" class="picker" bindchange="bindInput" fields="{{pickerFields}}" range="{{pickerRange}}" bindlongpress="bindDel">
         {{value}}
       </picker>
     </view>

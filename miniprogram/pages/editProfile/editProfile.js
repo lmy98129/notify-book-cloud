@@ -5,13 +5,13 @@ let newUserInfo = {
   nickName: "",
   realName: "",
   gender: "",
-  birthDate: "",
-  homeTown: "",
-  degree: "",
+  birthDate: "请选择日期",
+  homeTown: "请选择籍贯",
+  degree: "请选择学历",
   major: "",
   address: "",
-  enterSchoolTime: "",
-  leaveSchoolTime: "",
+  enterSchoolTime: "请选择入校时间",
+  leaveSchoolTime: "请选择离校时间",
   wechatId: "",
   phoneNumber: "",
   jobArray: [{
@@ -251,5 +251,57 @@ Page({
     this.setData({
       [btnType]: tmpArray
     })
+  },
+
+  pickerDel(e) {
+    let inputType = e.detail.inputType, arrayType, index, tmpArray, tmpValue;
+    if (e.detail.index != undefined) {
+      index = e.detail.index;
+    }
+    if (e.detail.arrayType != undefined) {
+      arrayType = e.detail.arrayType;
+    }
+
+    switch(inputType) {
+      case "jobStartTime":
+      case "jobEndTime":
+        switch(inputType) {
+          case "jobStartTime":
+            tmpValue = "请选择入职时间";
+            break;
+          case "jobEndTime":
+            tmpValue = "请选择离职时间";
+        }
+        newUserInfo[arrayType][index][inputType] = tmpValue;
+        tmpArray = this.data[arrayType];
+        tmpArray[index][inputType] = tmpValue;
+        this.setData({
+          [arrayType]: tmpArray
+        });
+        break;
+      default:
+        switch(inputType) {
+          case "birthDate":
+            tmpValue = "请选择日期"
+            break;
+          case "homeTown":
+            tmpValue = "请选择籍贯"
+            break;
+          case "degree": 
+            tmpValue = "请选择学历";
+            break;
+          case "enterSchoolTime":
+            tmpValue = "请选择入校时间";
+            break;
+          case "leaveSchoolTime":
+            tmpValue = "请选择离校时间";
+            break;
+        }
+        newUserInfo[inputType] = tmpValue;
+        this.setData({
+          [inputType]: tmpValue
+        })
+    }
+    console.log("current userInfo: ", newUserInfo);
   }
 })
