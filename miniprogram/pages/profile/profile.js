@@ -22,10 +22,7 @@ Page({
       
     // }
     sys.checkPhone(this);
-    this.setData({
-      avatarUrl: wx.getStorageSync("userInfo").avatarUrl,
-      userInfo: wx.getStorageSync("userInfo")
-    })
+
   },
 
   /**
@@ -39,7 +36,10 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    let avatarUrl = wx.getStorageSync("userInfo").avatarUrl
+    this.setData({
+      avatarUrl: avatarUrl
+    })
   },
 
   /**

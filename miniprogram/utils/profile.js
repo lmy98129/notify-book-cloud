@@ -5,7 +5,7 @@ const app = getApp();
 const download = () => {
   let msg = {};
   return (db.collection("profile").where({
-    _openid: app.globalData.openid
+    _openid: wx.getStorageSync("openid")
   })).get()
   .then(res => {
     if (res.data.length === 0) {
@@ -69,7 +69,7 @@ const upload = (userInfo) => {
       msg: "profile upload fail",
       err: err
     }
-    return Promise.resolve(msg);
+    return Promise.reject(msg);
   })
 }
 

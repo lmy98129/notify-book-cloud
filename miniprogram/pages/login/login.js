@@ -68,7 +68,7 @@ Page({
 
   backIndex(e) {
     wx.setStorageSync("userInfo", e.detail.userInfo);
-    app.globalData.isLogged = true;
+    app.globalData.isFirstLogin = true;
     wx.navigateBack({
       delta: 1
     })

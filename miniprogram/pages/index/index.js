@@ -1,6 +1,5 @@
 //index.js
 const app = getApp()
-const avatar = require("../../utils/avatar");
 const localData = require("../../test/local-data");
 const sys = require("../../utils/system");
 const login = require("../../utils/login");
@@ -28,10 +27,8 @@ Page({
       wx.redirectTo({
         url: '../chooseLib/chooseLib',
       })
-      return
+      return;
     }
-
-    login.getUserInfo(this);
 
     // 导入可能认识的人信息
     let rand = localData.rand;
@@ -55,92 +52,27 @@ Page({
   },
 
   onShow: function() {
-    if (app.globalData.isLogged == true) {
+    /**
+     * 这个条件涵盖了两个情况：
+     * 1）若用户首次使用，则会在执行onReady时就跳转到了login页面，
+     * 在login页面授权成功后，跳转回index页面，执行onShow，app.globalData.isFirstLogin === true，
+     * 这时执行了login.getUserInfo()
+     * 2）若用户是首次使用之后第一次打开，则会执行到onShow，此时app.globalData.isFirstLogin === undefined，
+     * 这时也执行了login.getUserInfo()
+     * 3）以上两种情况都执行了login.getUserInfo()，并在此时设置app.globalData.isFirstLogin = false,
+     * 保证之后打开页面时只读取本地存储而不去执行函数，相比定时器设计更灵活地减少了函数调用次数
+     */
+    if (app.globalData.isFirstLogin || app.globalData.isFirstLogin === undefined){
       login.getUserInfo(this);
-      app.globalData.isLogin = false;
-    }
-  },
-
-  onGetUserInfo: function(e) {
-    if (!this.logged && e.detail.userInfo) {
+      app.globalData.isFirstLogin = false;
+    } else {
+      let avatarUrl = wx.getStorageSync("userInfo").avatarUrl
       this.setData({
-        logged: true,
-        avatarUrl: e.detail.userInfo.avatarUrl,
-        userInfo: e.detail.userInfo
+        avatarUrl: avatarUrl
       })
     }
   },
 
-  onGetOpenid: function() {
-    // 调用云函数
-    wx.cloud.callFunction({
-      name: 'login',
-      data: {},
-      success: res => {
-        console.log('[云函数] [login] user openid: ', res.result.openid)
-        app.globalData.openid = res.result.openid
-        wx.navigateTo({
-          url: '../userConsole/userConsole',
-        })
-      },
-      fail: err => {
-        console.error('[云函数] [login] 调用失败', err)
-        wx.navigateTo({
-          url: '../deployFunctions/deployFunctions',
-        })
-      }
-    })
-  },
-
-  // 上传图片
-  doUpload: function () {
-    // 选择图片
-    wx.chooseImage({
-      count: 1,
-      sizeType: ['compressed'],
-      sourceType: ['album', 'camera'],
-      success: function (res) {
-
-        wx.showLoading({
-          title: '上传中',
-        })
-
-        const filePath = res.tempFilePaths[0]
-        
-        // 上传图片
-        const cloudPath = 'my-image' + filePath.match(/\.[^.]+?$/)[0]
-        wx.cloud.uploadFile({
-          cloudPath,
-          filePath,
-          success: res => {
-            console.log('[上传文件] 成功：', res)
-
-            app.globalData.fileID = res.fileID
-            app.globalData.cloudPath = cloudPath
-            app.globalData.imagePath = filePath
-            
-            wx.navigateTo({
-              url: '../storageConsole/storageConsole'
-            })
-          },
-          fail: e => {
-            console.error('[上传文件] 失败：', e)
-            wx.showToast({
-              icon: 'none',
-              title: '上传失败',
-            })
-          },
-          complete: () => {
-            wx.hideLoading()
-          }
-        })
-
-      },
-      fail: e => {
-        console.error(e)
-      }
-    })
-  },
 
   switchSideBar: function() {
     if (this.data.fixVeryTop) {

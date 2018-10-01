@@ -5,7 +5,7 @@
   <scroll-view scroll-y="true" style="height: 90%" scroll-with-animation="true" bindscrolltolower="scrollBottom" bindscroll="bindScroll" lower-threshold="80">
     <view class="avatar">
       <image src="{{avatarUrl}}"></image>
-      <view class="change">修改头像</view>
+      <view class="change" bindtap="uploadAvatar">修改头像</view>
     </view>
 
     <profile-input title="昵称" place-holder="请输入昵称" value="{{nickName}}" bind:input="inputHandler" input-type="nickName"/>

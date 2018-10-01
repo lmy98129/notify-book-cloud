@@ -7,31 +7,28 @@ const getUserInfo = (that) => {
     success: res => {
       if (res.authSetting['scope.userInfo']) {
         // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
-        if (app.globalData.avatarUrl != undefined &&
-        app.globalData.userInfo !=undefined) {
-          that.setData({
-            avatarUrl: app.globalData.avatarUrl,
-            userInfo: app.globalData.userInfo
-          })
-          wx.setStorageSync("userInfo", app.globalData.userInfo)
-        } else {
-          wx.getUserInfo({
-            success: res => {
-              let avatarUrl = res.userInfo.avatarUrl;
-              app.globalData.avatarUrl = avatarUrl;
-              app.globalData.userInfo = res.userInfo;
-              avatar.check(that, avatarUrl)
-                .then(res => {
-                  console.log("用户头像检测: ", res.msg);
+        wx.getUserInfo({
+          success: res => {
+            let avatarUrl = res.userInfo.avatarUrl;
+            wx.setStorageSync("userInfo", res.userInfo);
+            
+            // 头像检测函数
+            avatar.check(avatarUrl)
+              .then(res => {
+                console.log("用户头像检测成功：", res.msg);
+                
+                // 使用头像检测函数的最终结果，作为头像的最终路径
+                let tmpUserInfo = wx.getStorageSync("userInfo");
+                avatarUrl = tmpUserInfo.avatarUrl;
+                that.setData({
+                  avatarUrl: avatarUrl
                 })
-              that.setData({
-                avatarUrl: avatarUrl,
-                userInfo: res.userInfo
               })
-              wx.setStorageSync("userInfo", res.userInfo);
-            }
-          })
-        }
+              .catch(err => {
+                console.log("用户头像检测失败： ", err.msg)
+              })
+          }
+        })
       } else {
         wx.navigateTo({
           url: '../login/login',

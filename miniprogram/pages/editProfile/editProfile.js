@@ -1,9 +1,9 @@
 // pages/editProfile/editProfile.js
-const app = getApp();
-const login = require("../../utils/login");
+const avatar = require("../../utils/avatar");
 const profile = require("../../utils/profile");
-const profModel = require("../../utils/profile-model.js");
-const comfirmOnly = require("../../utils/show-modal.js").comfirmOnly;
+const profModel = require("../../utils/profile-model");
+const comfirmOnly = require("../../utils/message").comfirmOnly;
+const toast = require("../../utils/message").toast;
 
 const initValue = profModel.initValue;
 let newUserInfo = profModel.userInfo;
@@ -47,7 +47,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    let userInfo = wx.getStorageSync("userInfo");
+    let userInfo = wx.getStorageSync("userInfo"), tmpArray;
     profile.download().then(res => {
       if (res.code === 1) {
         this.setData({
@@ -59,6 +59,8 @@ Page({
         newUserInfo.gender = userInfo.gender;
       } else if (res.code === 2) {
         newUserInfo = res.data;
+        delete newUserInfo._id;
+        delete newUserInfo._openid;
         this.setData({
           avatarUrl: userInfo.avatarUrl
         })
@@ -72,12 +74,21 @@ Page({
               }
               break;
             case "jobArray":
-              let tmpArray = JSON.parse(JSON.stringify(newUserInfo[item]));
+              tmpArray = JSON.parse(JSON.stringify(newUserInfo[item]));
               for(let i=0; i<tmpArray.length; i++) {
                 if (tmpArray[i].jobEndTime === undefined || tmpArray[i].jobEndTime === "") {
-                  tmpArray[i].jobEndTime === initValue.jobEndTime.default;
+                  tmpArray[i].jobEndTime = initValue.jobEndTime.default;
                 }
+                this.setData({
+                  [item]: tmpArray
+                })
               }
+              break;
+            case "contactArray":
+              tmpArray = JSON.parse(JSON.stringify(newUserInfo[item]));
+              this.setData({
+                [item]: tmpArray
+              })
               break;
             default:
               this.setData({
@@ -89,6 +100,24 @@ Page({
       }
     }).catch(err => {
       console.log("获取用户资料出错：", err);
+    })
+  },
+
+  uploadAvatar() {
+    let that = this;
+    wx.showActionSheet({
+      itemList: ["上传自定义头像", "使用微信头像"],
+      itemColor: "#333",
+      success: function(res) {
+        switch(res.tapIndex) {
+          case 0:
+            avatar.upload(that);
+            break;
+          case 1:
+            avatar.wechat(that);
+            break;
+        }
+      }
     })
   },
 
@@ -380,8 +409,10 @@ Page({
     console.log("submit userInfo: ", newUserInfo);
     profile.upload(newUserInfo).then(res => {
       console.log("上传用户资料成功：", res);
+      toast("资料上传成功");
     }).catch(err => {
       console.log("上传用户资料失败：", err);
+      toast("资料上传失败", "none");
     })
   }
 })
