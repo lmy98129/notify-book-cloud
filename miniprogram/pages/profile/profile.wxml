@@ -1,7 +1,7 @@
 <!--pages/profile/profile.wxml-->
 <view class="root">
   <view class="contianer">
-    <top-widget avatarUrl="{{avatarUrl}}" fixTop="{{fixTop}}" class="top-widget-wrapper" isBack="true">
+    <top-widget avatarUrl="{{avatarUrl}}" nickname="{{nickname}}" fixTop="{{fixTop}}" class="top-widget-wrapper" isBack="true">
       <nav-btn slot="edit" btnType="edit" iconType="icon-bianji" bind:tapBtn="editProfile"/>
     </top-widget>
   </view>

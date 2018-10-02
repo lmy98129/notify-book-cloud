@@ -1,5 +1,5 @@
-const app = getApp();
 const avatar = require("./avatar");
+const profile = require("./profile");
 
 const getUserInfo = (that) => {
   // 获取用户信息
@@ -9,10 +9,11 @@ const getUserInfo = (that) => {
         // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
         wx.getUserInfo({
           success: res => {
+            let nickname = res.userInfo.nickname;
             let avatarUrl = res.userInfo.avatarUrl;
             wx.setStorageSync("userInfo", res.userInfo);
             
-            // 头像检测函数
+            // 头像、昵称检测函数
             avatar.check(avatarUrl)
               .then(res => {
                 console.log("用户头像检测成功：", res.msg);
@@ -23,9 +24,30 @@ const getUserInfo = (that) => {
                 that.setData({
                   avatarUrl: avatarUrl
                 })
+
+                // 开始昵称检测
+                return profile.download()
+              })
+              .then(res => {
+                if (res.code === 1) {
+                  that.setData({
+                    nickname: nickname
+                  })
+                } else if (res.code === 2) {
+
+                  // 更新本地存储的userInfo中的昵称
+                  nickname = res.data.nickName;
+                  let tmpUserInfo = wx.getStorageSync("userInfo");
+                  tmpUserInfo.nickname = nickname;
+                  wx.setStorageSync("userInfo", tmpUserInfo);
+                  that.setData({
+                    nickname: nickname
+                  })
+                }
+                console.log("用户昵称检测成功：", res.msg);
               })
               .catch(err => {
-                console.log("用户头像检测失败： ", err.msg)
+                console.log("用户头像、昵称检测失败： ", err)
               })
           }
         })

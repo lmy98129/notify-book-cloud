@@ -11,6 +11,7 @@ Page({
   data: {
     specialPhone: '',
     avatarUrl: "/images/user-unlogin.png",
+    nickname: "",
     userInfo: {},
   },
 
@@ -36,9 +37,12 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    let avatarUrl = wx.getStorageSync("userInfo").avatarUrl
+    let tmpUserInfo = wx.getStorageSync("userInfo");
+    let avatarUrl = tmpUserInfo.avatarUrl;
+    let nickname = tmpUserInfo.nickname;
     this.setData({
-      avatarUrl: avatarUrl
+      avatarUrl: avatarUrl,
+      nickname: nickname
     })
   },
 

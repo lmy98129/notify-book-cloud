@@ -430,6 +430,9 @@ Page({
     profile.upload(newUserInfo).then(res => {
       console.log("上传用户资料成功：", res);
       toast("资料上传成功");
+      let tmpUserInfo = wx.getStorageSync("userInfo");
+      tmpUserInfo.nickname = newUserInfo.nickName;
+      wx.setStorageSync("userInfo", tmpUserInfo);
     }).catch(err => {
       console.log("上传用户资料失败：", err);
       toast("资料上传失败", "none");

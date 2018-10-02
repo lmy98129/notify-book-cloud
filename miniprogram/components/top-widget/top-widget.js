@@ -23,6 +23,10 @@ Component({
       type: String,
       value: ""
     },
+    nickname: {
+      type: String,
+      value: ""
+    },
     fixTop: {
       type: Boolean,
       value: false

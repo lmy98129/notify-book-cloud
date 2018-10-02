@@ -9,7 +9,7 @@
     <image class="top-bg" src="cloud://test-5c133c.7465-test-5c133c/tvs-bg.jpg"></image>
     <view class="user-info">
       <image class="user-avatar {{fixTop ? 'fixed':''}}" src="{{avatarUrl}}" bindtap="goProfile"></image>
-      <open-data type="userNickName" class="user-nickname"></open-data>
+      <view class="user-nickname">{{nickname}}</view>
     </view>
     <view class="btn-wrap">
       <slot name="add"></slot>        
@@ -21,7 +21,7 @@
   <view class="top-widget-fixed {{fixTop ? 'fixed':''}} {{specialPhone}}">
     <view class="user-info">
       <image class="user-avatar" src="{{avatarUrl}}"></image>
-      <open-data type="userNickName" class="user-nickname"></open-data>
+      <view class="user-nickname">{{nickname}}</view>
     </view>
   </view>
 
