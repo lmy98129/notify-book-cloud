@@ -14,7 +14,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    avatarUrl: "",
+    avatarUrl: "/images/user-unlogin.png",
     nickName: "",
     realName: "",
     gender: "",
@@ -47,7 +47,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    let userInfo = wx.getStorageSync("userInfo"), tmpArray;
+    let userInfo = wx.getStorageSync("userInfo"), tmpArray, tmpDate;
     profile.download().then(res => {
       if (res.code === 1) {
         this.setData({
@@ -66,22 +66,42 @@ Page({
         })
         for (let item in newUserInfo) {
           switch(item) {
+            case "birthDate": 
+              tmpDate = newUserInfo[item].split("-");
+              this.setData({
+                [item]: parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月" + parseInt(tmpDate[2]) + "日"
+              });
+              break;
+            case "enterSchoolTime":
             case "leaveSchoolTime":
               if (newUserInfo[item] === undefined || newUserInfo[item] === "") {
                 this.setData({
                   [item]: initValue[item].default
                 });
+              } else {
+                tmpDate = newUserInfo[item].split("-");
+                this.setData({
+                  [item]: parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月"
+                })
               }
               break;
             case "jobArray":
               tmpArray = JSON.parse(JSON.stringify(newUserInfo[item]));
               for(let i=0; i<tmpArray.length; i++) {
-                if (tmpArray[i].jobEndTime === undefined || tmpArray[i].jobEndTime === "") {
-                  tmpArray[i].jobEndTime = initValue.jobEndTime.default;
+                for (let subItem in tmpArray[i]) {
+                  if (tmpArray[i][subItem] === undefined || tmpArray[i][subItem] === "") {
+                    tmpArray[i][subItem] = initValue[subItem].default;
+                    this.setData({
+                      [item]: tmpArray
+                    });
+                  } else if (subItem === "jobStartTime" || subItem === "jobEndTime") {
+                    tmpDate = tmpArray[i][subItem].split("-");
+                    tmpArray[i][subItem] = parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月";
+                    this.setData({
+                      [item]: tmpArray
+                    });
+                  }
                 }
-                this.setData({
-                  [item]: tmpArray
-                })
               }
               break;
             case "contactArray":

@@ -6,7 +6,7 @@ const login = require("../../utils/login");
 
 Page({
   data: {
-    avatarUrl: '/images/user-unlogin.png',
+    avatarUrl: "/images/user-unlogin.png",
     userInfo: {},
     logged: false,
     takeSession: false,

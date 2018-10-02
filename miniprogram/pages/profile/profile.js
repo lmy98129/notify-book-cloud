@@ -10,7 +10,7 @@ Page({
    */
   data: {
     specialPhone: '',
-    avatarUrl: '/images/user-unlogin.png',
+    avatarUrl: "/images/user-unlogin.png",
     userInfo: {},
   },
 
