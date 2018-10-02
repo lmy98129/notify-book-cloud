@@ -2,7 +2,9 @@
 const sys = require("../../utils/system");
 const profile = require("../../utils/profile");
 const profModel = require("../../utils/profile-model");
+const toast = require("../../utils/message").toast;
 
+let swiperFirstHeight;
 
 Page({
 
@@ -19,6 +21,11 @@ Page({
     profileStatus: 0,
     fixTop: false,
     fixVeryTop: false,
+    tabIndex: 0,
+    swiperHeight: 0,
+    introStatus: "default",
+    intro: "",
+    tmpIntro: "",
   },
 
   /**
@@ -45,7 +52,7 @@ Page({
   onShow: function () {
     let tmpUserInfo = wx.getStorageSync("userInfo"), tmpDate, tmpArray, newTmpArray, tmpObj;
     let avatarUrl = tmpUserInfo.avatarUrl;
-    let nickname = tmpUserInfo.nickname;
+    let nickname = tmpUserInfo.nickName;
     this.setData({
       avatarUrl: avatarUrl,
       nickname: nickname,
@@ -59,6 +66,9 @@ Page({
           delete tmpUserInfo._id;
           for (let item in tmpUserInfo) {
             switch (item) {
+              case "nickName":
+                delete tmpUserInfo[item];
+                break;
               case "gender":
                 if (tmpUserInfo[item] === 1) {
                   tmpUserInfo[item] = "男";
@@ -131,21 +141,35 @@ Page({
                 })
                 delete tmpUserInfo[item];
                 break;
+              case "intro":
+                this.setData({
+                  intro: tmpUserInfo[item],
+                  tmpIntro: tmpUserInfo[item]
+                });
+                delete tmpUserInfo[item];
+                break;
             }
           }
 
           tmpArray = [];
           for (let subItem in profModel.userInfo) {
             for (let item in tmpUserInfo) {
-              if (subItem === item && item !== "nickName") 
+              if (subItem === item) 
                 tmpArray.push({
                   title: profModel.initValue[item].name,
                   content: tmpUserInfo[item]
                 });
             }
           }
+          
+          let tmpArrayLength = tmpArray.length;
+          let jobArrayLength = this.data.jobArray.length;
+          let contactArrayLength = this.data.contactArray.length;
+          swiperFirstHeight = 50 * tmpArrayLength + 50 + 40 * contactArrayLength + 250 * jobArrayLength
           this.setData({
-            userInfo: tmpArray
+            userInfo: tmpArray,
+            profileStatus: 1,
+            swiperHeight: swiperFirstHeight
           });
         } else if (res.code === 1) {
           this.setData({
@@ -189,6 +213,44 @@ Page({
 
   },
 
+  tabHandler(e) {
+    let index = parseInt(e.target.dataset.index);
+    if (index === 0) {
+      this.setData({
+        swiperHeight: swiperFirstHeight
+      })
+    } else if (index === 1){
+      this.setData({
+        swiperHeight: 1000
+      })
+    }
+    this.setData({
+      tabIndex: index
+    })
+  },
+
+  bindSwiper(e) {
+    let index = e.detail.current, that = this;
+    this.setData({
+      tabIndex: index
+    });
+    wx.createSelectorQuery().select('#intro').fields({
+      rect: true,
+      size: true,
+    }, function(res) {
+      if (index === 0) {
+        that.setData({
+          swiperHeight: swiperFirstHeight 
+        })
+      } else if (index === 1){
+        console.log(res.height);
+        that.setData({
+          swiperHeight: res.height + 100
+        })
+      }
+    }).exec();
+  },
+
   onPageScroll: function(e) {
     if (e.scrollTop > 0) {
       this.setData({
@@ -207,6 +269,46 @@ Page({
     }
   },
 
+  addIntro() {
+    this.setData({
+      introStatus: "editing"
+    })
+  },
+
+  cancelIntro() {
+    this.setData({
+      introStatus: "default",
+      tmpIntro: ""
+    })
+  },
+
+  introInput(e) {
+    this.setData({
+      tmpIntro: e.detail.value
+    })
+  },
+  
+  submitIntro() {
+    let that = this;
+    wx.showLoading({
+      title: "数据提交中"
+    })
+    profile.introUpload(this.data.tmpIntro)
+    .then(res => {
+      wx.hideLoading();
+      toast("提交成功");
+      console.log("自我介绍上传成功：", res);
+      that.setData({
+        introStatus: 'default',
+        intro: this.data.tmpIntro
+      });
+    })
+    .catch(err => {
+      wx.hideLoading();
+      toast("错误：提交失败", "none");
+      console.log("自我介绍上传成功：", err);
+    })
+  },
   /**
    * 用户点击右上角分享
    */

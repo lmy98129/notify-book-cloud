@@ -36,7 +36,7 @@ const download = () => {
 const upload = (userInfo) => {
   let msg = {};
   return (db.collection("profile").where({
-    _openid: app.globalData.openid
+    _openid: wx.getStorageSync("openid")
   }).get()
   .then(res => {
     if (res.data.length === 0) {
@@ -73,7 +73,37 @@ const upload = (userInfo) => {
   })
 }
 
+const introUpload = (intro) => {
+  let msg = {};
+  return (db.collection("profile").where({
+    _openid: wx.getStorageSync("openid")
+  }).get()
+  .then(res => {
+    return db.collection("profile")
+    .doc(res.data[0]._id).update({
+      data: {
+        intro: intro
+      }
+    }).then(res => {
+      msg = {
+        code: 0,
+        msg: "profile intro updated"
+      }
+      return Promise.resolve(msg);
+    })
+  })
+  .catch(err => {
+    msg = {
+      code: 0,
+      msg: "profile intro updated failed",
+      err: err
+    }
+    return Promise.reject(msg);
+  }))
+}
+
 module.exports = {
   upload: upload,
-  download: download
+  download: download,
+  introUpload: introUpload
 }

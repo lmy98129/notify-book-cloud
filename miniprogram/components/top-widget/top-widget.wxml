@@ -1,7 +1,7 @@
 <!--components/top-widget/top-widget.wxml-->
-<block wx:if="{{mode === 'main'}}">
+<block wx:if="{{mode === 'main' || mode === 'center'}}">
 
-  <view class="top-widget {{fixTop ? 'fixed':''}}">
+  <view class="top-widget {{fixTop ? 'fixed':''}} {{mode === 'center'? 'center':''}}">
     <block wx:if="{{isBack}}">
       <view class="iconfont icon-fanhui back-icon fixed {{specialPhone}}" bindtap="goBack"></view>
     </block>

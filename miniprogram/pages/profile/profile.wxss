@@ -1,4 +1,8 @@
 /* pages/profile/profile.wxss */
+.root.editing {
+  overflow: hidden;
+}
+
 .profile-item-wrapper:first-child {
   margin-top: 40rpx;
   margin-bottom: 10rpx;
@@ -42,4 +46,129 @@
 
 .item-wrapper:last-child {
   margin-bottom: 50rpx;
+}
+
+.hint-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 100%;
+  padding-bottom: 180rpx;
+  padding-top: 40%;
+}
+
+.upper {
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 35rpx;
+}
+
+.upper image{
+  margin: 40rpx auto;
+  width: 100rpx;
+  height: 100rpx;
+}
+
+.hint {
+  font-size: 35rpx;
+  text-align: center;
+}
+
+.tabbar {
+  width: 85%;
+  margin-top: 27rpx;
+  margin-bottom: 15rpx;
+  display: flex;
+  flex-direction: row;
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: space-around;
+}
+
+.tabbar .tabbar-item {
+  font-size: 40rpx;
+  color: #555;
+}
+
+.tabbar .tabbar-item.selected {
+  color: #222;
+}
+
+.tabbar .tabbar-item.selected:after {
+  content: "";
+  display: block;
+  position: relative;
+  bottom: -5rpx;
+  left: 0;
+  right: 0;
+  height: 5rpx;
+  background-color: #222;
+}
+
+swiper-item .main {
+  margin-top: 0;
+}
+
+#global {
+  margin-top: 115rpx;
+}
+
+.intro-wrapper {
+  margin-top: 25rpx;
+}
+
+.intro-wrapper .add-hint {
+  padding-top: 27%;
+  text-align: center;
+  font-size: 35rpx;
+  margin-bottom: 20rpx;
+}
+
+.intro-wrapper .add-btn,
+.intro-wrapper .edit-btn {
+  font-size: 35rpx;
+  width: 40%;
+}
+
+.float-wrap {
+  position: fixed;
+  top: 590rpx;
+  border: 1rpx solid #ccc;
+  width: 80%;
+  height: 400rpx;
+  background: #fff;
+  border-radius: 20rpx;
+}
+
+.float-wrap .intro-input {
+  width: 88%;
+  height: 60%;
+  color: rgb(60, 60, 60);
+  margin: 20rpx auto 30rpx;
+  font-size: 35rpx;
+}
+
+.float-wrap .btn-wrap {
+  width: 95;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.submit-btn,
+.cancel-btn {
+  font-size: 35rpx;
+  width: 40%;
+  border: 0;
+  background: #fff;
+}
+
+.intro-wrapper .intro{
+  width: 80%;
+  margin: 60rpx auto 20rpx;
+  font-size: 40rpx;
+  text-indent: 2em;
 }

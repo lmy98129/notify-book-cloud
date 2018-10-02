@@ -69,7 +69,7 @@ Page({
     } else {
       let tmpUserInfo = wx.getStorageSync("userInfo");
       let avatarUrl = tmpUserInfo.avatarUrl;
-      let nickname = tmpUserInfo.nickname;
+      let nickname = tmpUserInfo.nickName;
       this.setData({
         avatarUrl: avatarUrl,
         nickname: nickname

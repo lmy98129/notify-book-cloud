@@ -60,9 +60,9 @@ const initValue = {
     name: "离校时间",
     default: "请选择离校时间"
   },
-  // intro: {
-  //   name: "自我介绍"
-  // }
+  intro: {
+    name: "自我介绍"
+  }
 }
 
 const userInfo = {
@@ -88,7 +88,7 @@ const userInfo = {
     contactType: "",
     content: ""
   }],
-  // intro: ""
+  intro: ""
 }
 
 module.exports = {

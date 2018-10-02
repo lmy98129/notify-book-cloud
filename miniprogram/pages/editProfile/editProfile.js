@@ -426,7 +426,7 @@ Page({
           break;
       }
     }
-    console.log("submit userInfo: ", newUserInfo);
+    console.log("上传用户资料：", newUserInfo);
     profile.upload(newUserInfo)
     .then(res => {
       console.log("上传用户资料成功：", res);

@@ -103,6 +103,23 @@
   padding-top:50rpx;
 }
 
+.top-widget.center .user-info{
+  flex-direction: column;
+  width: 100%;
+  left: 0;
+}
+
+.top-widget.center .user-info .user-avatar {
+  margin: 0 auto;
+}
+
+.top-widget.center .user-info .user-nickname {
+  margin-top: 6rpx;
+  margin-right: auto;
+  margin-left: auto;
+  color: #000;
+}
+
 .top-widget-title .back-icon {
   position: fixed;
   padding-top: 10rpx;

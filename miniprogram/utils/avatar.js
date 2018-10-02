@@ -134,10 +134,11 @@ const uploadAvatar = (that) => {
         title: '上传图片中',
       })
 
+      const curAvatarUrl = wx.getStorageSync("userInfo").avatarUrl;
       // 上传图片文件到云存储
       const filePath = res.tempFilePaths[0];
       const openid = wx.getStorageSync("openid");
-      const cloudPath = 'avatar-' + openid + filePath.match(/\.[^.]+?$/)[0];
+      const cloudPath = 'avatar-' + openid + Date.parse(new Date()) + filePath.match(/\.[^.]+?$/)[0];
       wx.cloud.uploadFile({
         cloudPath,
         filePath,
@@ -159,8 +160,11 @@ const uploadAvatar = (that) => {
               }
             })
           })
-          // 结束任务
+          // 删除原图片，并结束任务
           .then(res => {
+            wx.cloud.deleteFile({
+              fileList: [curAvatarUrl]
+            })
             wx.hideLoading();
             console.log("更新自定义头像成功：", res);
             toast("上传图片成功");
