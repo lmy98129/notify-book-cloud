@@ -27,10 +27,10 @@ const initValue = {
     name: "职务名称"
   },
   contactType: {
-    name: "联系方式类型",
+    name: "类型",
   },
   content: {
-    name: "联系方式内容"
+    name: "内容"
   },
   jobStartTime: {
     name: "入职时间",

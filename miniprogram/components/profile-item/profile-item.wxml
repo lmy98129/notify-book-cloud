@@ -1,0 +1,5 @@
+<!--components/profile-item/profile-item.wxml-->
+  <view class="profile-item">
+    <view class="title">{{title}}</view>
+    <view class="content">{{content}}</view>
+  </view>

@@ -1,8 +1,34 @@
 <!--pages/profile/profile.wxml-->
 <view class="root">
-  <view class="contianer">
-    <top-widget avatarUrl="{{avatarUrl}}" nickname="{{nickname}}" fixTop="{{fixTop}}" class="top-widget-wrapper" isBack="true">
+  <view class="container {{fixVeryTop ? 'fixed':''}}">
+    <top-widget avatarUrl="{{avatarUrl}}" nickname="{{nickname}}" fixTop="{{fixTop}}" class="top-widget-wrapper" isBack="{{true}}">
       <nav-btn slot="edit" btnType="edit" iconType="icon-bianji" bind:tapBtn="editProfile"/>
     </top-widget>
+
+    <view class="main">
+      <block wx:for="{{userInfo}}" wx:key="{{index}}">
+        <profile-item title="{{item.title}}" content="{{item.content}}" class="profile-item-wrapper"></profile-item>
+      </block>
+      
+      <view class="item-wrapper">
+        <view class="item-title">联系方式</view>
+        <block wx:for="{{contactArray}}" wx:key="{{index}}">
+          <profile-item title="{{item.contactType.content}}" content="{{item.content.content}}" class="profile-item-wrapper"></profile-item>
+        </block>
+      </view>
+  
+      <block wx:for="{{jobArray}}" wx:key="{{index}}">
+        <view class="item-wrapper">
+          <view class="item-title">工作职务 {{index + 1}}</view>
+          <profile-item title="{{item.institution.title}}" content="{{item.institution.content}}" class="profile-item-wrapper"></profile-item>
+          <profile-item title="{{item.job.title}}" content="{{item.job.content}}" class="profile-item-wrapper"></profile-item>
+          <profile-item title="{{item.jobStartTime.title}}" content="{{item.jobStartTime.content}}" class="profile-item-wrapper"></profile-item>
+          <profile-item title="{{item.jobEndTime.title}}" content="{{item.jobEndTime.content}}" class="profile-item-wrapper"></profile-item>
+        </view>
+      </block>
+
+
+    </view> 
   </view>
+  
 </view>

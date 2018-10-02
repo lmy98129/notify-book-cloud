@@ -28,6 +28,13 @@ page {
   -webkit-transition: all 0.4s;
 } 
 
+.container.fixed {
+  transform: none;
+  -webkit-transform: none;
+  transition: none;
+  -webkit-transition: none;
+}
+
 .top-widget-wrapper {
   position: relative;
   width: 100%;

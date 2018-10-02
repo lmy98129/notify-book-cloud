@@ -67,11 +67,6 @@
     <profile-input title="微信号" asterisk="{{false}}" place-holder="请输入微信号（非昵称）" value="{{wechatId}}" bind:input="inputHandler" input-type="wechatId"/>
 
     <profile-input title="手机号" asterisk="{{false}}" place-holder="推荐填写微信绑定的号码" value="{{phoneNumber}}" bind:input="inputHandler" input-type="phoneNumber"/>
-    
-    <!-- <view class="item-wrapper">
-      <view class="item-title">自我介绍：</view>
-      <profile-input mode="textarea" value="{{intro}}" bind:input="inputHandler" input-type="intro" />
-    </view> -->
 
     <view class="hint"><text>1. 标注<text class="asterisk">*</text>的选项为必填项。\n2. 对于一些弹出选择框的选项，可以通过长按该选项右侧内容的方式清空原有的输入内容。\n3. 点击“修改头像”并上传的新头像将立即生效，无需点击“提交”按钮。\n4. 如需撤销当前更改，请退出本页面后重新操作。</text></view>
 

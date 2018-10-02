@@ -1,1 +1,45 @@
 /* pages/profile/profile.wxss */
+.profile-item-wrapper:first-child {
+  margin-top: 40rpx;
+  margin-bottom: 10rpx;
+}
+
+.profile-item-wrapper {
+  width: auto;
+  height: auto;
+  margin-right: 30rpx;
+  margin-left: 30rpx;
+  margin-top: 10rpx;
+  margin-bottom: 10rpx;
+}
+
+.item-wrapper {
+  background: rgb(240,240,240);
+  width: 92%;
+  margin: 14rpx auto;
+  padding-bottom: 20rpx;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.item-wrapper .item-title {
+  text-align: center;
+  font-size: 36rpx;
+  padding-top: 20rpx;
+  padding-bottom: 10rpx;
+  color: rgb(100, 100, 100);
+}
+
+.item-wrapper .profile-item-wrapper {
+  width: 90%;
+}
+
+.item-wrapper .profile-item-wrapper:first-child {
+  margin-top: 10rpx;
+  margin-bottom: 10rpx;
+}
+
+.item-wrapper:last-child {
+  margin-bottom: 50rpx;
+}

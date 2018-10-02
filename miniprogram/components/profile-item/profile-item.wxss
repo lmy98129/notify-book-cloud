@@ -1,0 +1,25 @@
+/* components/profile-item/profile-item.wxss */
+.profile-item {
+  display: flex;
+  flex-direction: row;
+}
+.profile-item .title {
+  width: 175rpx;
+  height: auto;
+  background: rgb(149, 149, 149);
+  color: #fff;
+  text-align: left;
+  font-size: 36rpx;
+  line-height: 66rpx;
+  padding-left: 20rpx;
+}
+
+.profile-item .content {
+  font-size: 36rpx;
+  line-height: 66rpx;
+  width: 68%;
+  background: rgb(200, 200, 200);
+  color: #555;
+  padding-left: 33rpx;
+  padding-right: 10rpx;
+}

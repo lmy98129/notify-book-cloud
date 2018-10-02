@@ -1,10 +1,4 @@
 /**index.wxss**/
-
-.container.fixed {
-  transform: none;
-  -webkit-transform: none;
-}
-
 .root.left {
   overflow: hidden;
 }
@@ -14,13 +8,6 @@
   -webkit-transform: scale(.9) translate(-35%, 0%);
   transition: all 0.4s;
   -webkit-transition: all 0.4s;
-}
-
-.container.fixed {
-  transform: none;
-  -webkit-transform: none;
-  transition: none;
-  -webkit-transition: none;
 }
 
 .side-bar {
