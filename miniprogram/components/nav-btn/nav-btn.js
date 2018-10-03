@@ -11,6 +11,10 @@ Component({
     iconType: {
       type: String,
       value: ""
+    },
+    isRedDot: {
+      type: Boolean,
+      value: false
     }
   },
 

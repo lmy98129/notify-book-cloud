@@ -1,4 +1,5 @@
 <!--components/nav-btn/nav-btn.wxml-->
 <view class="{{btnType}} btn-wrap">
   <view class="iconfont {{iconType}} icon" bindtap="tapBtn"></view>
+  <view class="red-dot" wx:if="{{isRedDot}}"></view>
 </view>

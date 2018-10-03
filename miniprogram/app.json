@@ -6,7 +6,11 @@
     "pages/contact/contact",
     "pages/profile/profile",
     "pages/login/login",
-    "pages/editProfile/editProfile"
+    "pages/editProfile/editProfile",
+    "pages/search/search",
+    "pages/auth/auth",
+    "pages/settings/settings",
+    "pages/auditing/auditing"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",

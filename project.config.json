@@ -6,7 +6,8 @@
 		"es6": true,
 		"postcss": true,
 		"minified": true,
-		"newFeature": true
+		"newFeature": true,
+		"nodeModules": false
 	},
 	"appid": "wxe9b916dde775d246",
 	"projectname": "notify-book-cloud",
@@ -29,7 +30,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 1,
+			"current": 2,
 			"list": [
 				{
 					"id": -1,
@@ -42,6 +43,11 @@
 					"name": "编辑个人资料",
 					"pathName": "pages/editProfile/editProfile",
 					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "校友认证",
+					"pathName": "pages/auth/auth"
 				}
 			]
 		}

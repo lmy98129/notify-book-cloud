@@ -22,7 +22,8 @@ Page({
     fixTop: false,
     fixVeryTop: false,
     specialPhone: '',
-    realname: ""
+    realname: "",
+    isRedDot: false,
   },
 
   onLoad: function() {

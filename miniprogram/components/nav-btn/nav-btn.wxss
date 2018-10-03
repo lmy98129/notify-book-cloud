@@ -15,12 +15,23 @@
 .icon {
   text-align: center;
   line-height: 88rpx;
+  width: 100%;
 }
 
 .settings .icon{
   transform: scale(-1, 1);
   -webkit-transform: scale(-1, 1);
   font-size: 38rpx;
+}
+
+.red-dot {
+  position: relative;
+  width: 15rpx;
+  height: 15rpx;
+  background: #f00;
+  border-radius: 15rpx;
+  top: -80rpx;
+  right: -74rpx;  
 }
 
 .add .icon {

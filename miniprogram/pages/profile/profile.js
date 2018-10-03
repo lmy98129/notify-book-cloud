@@ -330,21 +330,27 @@ Page({
   },
 
   customBgImg() {
-    let that = this;
-    wx.showActionSheet({
-      itemList: ["上传自定义背景图片", "使用默认背景图片"],
-      itemColor: "#333",
-      success: function(res) {
-        switch(res.tapIndex) {
-          case 0:
-            bgImg.upload(that);
-            break;
-          case 1:
-            bgImg.default(that);
-            break;
+    if (wx.getStorageSync("authStatus") !== "authorized") {
+      wx.navigateTo({
+        url: "../auth/auth"
+      })
+    } else {
+      let that = this;
+      wx.showActionSheet({
+        itemList: ["上传自定义背景图片", "使用默认背景图片"],
+        itemColor: "#333",
+        success: function(res) {
+          switch(res.tapIndex) {
+            case 0:
+              bgImg.upload(that);
+              break;
+            case 1:
+              bgImg.default(that);
+              break;
+          }
         }
-      }
-    })
+      })
+    }
   },
   /**
    * 用户点击右上角分享
@@ -355,9 +361,15 @@ Page({
 
 
   editProfile: function() {
-    wx.navigateTo({
-      url: '../editProfile/editProfile',
-    })
+    if (wx.getStorageSync("authStatus") !== "authorized") {
+      wx.navigateTo({
+        url: "../auth/auth"
+      })
+    } else {
+      wx.navigateTo({
+        url: '../editProfile/editProfile',
+      })
+    }
   },
 
 })

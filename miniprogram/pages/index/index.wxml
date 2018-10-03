@@ -3,7 +3,7 @@
   <view class="container {{sideBar ? 'left' : ''}}  {{fixVeryTop ? 'fixed':''}}">
     <top-widget avatarUrl="{{avatarUrl}}" bgImgUrl="{{bgImgUrl}}" nickname="{{nickname}}" fixTop="{{fixTop}}" class="top-widget-wrapper" isNavigateToProfile="true">
       <nav-btn slot="add" btnType="add" iconType="icon-tianjiahaoyou"/>
-      <nav-btn slot="settings" btnType="settings" iconType="icon-option2" bind:tapBtn="switchSideBar"/>
+      <nav-btn slot="settings" btnType="settings" iconType="icon-option2" bind:tapBtn="switchSideBar" isRedDot="{{isRedDot}}"/>
     </top-widget>
     
     <view class="main">
@@ -73,6 +73,10 @@
       <view class="btn-wrap">
         <navigator url="../profile/profile?isOtherUser=false">
           <view class="btn">个人资料</view>
+        </navigator>
+        <navigator url="../auth/auth">
+          <view class="btn">校友认证</view>
+          <view class="red-dot" wx:if="{{isRedDot}}"></view>
         </navigator>
         <view class="btn">消息</view>
         <view class="btn">设置</view>

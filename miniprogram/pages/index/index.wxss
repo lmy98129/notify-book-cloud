@@ -203,3 +203,13 @@
   margin: 0 auto;
   font-size: 35rpx;
 }
+
+.red-dot {
+  position: relative;
+  width: 15rpx;
+  height: 15rpx;
+  background: #f00;
+  border-radius: 15rpx;
+  right: -255rpx;
+  top: -51rpx;
+}

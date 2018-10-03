@@ -1,6 +1,7 @@
 const avatar = require("./avatar");
 const profile = require("./profile");
 const bgImg = require("./bg-img");
+const auth = require("./auth");
 
 const getUserInfo = (that) => {
   // 获取用户信息
@@ -23,6 +24,14 @@ const getUserInfo = (that) => {
                 // 使用头像检测函数的最终结果，作为头像的最终路径
                 let tmpUserInfo = wx.getStorageSync("userInfo");
                 avatarUrl = tmpUserInfo.avatarUrl;
+
+                // 对空头像做特殊处理
+                if (avatarUrl === undefined || avatarUrl === "") {
+                  avatarUrl = "/images/user-unlogin.png";
+                  tmpUserInfo.avatarUrl = "/images/user-unlogin.png";
+                  wx.setStorageSync("userInfo", tmpUserInfo);
+                }
+
                 that.setData({
                   avatarUrl: avatarUrl
                 })
@@ -62,7 +71,18 @@ const getUserInfo = (that) => {
                   bgImgUrl: bgImgUrl
                 })
                 console.log("用户背景图检测成功：", res.msg);
-
+                
+                // 开始用户审核检测
+                return auth.check();
+              })
+              .then(res => {
+                if (res.status === "unauthorized") {
+                  that.setData({
+                    isRedDot: true
+                  });
+                }
+                wx.setStorageSync("authStatus", res.status);
+                console.log("用户审核检测成功：", res.msg);
               })
               .catch(err => {
                 console.log("用户信息检测失败： ", err)

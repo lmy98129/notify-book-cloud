@@ -152,6 +152,7 @@
   color: #fff;
   display: flex;
   flex-direction: row;
+  z-index: 999;
 }
 
 .top-widget-title .title {
