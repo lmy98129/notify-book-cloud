@@ -3,6 +3,7 @@ const sys = require("../../utils/system");
 const profile = require("../../utils/profile");
 const profModel = require("../../utils/profile-model");
 const toast = require("../../utils/message").toast;
+const bgImg = require("../../utils/bg-img");
 
 let swiperFirstHeight;
 
@@ -14,6 +15,7 @@ Page({
   data: {
     specialPhone: '',
     avatarUrl: "/images/user-unlogin.png",
+    bgImgUrl: "",
     nickname: "",
     userInfo: [],
     contactArray: [],
@@ -51,11 +53,13 @@ Page({
    */
   onShow: function () {
     let tmpUserInfo = wx.getStorageSync("userInfo"), tmpDate, tmpArray, newTmpArray, tmpObj;
-    let avatarUrl = tmpUserInfo.avatarUrl;
-    let nickname = tmpUserInfo.nickName;
+    let avatarUrl = tmpUserInfo.avatarUrl,
+      nickname = tmpUserInfo.nickName,
+      bgImgUrl = tmpUserInfo.bgImgUrl;
     this.setData({
       avatarUrl: avatarUrl,
       nickname: nickname,
+      bgImgUrl: bgImgUrl
     })
     profile.download()
       .then(res => {
@@ -67,6 +71,7 @@ Page({
           for (let item in tmpUserInfo) {
             switch (item) {
               case "nickName":
+              case "bgImgUrl":
                 delete tmpUserInfo[item];
                 break;
               case "gender":
@@ -321,6 +326,24 @@ Page({
       wx.hideLoading();
       toast("错误：提交失败", "none");
       console.log("自我介绍上传成功：", err);
+    })
+  },
+
+  customBgImg() {
+    let that = this;
+    wx.showActionSheet({
+      itemList: ["上传自定义背景图片", "使用默认背景图片"],
+      itemColor: "#333",
+      success: function(res) {
+        switch(res.tapIndex) {
+          case 0:
+            bgImg.upload(that);
+            break;
+          case 1:
+            bgImg.default(that);
+            break;
+        }
+      }
     })
   },
   /**

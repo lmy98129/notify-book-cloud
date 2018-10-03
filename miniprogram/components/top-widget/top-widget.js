@@ -39,6 +39,10 @@ Component({
       type: Boolean,
       value: false
     },
+    bgImgUrl: {
+      type: String,
+      value: ""
+    }
   },
 
   /**

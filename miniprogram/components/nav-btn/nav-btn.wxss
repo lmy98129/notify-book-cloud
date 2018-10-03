@@ -31,3 +31,9 @@
   font-size: 45rpx;
 }
 
+.custom-style .icon {
+  font-size: 50rpx;
+  transform: rotate(30deg);
+  -webkit-transform: rotate(30deg);
+}
+

@@ -47,6 +47,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-shadow:2rpx 2rpx 5rpx #444;
 }
 
 .top-widget.mode-2  .user-info{
@@ -100,7 +101,8 @@
   color: #fff;
   position: fixed;
   left: 30rpx;
-  padding-top:50rpx;
+  padding-top:58rpx;
+  text-shadow:2rpx 2rpx 5rpx #444;  
 }
 
 .top-widget.center .user-info{
@@ -121,6 +123,7 @@
   margin-right: auto;
   margin-left: auto;
   color: #000;
+  text-shadow: none;  
 }
 
 .top-widget.center .btn-wrap {

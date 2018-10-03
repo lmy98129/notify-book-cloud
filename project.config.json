@@ -11,6 +11,7 @@
 	"appid": "wxe9b916dde775d246",
 	"projectname": "notify-book-cloud",
 	"libVersion": "2.3.0",
+	"compileType": "miniprogram",
 	"condition": {
 		"search": {
 			"current": -1,

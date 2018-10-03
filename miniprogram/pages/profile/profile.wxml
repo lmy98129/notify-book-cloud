@@ -1,8 +1,8 @@
 <!--pages/profile/profile.wxml-->
 <view class="root {{introStatus}}">
   <view class="container {{fixVeryTop ? 'fixed':''}}">
-    <top-widget avatarUrl="{{avatarUrl}}" nickname="{{nickname}}" fixTop="{{fixTop}}" class="top-widget-wrapper" isBack="{{true}}" mode="center">
-      <!-- <nav-btn slot="add" btnType="add" iconType="icon-tianjiahaoyou"/> -->
+    <top-widget avatarUrl="{{avatarUrl}}" bgImgUrl="{{bgImgUrl}}" nickname="{{nickname}}" fixTop="{{fixTop}}" class="top-widget-wrapper" isBack="{{true}}" mode="center">
+      <nav-btn slot="custom-style" btnType="custom-style" iconType="icon-gexinghua" bind:tapBtn="customBgImg"/>
       <nav-btn slot="edit" btnType="edit" iconType="icon-bianji" bind:tapBtn="editProfile"/>
     </top-widget>
 

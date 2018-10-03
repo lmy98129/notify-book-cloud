@@ -7,6 +7,7 @@ const login = require("../../utils/login");
 Page({
   data: {
     avatarUrl: "/images/user-unlogin.png",
+    bgImgUrl: "",
     nickname: "",
     userInfo: {},
     logged: false,
@@ -20,7 +21,8 @@ Page({
     randListLength: 0,
     fixTop: false,
     fixVeryTop: false,
-    specialPhone: ''
+    specialPhone: '',
+    realname: ""
   },
 
   onLoad: function() {
@@ -68,11 +70,13 @@ Page({
       app.globalData.isFirstLogin = false;
     } else {
       let tmpUserInfo = wx.getStorageSync("userInfo");
-      let avatarUrl = tmpUserInfo.avatarUrl;
-      let nickname = tmpUserInfo.nickName;
+      let avatarUrl = tmpUserInfo.avatarUrl,
+        nickname = tmpUserInfo.nickName,
+        bgImgUrl = tmpUserInfo.bgImgUrl;
       this.setData({
         avatarUrl: avatarUrl,
-        nickname: nickname
+        nickname: nickname,
+        bgImgUrl: bgImgUrl
       })
     }
   },

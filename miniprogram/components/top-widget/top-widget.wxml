@@ -6,7 +6,7 @@
       <view class="iconfont icon-fanhui back-icon fixed {{specialPhone}}" bindtap="goBack"></view>
     </block>
     <!-- <view class="top-bg"></view> -->
-    <image class="top-bg" src="cloud://test-5c133c.7465-test-5c133c/tvs-bg.jpg"></image>
+    <image class="top-bg" src="{{bgImgUrl}}"></image>
     <view class="user-info">
       <image class="user-avatar {{fixTop ? 'fixed':''}}" src="{{avatarUrl}}" bindtap="goProfile"></image>
       <view class="user-nickname">{{nickname}}</view>
@@ -15,6 +15,7 @@
       <slot name="add"></slot>        
       <slot name="settings"></slot>
       <slot name="edit"></slot>
+      <slot name="custom-style"></slot>
     </view>
   </view>
 

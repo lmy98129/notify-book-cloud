@@ -1,9 +1,10 @@
 const avatar = require("./avatar");
 const profile = require("./profile");
+const bgImg = require("./bg-img");
 
 const getUserInfo = (that) => {
   // 获取用户信息
-  let nickname, avatarUrl, tmpUserInfo;
+  let nickname, avatarUrl, bgImgUrl, tmpUserInfo;
   wx.getSetting({
     success: res => {
       if (res.authSetting['scope.userInfo']) {
@@ -46,9 +47,25 @@ const getUserInfo = (that) => {
                   })
                 }
                 console.log("用户昵称检测成功：", res.msg);
+
+                // 开始用户背景图检测
+                return bgImg.check()
+              })
+              .then(res => {
+
+                // 更新本地存储的userInfo中的用户背景图
+                bgImgUrl = res.data;
+                tmpUserInfo = wx.getStorageSync("userInfo");
+                tmpUserInfo.bgImgUrl = bgImgUrl
+                wx.setStorageSync("userInfo", tmpUserInfo);
+                that.setData({
+                  bgImgUrl: bgImgUrl
+                })
+                console.log("用户背景图检测成功：", res.msg);
+
               })
               .catch(err => {
-                console.log("用户头像、昵称检测失败： ", err)
+                console.log("用户信息检测失败： ", err)
               })
           }
         })

@@ -10,6 +10,13 @@
   -webkit-transition: all 0.4s;
 }
 
+.realname {
+  font-size: 35rpx;
+  text-align: left;
+  position: absolute;
+  top: 327rpx;
+}
+
 .side-bar {
   position: fixed;
   top: 0;
