@@ -39,6 +39,32 @@ const checkPhone = (that) => {
   }
 }
 
+const adjustSwiper = (swiperFirstHeight, index, height, that) => {
+  if (index === 0) {
+    that.setData({
+      swiperHeight: swiperFirstHeight
+    })
+  } else if (index === 1) {
+    let phone = wx.getSystemInfoSync().model;
+    switch (phone) {
+      case "iPhone 5":
+      case "iPhone 4":
+      case "iPhone 5s":
+      case "iPhone se":
+        that.setData({
+          swiperHeight: height + 80
+        })
+        break;
+      default:
+        that.setData({
+          swiperHeight: height + 90
+        })
+        break;
+    }
+  }
+}
+
 module.exports = {
-  checkPhone: checkPhone
+  checkPhone: checkPhone,
+  adjustSwiper: adjustSwiper
 }

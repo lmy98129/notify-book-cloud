@@ -107,10 +107,13 @@
   flex-direction: column;
   width: 100%;
   left: 0;
+  top: 165rpx;
 }
 
 .top-widget.center .user-info .user-avatar {
   margin: 0 auto;
+  width: 200rpx;
+  height: 200rpx;
 }
 
 .top-widget.center .user-info .user-nickname {
@@ -118,6 +121,14 @@
   margin-right: auto;
   margin-left: auto;
   color: #000;
+}
+
+.top-widget.center .btn-wrap {
+  width: 95%;
+  right: auto;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  left: 10rpx;
 }
 
 .top-widget-title .back-icon {

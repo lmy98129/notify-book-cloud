@@ -167,8 +167,30 @@ swiper-item .main {
 }
 
 .intro-wrapper .intro{
-  width: 80%;
-  margin: 60rpx auto 20rpx;
+  margin-bottom: 20rpx;
   font-size: 40rpx;
   text-indent: 2em;
+  margin-left: 10rpx;
+  margin-right: 10rpx;
+}
+
+.intro-content {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  width: 80%;
+}
+
+.quote {
+  font-size: 80rpx;
+  margin-bottom: -60rpx;
+  margin-right: -17rpx;
+}
+
+#quote-left {
+  text-align: left
+}
+
+#quote-right {
+  text-align: right;
 }

@@ -165,7 +165,22 @@ Page({
           let tmpArrayLength = tmpArray.length;
           let jobArrayLength = this.data.jobArray.length;
           let contactArrayLength = this.data.contactArray.length;
-          swiperFirstHeight = 50 * tmpArrayLength + 50 + 40 * contactArrayLength + 250 * jobArrayLength
+          swiperFirstHeight = 55 * tmpArrayLength + 50 + 40 * contactArrayLength + 250 * jobArrayLength;
+          let phone = wx.getSystemInfoSync().model;
+          switch (phone) {
+            case "iPhone 5":
+            case "iPhone 4":
+            case "iPhone 5s":
+            case "iPhone se":
+              swiperFirstHeight -= 280;
+              break;
+            case "iPhone 6":
+            case "iPhone 6s":
+            case "iPhone 7":
+            case "iPhone 8":
+              swiperFirstHeight -= 50;
+              break;
+          }
           this.setData({
             userInfo: tmpArray,
             profileStatus: 1,
@@ -214,19 +229,18 @@ Page({
   },
 
   tabHandler(e) {
-    let index = parseInt(e.target.dataset.index);
-    if (index === 0) {
-      this.setData({
-        swiperHeight: swiperFirstHeight
-      })
-    } else if (index === 1){
-      this.setData({
-        swiperHeight: 1000
-      })
-    }
+    let index = parseInt(e.target.dataset.index), that = this;
     this.setData({
       tabIndex: index
     })
+    wx.createSelectorQuery().select('#intro').fields({
+      rect: true,
+      size: true,
+    }, function (res) {
+      sys.adjustSwiper(
+        swiperFirstHeight, index, res.height, that
+      );
+    }).exec();
   },
 
   bindSwiper(e) {
@@ -238,16 +252,9 @@ Page({
       rect: true,
       size: true,
     }, function(res) {
-      if (index === 0) {
-        that.setData({
-          swiperHeight: swiperFirstHeight 
-        })
-      } else if (index === 1){
-        console.log(res.height);
-        that.setData({
-          swiperHeight: res.height + 100
-        })
-      }
+      sys.adjustSwiper(
+        swiperFirstHeight, index, res.height, that
+      );
     }).exec();
   },
 
@@ -278,7 +285,6 @@ Page({
   cancelIntro() {
     this.setData({
       introStatus: "default",
-      tmpIntro: ""
     })
   },
 
@@ -302,6 +308,14 @@ Page({
         introStatus: 'default',
         intro: this.data.tmpIntro
       });
+      wx.createSelectorQuery().select('#intro').fields({
+        rect: true,
+        size: true,
+      }, function (res) {
+        sys.adjustSwiper(
+          swiperFirstHeight, that.data.tabIndex, res.height, that
+        );
+      }).exec();
     })
     .catch(err => {
       wx.hideLoading();

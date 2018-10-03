@@ -2,6 +2,7 @@
 <view class="root {{introStatus}}">
   <view class="container {{fixVeryTop ? 'fixed':''}}">
     <top-widget avatarUrl="{{avatarUrl}}" nickname="{{nickname}}" fixTop="{{fixTop}}" class="top-widget-wrapper" isBack="{{true}}" mode="center">
+      <!-- <nav-btn slot="add" btnType="add" iconType="icon-tianjiahaoyou"/> -->
       <nav-btn slot="edit" btnType="edit" iconType="icon-bianji" bind:tapBtn="editProfile"/>
     </top-widget>
 
@@ -44,8 +45,14 @@
                     添加自我介绍
                   </button>
                 </block>
-                <block wx:else>
-                  <view class="intro">{{intro}}</view>
+                <block wx:elif="{{(intro !== undefined && intro !== '') && introStatus === 'default'}}">
+                  <view class="intro-content">
+                    <text class="quote" id="quote-left">“</text>
+                      <view class="intro">
+                          {{intro}}
+                      </view>
+                    <text class="quote" id="quote-right">”</text>
+                  </view>
                   <button class="edit-btn" type="default" bindtap="addIntro">
                     修改自我介绍
                   </button>
