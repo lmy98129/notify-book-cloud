@@ -12,11 +12,8 @@
   align-items: center;
 }
 
-.settings:last-child {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
 .settings-text{
+  line-height: 97rpx;
   font-size: 34rpx;
   color: #000;
 }

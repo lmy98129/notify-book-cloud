@@ -191,7 +191,7 @@ Page({
             profileStatus: 1,
             swiperHeight: swiperFirstHeight
           });
-        } else if (res.code === 1) {
+        } else {
           this.setData({
             profileStatus: -1
           })

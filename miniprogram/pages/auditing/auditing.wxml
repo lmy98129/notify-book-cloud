@@ -1,3 +1,18 @@
 <!--pages/auditing/auditing.wxml-->
 <top-widget mode="title" title="校友认证审核">
 </top-widget>
+
+<view class="main">
+  <view class="tabbar-wrap"></view>
+  <view class="auditing-wrap">
+    <view class="avatar"></view>
+    <view class="profile">
+      <view class="nickname"></view>
+      <view class="remark"></view>
+    </view>
+    <view class="btn-wrap">
+      <view class="detail-btn"></view>
+      <view class="authorize-btn"></view>
+    </view>
+  </view>
+</view>

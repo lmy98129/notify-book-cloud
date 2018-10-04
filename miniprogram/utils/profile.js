@@ -9,16 +9,27 @@ const download = () => {
   })).get()
   .then(res => {
     if (res.data.length === 0) {
+      db.collection("profile").add({
+        data: {
+          nickName: wx.getStorageSync("userInfo").nickName
+        }
+      })
       msg = {
-        code: 1,
-        msg: "profile not found"
+        code: 0,
+        msg: "profile record added & nickName uploaded"
       }
       return Promise.resolve(msg);
-    } else if (res.data[0] !== undefined) {
+    } else if (res.data[0].realName !== undefined) {
       msg = {
         code: 2,
         msg: "profile exist",
         data: res.data[0]
+      }
+      return Promise.resolve(msg);
+    } else {
+      msg = {
+        code: 1,
+        msg: "profile stay empty with only nickName"
       }
       return Promise.resolve(msg);
     }

@@ -42,11 +42,11 @@ const getUserInfo = (that) => {
               })
               .then(res => {
                 tmpUserInfo = wx.getStorageSync("userInfo");
-                if (res.code === 1) {
+                if (res.code !== 2) {
                   that.setData({
                     nickname: nickname
                   })
-                } else if (res.code === 2) {
+                } else {
 
                   // 更新本地存储的userInfo中的昵称
                   nickname = res.data.nickName;

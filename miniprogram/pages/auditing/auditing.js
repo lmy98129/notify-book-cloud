@@ -1,4 +1,7 @@
 // pages/auditing/auditing.js
+const auditing = require("../../utils/auditing");
+import regeneratorRuntime, { async } from "../../utils/regenerator-runtime/runtime";
+
 Page({
 
   /**
@@ -18,8 +21,9 @@ Page({
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady: function () {
-
+  onReady: async function () {
+    let res = await auditing.download(this);
+    console.log(res);
   },
 
   /**
