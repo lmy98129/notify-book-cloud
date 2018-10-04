@@ -28,8 +28,15 @@
 
     <block wx:if="{{authStatus === 'auditing'}}">
       <view class="auditing-wrapper">
-        <view class="iconfont icon-shenhe icon"></view>
+        <view class="iconfont icon-shenhe1 icon"></view>
         <view class="hint"><text>认证材料提交成功\n正在审核中，请耐心等待。</text></view>
+      </view>
+    </block>
+
+    <block wx:if="{{authStatus === 'authorized'}}">
+        <view class="auditing-wrapper">
+          <view class="iconfont icon-shenhe icon"></view>
+        <view class="hint"><text>校友审核已通过\n您可以使用本小程序的全部功能。</text></view>
       </view>
     </block>
   </view>

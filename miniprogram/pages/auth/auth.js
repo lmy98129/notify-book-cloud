@@ -1,5 +1,6 @@
 // pages/auth/auth.js
 const auth = require("../../utils/auth");
+const toast = require("../../utils/message").toast;
 
 Page({
 
@@ -103,6 +104,6 @@ Page({
   },
 
   submit() {
-    auth.upload(this.data.authImgArray, this.data.remark, this);
+      auth.upload(this.data.authImgArray, this.data.remark, this);
   }
 })

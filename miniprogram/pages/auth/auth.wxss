@@ -39,7 +39,8 @@ page {
   font-size: 30rpx;
 }
 
-.icon-shenhe.icon {
+.icon-shenhe.icon,
+.icon-shenhe1.icon {
   font-size: 100rpx;
   margin-bottom: 20rpx;
 }

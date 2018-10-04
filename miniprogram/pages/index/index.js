@@ -77,8 +77,17 @@ Page({
       this.setData({
         avatarUrl: avatarUrl,
         nickname: nickname,
-        bgImgUrl: bgImgUrl
+        bgImgUrl: bgImgUrl,
       })
+      if (wx.getStorageSync("authStatus") === "unauthorized") {
+        this.setData({
+          isRedDot: true
+        })
+      } else {
+        this.setData({
+          isRedDot: false
+        })
+      }
     }
   },
 

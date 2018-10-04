@@ -1,6 +1,6 @@
 const db = wx.cloud.database();
 const toast = require("./message").toast;
-import regeneratorRuntime from "./regenerator-runtime/runtime";
+import regeneratorRuntime, { async } from "./regenerator-runtime/runtime";
 
 const checkAuth = () => {
   let msg = {};
@@ -55,12 +55,71 @@ const checkAuth = () => {
   }))
 }
 
-const uploadAuth = (authImgArray, remark, that) => {
+const codeCheck = async (remark) => {
+  try {
+    let res = await db.collection("auth-code").where({
+      code: remark
+    }).get();
+
+    if (res.data.length === 0) {
+      return Promise.resolve({
+        code: 0,
+        msg: "not auth-code"
+      });
+    } else {
+  
+      res = await db.collection("auth").where({
+        _openid: wx.getStorageSync("openid")
+      }).get();
+  
+      res = await db.collection("auth").doc(res.data[0]._id).update({
+        data: {
+          status: "authorized"
+        }
+      });
+  
+      return Promise.resolve({
+        code: 1,
+        msg: "is auth-code & authorized",
+      });
+    }
+  } catch (error) {
+    return Promise.reject(error);
+  }
+}
+
+const uploadAuth = async (authImgArray, remark, that) => {
+  let tmpAuthImgArray = [], cloudPath, filePath, openid = wx.getStorageSync("openid");
+
+  try {
+    let res = await codeCheck(remark);
+    if (res.code === 1) {
+      wx.hideLoading();
+      console.log("授权码检测成功：", res.msg);
+      toast("数据上传成功");
+      wx.setStorageSync("authStatus", "authorized");
+      that.setData({
+        authStatus: "authorized"
+      });
+      return;
+    } else {
+      console.log("非授权码：", res.msg);
+    }
+  } catch (error) {
+    wx.hideLoading();
+    console.log("认证数据上传失败", error);
+    toast("上传失败", "none");
+    return;
+  }
+
+  if (that.data.authImgArray.length === 0) {
+    toast("请至少上传一张图片", "none");
+    return;
+  }
+
   wx.showLoading({
     title: "数据上传中"
   });
-  let tmpAuthImgArray = [], cloudPath, filePath, openid = wx.getStorageSync("openid");
-
   (async () => {
     for (let i=0; i<authImgArray.length; i++) {
       filePath = authImgArray[i];
@@ -84,23 +143,23 @@ const uploadAuth = (authImgArray, remark, that) => {
       data: {
         authImgUrl: tmpAuthImgArray,
         remark: remark,
-        authStatus: "auditing"
+        status: "auditing"
       }
     })
   })
   .then(res => {
     wx.hideLoading();
-    console.log("认证数据上传成功", res);
+    console.log("认证数据上传成功：", res);
     toast("数据上传成功");
     
     wx.setStorageSync("authStatus", "auditing");
     that.setData({
-      authStatus: "auditing"
+      status: "auditing"
     });
   })
   .catch(err => {
     wx.hideLoading();
-    console.log("认证数据上传失败", err);
+    console.log("认证数据上传失败：", err);
     toast("上传失败", "none");
   })
   
@@ -109,4 +168,5 @@ const uploadAuth = (authImgArray, remark, that) => {
 module.exports = {
   check: checkAuth,
   upload: uploadAuth,
+  code: codeCheck
 }

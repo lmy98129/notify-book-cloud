@@ -1,2 +1,3 @@
 <!--pages/auditing/auditing.wxml-->
-<text>pages/auditing/auditing.wxml</text>
+<top-widget mode="title" title="校友认证审核">
+</top-widget>

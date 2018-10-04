@@ -1,0 +1,12 @@
+<!--components/settings-item/settings-item.wxml-->
+<navigator url="{{url}}">
+  <view class="settings">
+    <view class="settings-text">
+      <text>{{title}}</text>
+    </view>
+    <view class="settings-arrow">
+      <view class="hint">{{hint}}</view>
+      <view class="iconfont icon-fanhui1 icon"></view>
+    </view>
+  </view>
+</navigator>

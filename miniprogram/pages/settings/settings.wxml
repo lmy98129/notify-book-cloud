@@ -1,2 +1,10 @@
-<!--pages/settings/settings.wxml-->
-<text>pages/settings/settings.wxml</text>
+<top-widget mode="title" title="设置">
+</top-widget>
+
+<view class="main">
+  <block wx:if="{{isAdmin}}">
+    <settings-item url="/pages/auditing/auditing" title="校友认证审核" hint="仅管理员可见"></settings-item>
+  </block>
+  
+  
+</view>

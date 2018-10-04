@@ -79,7 +79,9 @@
           <view class="red-dot" wx:if="{{isRedDot}}"></view>
         </navigator>
         <view class="btn">消息</view>
-        <view class="btn">设置</view>
+        <navigator url="../settings/settings">
+          <view class="btn">设置</view>
+        </navigator>
         <view class="btn">关于</view>
       </view>
       <view class="close"  bindtap="switchSideBar">

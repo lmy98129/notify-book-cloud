@@ -2,6 +2,7 @@ const avatar = require("./avatar");
 const profile = require("./profile");
 const bgImg = require("./bg-img");
 const auth = require("./auth");
+const admin = require("./admin");
 
 const getUserInfo = (that) => {
   // 获取用户信息
@@ -72,17 +73,35 @@ const getUserInfo = (that) => {
                 })
                 console.log("用户背景图检测成功：", res.msg);
                 
-                // 开始用户审核检测
-                return auth.check();
+                // 开始用户权限检测
+                return admin.check();
               })
               .then(res => {
-                if (res.status === "unauthorized") {
-                  that.setData({
-                    isRedDot: true
+                wx.setStorageSync("isAdmin", res.isAdmin);
+                console.log("用户权限检测成功：", res.msg);
+
+                if (!res.isAdmin) {
+                  // 开始用户审核检测
+                  return auth.check()
+                } else {
+                  wx.setStorageSync("authStatus", "authorized");
+                  return Promise.resolve({
+                    isAdmin: true
                   });
                 }
-                wx.setStorageSync("authStatus", res.status);
-                console.log("用户审核检测成功：", res.msg);
+              })
+              .then(res => {
+                if (res.isAdmin !== true) {
+                  
+                  if (res.status === "unauthorized") {
+                    that.setData({
+                      isRedDot: true
+                    });
+                  }
+                  wx.setStorageSync("authStatus", res.status);
+                  console.log("用户审核检测成功：", res.msg);
+
+                }
               })
               .catch(err => {
                 console.log("用户信息检测失败： ", err)
