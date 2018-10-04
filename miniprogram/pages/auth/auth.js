@@ -79,16 +79,15 @@ Page({
   },
 
   addBtn() {
-    let that = this, tmpAuthImgArray = this.data.authImgArray;
+    let that = this, tmpArray = this.data.authImgArray;
     wx.chooseImage({
-      count: 1,
+      count: 9,
       sizeType: ['compressed'],
       sourceType: ['album', 'camera'],
       success: function(res) {
-        const filePath = res.tempFilePaths[0];
-        tmpAuthImgArray.push(filePath);
+        tmpArray = tmpArray.concat(res.tempFilePaths);
         that.setData({
-          authImgArray: tmpAuthImgArray
+          authImgArray: tmpArray
         })
       }
     })

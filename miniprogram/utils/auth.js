@@ -16,6 +16,7 @@ const checkAuth = () => {
           authImgUrl: "",
           remark: "",
           status: "unauthorized",
+          isCode: false
         }
       }).then(res => {
         msg = {
@@ -74,7 +75,8 @@ const codeCheck = async (remark) => {
   
       res = await db.collection("auth").doc(res.data[0]._id).update({
         data: {
-          status: "authorized"
+          status: "authorized",
+          isCode: true,
         }
       });
   
@@ -123,7 +125,7 @@ const uploadAuth = async (authImgArray, remark, that) => {
   (async () => {
     for (let i=0; i<authImgArray.length; i++) {
       filePath = authImgArray[i];
-      cloudPath = "authImg-"+ openid + Date.parse(new Date()) + filePath.match(/\.[^.]+?$/)[0];
+      cloudPath = "authImg-"+ openid + (new Date()).getTime() + filePath.match(/\.[^.]+?$/)[0];
       // 用await关键字异步转同步
       await wx.cloud.uploadFile({
         cloudPath,
@@ -154,7 +156,7 @@ const uploadAuth = async (authImgArray, remark, that) => {
     
     wx.setStorageSync("authStatus", "auditing");
     that.setData({
-      status: "auditing"
+      authStatus: "auditing"
     });
   })
   .catch(err => {

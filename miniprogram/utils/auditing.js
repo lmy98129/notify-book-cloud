@@ -1,12 +1,13 @@
 const db = wx.cloud.database();
+const _ = db.command;
 const toast = require("./message").toast;
 import regeneratorRuntime, { async } from "./regenerator-runtime/runtime";
 
 const tmpDownload = async (arr, collection) => {
   let res = await Promise.all(arr.map(item => {
-      return db.collection(collection).where({
-        _openid: item._openid
-      }).get()
+    return db.collection(collection).where({
+      _openid: item._openid
+    }).get()
   }))
   let final = [];
   res.map(item => final.push(item = item.data[0]));
@@ -19,19 +20,16 @@ const downloadList = async () => {
   })
   try {
     let res = await db.collection("auth").where({
-      status: "auditing"
+      status: _.eq("auditing").or(_.eq("authorized"))
     }).get();
 
     let finalArray = res.data;
+    let avatarArray = await tmpDownload(finalArray, "avatar");
+    let profileArray = await tmpDownload(finalArray, "profile");
 
-    let combinedArray = await Promise.all([
-      tmpDownload(finalArray, "avatar"),
-      tmpDownload(finalArray, "profile")
-    ])
-
-    combinedArray[0].map(item1 => {
+    avatarArray.map(item1 => {
       delete item1.isCustom;
-      combinedArray[1].map(item2 => {
+      profileArray.map(item2 => {
         if (item1._openid === item2._openid) {
           item1.nickName = item2.nickName;
         }
@@ -39,7 +37,7 @@ const downloadList = async () => {
     });
 
     finalArray.map(item1 => {
-      combinedArray[0].map(item2 => {
+      avatarArray.map(item2 => {
         if (item1._openid === item2._openid) {
           for (let attr in item2) {
             item1[attr] = item2[attr];
@@ -50,6 +48,7 @@ const downloadList = async () => {
 
     wx.hideLoading();
     toast("列表加载成功");
+    console.log("审核列表加载成功：", finalArray);
     return finalArray;
 
   } catch (error) {
@@ -59,6 +58,60 @@ const downloadList = async () => {
   }
 }
 
+const allowAuditing = async (openidList) => {
+  wx.showLoading({
+    title: "提交数据中"
+  })
+
+  let res = await wx.cloud.callFunction({
+    name: "allowAuditing",
+    data: {
+      openidList
+    }
+  });
+
+  wx.hideLoading();
+
+  console.log(res);
+
+  if (res.result.code === 0) {
+    toast("数据提交成功");
+    console.log("审核通过操作成功：", res.result);
+  } else {
+    toast("数据提交失败", "none");
+    console.log("审核通过操作失败：", res.err);
+  }
+
+  return res.result;
+}
+
+const disallowAuditing = async (openidList) => {
+  wx.showLoading({
+    title: "提交数据中"
+  })
+
+  let res = await wx.cloud.callFunction({
+    name: "disallowAuditing",
+    data: {
+      openidList
+    }
+  });
+
+  wx.hideLoading();
+
+  if (res.result.code === 0) {
+    toast("数据提交成功");
+    console.log("审核驳回操作成功：", res.result);
+  } else {
+    toast("数据提交失败", "none");
+    console.log("审核驳回操作失败：", res.err);
+  }
+
+  return res.result;
+}
+
 module.exports = {
-  download: downloadList
+  download: downloadList,
+  allow: allowAuditing,
+  disallow: disallowAuditing,
 }

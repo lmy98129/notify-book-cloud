@@ -30,7 +30,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 4,
+			"current": 5,
 			"list": [
 				{
 					"id": -1,
@@ -59,7 +59,14 @@
 				{
 					"id": -1,
 					"name": "校友认证审核",
-					"pathName": "pages/auditing/auditing"
+					"pathName": "pages/auditing/auditing",
+					"query": ""
+				},
+				{
+					"id": 5,
+					"name": "认证内容",
+					"pathName": "pages/auditing-detail/auditing-detail",
+					"query": "index=0"
 				}
 			]
 		}

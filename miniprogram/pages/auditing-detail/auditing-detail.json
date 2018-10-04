@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "top-widget": "/components/top-widget/top-widget",
+    "profile-input": "/components/profile-input/profile-input",
+    "settings-item": "/components/settings-item/settings-item"
+  }
+}

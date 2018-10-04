@@ -104,7 +104,7 @@ const uploadImg = (that) => {
       // 上传图片文件到云存储
       const filePath = res.tempFilePaths[0];
       const openid = wx.getStorageSync("openid");
-      const cloudPath = "bgImg-" + openid + Date.parse(new Date()) + filePath.match(/\.[^.]+?$/)[0];
+      const cloudPath = "bgImg-" + openid + (new Date()).getTime() + filePath.match(/\.[^.]+?$/)[0];
       wx.cloud.uploadFile({
         cloudPath,
         filePath,

@@ -1,0 +1,84 @@
+/* pages/auditing-detail/auditing-detail.wxss */
+@import "../../pages/editProfile/editProfile.wxss";
+page {
+  background: #fff;
+}
+
+.item-wrapper {
+  width: 92%;
+}
+
+.item-wrapper.remark {
+  margin: 2rpx auto;
+  text-align: left;
+  padding-top: 20rpx;
+  padding-bottom: 30rpx;
+  margin-bottom: 150rpx!important;
+  font-size: 38rpx;
+}
+
+.item-wrapper.remark view {
+  padding-left: 20rpx;
+  padding-right: 20rpx;
+}
+
+.item-wrapper {
+  margin: 2rpx auto;
+}
+
+.item-wrapper.title:first-child {
+  margin: 5rpx auto 10rpx;
+}
+
+.item-wrapper.title {
+  margin: 30rpx auto 10rpx;
+  background: rgb(126, 126, 126);
+  color: #fff;
+  font-size: 40rpx;
+  padding-top: 10rpx;
+  line-height: 70rpx;
+}
+
+.bottom-wrap {
+  width: 100%;
+  height: 120rpx;
+  background: rgba(0, 0, 0, .7);
+  color: #fff;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  font-size: 44rpx;
+  position: fixed;
+  bottom: 0rpx;
+  line-height: 110rpx;
+}
+
+.bottom-wrap .btn {
+  width: 50%;
+  text-align: center
+}
+
+.bottom-wrap .btn:active {
+  background: rgba(120, 120, 120, .7)
+}
+
+.bottom-wrap .btn:nth-child(2) {
+  border-left: .1rpx solid #aaa;
+}
+
+.user image {
+  width: 170rpx;
+  height: 170rpx;
+  border: 1rpx solid #aaa;
+  background-size: cover;
+  background-color: white;
+  border-radius: 50%;
+  margin: 0 auto;
+}
+
+.user .nickname {
+  font-size: 35rpx;
+  color: #000;
+  margin-top: 25rpx;
+  margin-bottom: 18rpx;
+}

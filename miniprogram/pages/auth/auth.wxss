@@ -36,11 +36,11 @@ page {
 .auditing-wrapper .hint {
   text-align: center;
   color: #000;
-  font-size: 30rpx;
+  font-size: 35rpx;
 }
 
 .icon-shenhe.icon,
 .icon-shenhe1.icon {
   font-size: 100rpx;
-  margin-bottom: 20rpx;
+  margin-bottom: 35rpx;
 }

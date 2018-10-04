@@ -1,1 +1,142 @@
 /* pages/auditing/auditing.wxss */
+.main {
+  display: block;
+}
+
+.tabbar {
+  width: 85%;
+  margin-top: -8rpx;
+  margin-bottom: 15rpx;
+  display: flex;
+  flex-direction: row;
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: space-around;
+}
+
+.tabbar .tabbar-item {
+  font-size: 40rpx;
+  color: #555;
+}
+
+.tabbar .tabbar-item.selected {
+  color: #222;
+}
+
+.tabbar .tabbar-item.selected:after {
+  content: "";
+  display: block;
+  position: relative;
+  bottom: -5rpx;
+  left: 0;
+  right: 0;
+  height: 5rpx;
+  background-color: #222;
+}
+
+.auditing-wrap {
+  padding: 10px;
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+}
+
+.auditing-wrap .avatar {
+  width: 170rpx;
+  height: 170rpx;
+  border-radius: 100%;
+  margin-right: 20rpx;
+}
+
+.auditing-wrap .right {
+  -webkit-box-flex:1;
+  -webkit-flex:1;
+  flex:1;
+  min-width:0;  
+}
+
+.auditing-wrap .right .profile .nickname {
+  font-size: 42rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 280rpx;
+}
+
+.auditing-wrap .right .profile .remark {
+  font-size: 35rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 280rpx;
+}
+
+.auditing-wrap right .btn-wrap {
+  float: right;
+  position: relative;
+  top: 60rpx;
+}
+
+.bottom-wrap {
+  width: 100%;
+  height: 120rpx;
+  background: rgba(0, 0, 0, .7);
+  color: #fff;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  font-size: 44rpx;
+  position: fixed;
+  bottom: 0rpx;
+  line-height: 110rpx;
+}
+
+.bottom-wrap .btn {
+  width: 50%;
+  text-align: center
+}
+
+.bottom-wrap .btn:active {
+  background: rgba(120, 120, 120, .7)
+}
+
+.bottom-wrap .btn:nth-child(2) {
+  border-left: .1rpx solid #aaa;
+}
+
+.check-box {
+  margin-left: 30rpx;
+}
+
+checkbox .wx-checkbox-input {
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 100%;
+}
+
+checkbox .wx-checkbox-input.wx-checkbox-input-checked {
+  background: #353535;
+}
+
+checkbox .wx-checkbox-input.wx-checkbox-input-checked::before {
+  width: 28rpx;
+  height: 28rpx;
+  line-height: 28rpx;
+  text-align: center;
+  font-size: 25rpx;
+  color: #fff;
+  font-weight: bold;
+  background: transparent;
+  transform: translate(-50%, -50%) scale(1);
+  -webkit-transform: translate(-50%, -50%) scale(1);
+}
+
+.hint {
+  text-align: center;
+  padding-top: 50%;
+  font-size: 35rpx;
+}

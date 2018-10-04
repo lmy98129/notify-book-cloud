@@ -3,16 +3,46 @@
 </top-widget>
 
 <view class="main">
-  <view class="tabbar-wrap"></view>
-  <view class="auditing-wrap">
-    <view class="avatar"></view>
-    <view class="profile">
-      <view class="nickname"></view>
-      <view class="remark"></view>
-    </view>
-    <view class="btn-wrap">
-      <view class="detail-btn"></view>
-      <view class="authorize-btn"></view>
-    </view>
+  <view class="tabbar">
+    <view class="tabbar-item {{tabIndex === 0 ? 'selected':''}}" bindtap="tabHandler" data-index="0">审核列表</view>
+    <view class="tabbar-item {{tabIndex === 1 ? 'selected':''}}" bindtap="tabHandler" data-index="1">邀请码管理</view>
   </view>
+  <block wx:if="{{tabIndex === 0}}">
+    <checkbox-group bindchange="bindChecked">
+      <block wx:if="{{auditingList.length === 0}}">
+        <view class="hint">暂无待审核项目</view>
+      </block>
+      <block wx:for="{{auditingList}}" wx:key="{{index}}">
+          <view class="auditing-wrap">
+            <image src="{{item.avatarUrl === '' ? '/images/user-unlogin.png' : item.avatarUrl}}" class="avatar" />
+            <view class="right">
+              <view class="profile">
+                <view class="nickname">{{item.nickName}}</view>
+                <view class="remark">状态: 
+                  <block wx:if="{{item.status === 'auditing'}}">
+                    待审核
+                  </block>
+                  <block wx:if="{{item.status === 'authorized'}}">
+                    已通过
+                  </block>
+                </view>
+              </view>
+            </view>
+            <button class="detail-btn" data-index="{{index}}" bindtap="goDetail">详情</button>
+            <view class="check-box">
+              <checkbox value="{{item._openid}}"/>
+            </view>
+          </view>
+      </block>
+    </checkbox-group>
+    <view class="bottom-wrap">
+      <view class="btn" bindtap="disallow">驳回</view>
+      <view class="btn" bindtap="allow">通过</view>
+    </view>
+  </block>
+
+  <block wx:if="{{tabIndex === 1}}">
+    
+  </block>
+
 </view>

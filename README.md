@@ -7,6 +7,7 @@ A wechat mini-program for students of Television School, Communication Universit
   - [x] self-intro add/upload/download/edit
   - [x] background img default/custom-mode 
 - [ ] add friends into address-book
-- [ ] user authorization page/unauthoriazed-limit
+- [x] user authorization page/unauthoriazed-limit
+- [x] auditing page for administrator
 - [ ] address-book page & add/delete/edit/search
 - [ ] notification

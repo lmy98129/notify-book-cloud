@@ -1,5 +1,6 @@
 // pages/auditing/auditing.js
 const auditing = require("../../utils/auditing");
+const toast = require("../../utils/message").toast;
 import regeneratorRuntime, { async } from "../../utils/regenerator-runtime/runtime";
 
 Page({
@@ -8,7 +9,9 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    auditingList: [],
+    tabIndex: 0,
+    selectedList: []
   },
 
   /**
@@ -21,16 +24,19 @@ Page({
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady: async function () {
-    let res = await auditing.download(this);
-    console.log(res);
+  onReady: function () {
+
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function () {
-
+  onShow: async function () {
+    let res = await auditing.download(this); 
+    wx.setStorageSync("auditingList", res); 
+    this.setData({
+      auditingList: res
+    })
   },
 
   /**
@@ -66,5 +72,58 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+
+  tabHandler(e) {
+    let index = parseInt(e.target.dataset.index);
+    this.setData({
+      tabIndex: index
+    })
+  },
+
+  bindChecked(e) {
+    this.setData({
+      selectedList: e.detail.value
+    })
+  },
+
+  goDetail(e) {
+    wx.navigateTo({
+      url: "../auditing-detail/auditing-detail?index=" + e.target.dataset.index
+    })
+  },
+
+  allow: async function () {
+    let length = this.data.selectedList.length
+    if (length === 0) {
+      return;
+    } else if (length > 20) {
+      toast("暂不支持同时更改20条以上数据", "none");
+    }
+    let res = await auditing.allow(this.data.selectedList);
+    if (res.code === 0) {
+      res = await auditing.download(this); 
+      wx.setStorageSync("auditingList", res); 
+      this.setData({
+        auditingList: res
+      })
+    }
+  },
+
+  disallow: async function() {
+    let length = this.data.selectedList.length
+    if (length === 0) {
+      return;
+    } else if (length > 20) {
+      toast("暂不支持同时更改20条以上数据", "none");
+    }
+    let res = await auditing.disallow(this.data.selectedList);
+    if (res.code === 0) {
+      res = await auditing.download(this); 
+      wx.setStorageSync("auditingList", res); 
+      this.setData({
+        auditingList: res
+      })
+    }
   }
 })

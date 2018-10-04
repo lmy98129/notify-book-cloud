@@ -11,7 +11,7 @@ const checkAvatar = (avatarUrl) => {
   let msg = {};
 
   // let oldTimeStamp = wx.getStorageSync("shortTimer"),
-  //   curTimeStamp = Date.parse(new Date());
+  //   curTimeStamp = (new Date()).getTime();
 
   // // 拉长查询周期，减少API调用次数
   // if (!oldTimeStamp) {
@@ -138,7 +138,7 @@ const uploadAvatar = (that) => {
       // 上传图片文件到云存储
       const filePath = res.tempFilePaths[0];
       const openid = wx.getStorageSync("openid");
-      const cloudPath = 'avatar-' + openid + Date.parse(new Date()) + filePath.match(/\.[^.]+?$/)[0];
+      const cloudPath = 'avatar-' + openid + (new Date()).getTime() + filePath.match(/\.[^.]+?$/)[0];
       wx.cloud.uploadFile({
         cloudPath,
         filePath,

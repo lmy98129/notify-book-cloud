@@ -7,41 +7,41 @@ const download = () => {
   return (db.collection("profile").where({
     _openid: wx.getStorageSync("openid")
   })).get()
-  .then(res => {
-    if (res.data.length === 0) {
-      db.collection("profile").add({
-        data: {
-          nickName: wx.getStorageSync("userInfo").nickName
+    .then(res => {
+      if (res.data.length === 0) {
+        db.collection("profile").add({
+          data: {
+            nickName: wx.getStorageSync("userInfo").nickName
+          }
+        })
+        msg = {
+          code: 0,
+          msg: "profile record added & nickName uploaded"
         }
-      })
-      msg = {
-        code: 0,
-        msg: "profile record added & nickName uploaded"
+        return Promise.resolve(msg);
+      } else if (res.data[0].realName !== undefined) {
+        msg = {
+          code: 2,
+          msg: "profile exist",
+          data: res.data[0]
+        }
+        return Promise.resolve(msg);
+      } else {
+        msg = {
+          code: 1,
+          msg: "profile stay empty with only nickName"
+        }
+        return Promise.resolve(msg);
       }
-      return Promise.resolve(msg);
-    } else if (res.data[0].realName !== undefined) {
+    })
+    .catch(err => {
       msg = {
-        code: 2,
-        msg: "profile exist",
-        data: res.data[0]
+        code: -1,
+        msg: "profile download fail",
+        err: err
       }
-      return Promise.resolve(msg);
-    } else {
-      msg = {
-        code: 1,
-        msg: "profile stay empty with only nickName"
-      }
-      return Promise.resolve(msg);
-    }
-  })
-  .catch(err => {
-    msg = {
-      code: -1,
-      msg: "profile download fail",
-      err: err
-    }
-    return Promise.reject(msg);
-  })
+      return Promise.reject(msg);
+    })
 }
 
 const upload = (userInfo) => {
@@ -49,39 +49,39 @@ const upload = (userInfo) => {
   return (db.collection("profile").where({
     _openid: wx.getStorageSync("openid")
   }).get()
-  .then(res => {
-    if (res.data.length === 0) {
-      return db.collection("profile").add({
-        data: userInfo
-      })
-      .then(res => {
-        msg = {
-          code: 1,
-          msg: "profile record added"
-        };
-        return Promise.resolve(msg);
-      })
-    } else if (res.data[0] !== undefined) {
-      return db.collection("profile")
-      .doc(res.data[0]._id).update({
-        data: userInfo
-      }).then(res => {
-        msg = {
-          code: 2,
-          msg: "profile record updated"
-        };
-        return Promise.resolve(msg);
-      })
-    }
-  }))
-  .catch(err => {
-    msg = {
-      code: -1,
-      msg: "profile upload fail",
-      err: err
-    }
-    return Promise.reject(msg);
-  })
+    .then(res => {
+      if (res.data.length === 0) {
+        return db.collection("profile").add({
+          data: userInfo
+        })
+          .then(res => {
+            msg = {
+              code: 1,
+              msg: "profile record added"
+            };
+            return Promise.resolve(msg);
+          })
+      } else if (res.data[0] !== undefined) {
+        return db.collection("profile")
+          .doc(res.data[0]._id).update({
+            data: userInfo
+          }).then(res => {
+            msg = {
+              code: 2,
+              msg: "profile record updated"
+            };
+            return Promise.resolve(msg);
+          })
+      }
+    }))
+    .catch(err => {
+      msg = {
+        code: -1,
+        msg: "profile upload fail",
+        err: err
+      }
+      return Promise.reject(msg);
+    })
 }
 
 const introUpload = (intro) => {
@@ -89,28 +89,28 @@ const introUpload = (intro) => {
   return (db.collection("profile").where({
     _openid: wx.getStorageSync("openid")
   }).get()
-  .then(res => {
-    return db.collection("profile")
-    .doc(res.data[0]._id).update({
-      data: {
-        intro: intro
-      }
-    }).then(res => {
+    .then(res => {
+      return db.collection("profile")
+        .doc(res.data[0]._id).update({
+          data: {
+            intro: intro
+          }
+        }).then(res => {
+          msg = {
+            code: 0,
+            msg: "profile intro updated"
+          }
+          return Promise.resolve(msg);
+        })
+    })
+    .catch(err => {
       msg = {
         code: 0,
-        msg: "profile intro updated"
+        msg: "profile intro updated failed",
+        err: err
       }
-      return Promise.resolve(msg);
-    })
-  })
-  .catch(err => {
-    msg = {
-      code: 0,
-      msg: "profile intro updated failed",
-      err: err
-    }
-    return Promise.reject(msg);
-  }))
+      return Promise.reject(msg);
+    }))
 }
 
 module.exports = {
