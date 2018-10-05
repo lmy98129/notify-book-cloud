@@ -125,9 +125,15 @@ Page({
   },
 
   goSearch() {
-    wx.navigateTo({
-      url: "../search/search"
-    })
+    if (wx.getStorageSync("authStatus") !== "authorized") {
+      wx.navigateTo({
+        url: "../auth/auth"
+      })
+    } else {
+      wx.navigateTo({
+        url: "../search/search"
+      })
+    }
   }
 
 })

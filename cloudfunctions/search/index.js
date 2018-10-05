@@ -128,12 +128,23 @@ const searchProfile = (data, requestArray) => {
   return final;
 }
 
+const sleep = (numberMillis) => { 
+  var now = new Date(); 
+  var exitTime = now.getTime() + numberMillis; 
+  while (true) { 
+    now = new Date(); 
+    if (now.getTime() > exitTime) 
+    return; 
+  } 
+}
+
+
 // 云函数入口函数
 exports.main = async (event, context) => {
   try {
-    let allProfile = [], skip = 0, text = event.text;
+    let allProfile = [], skip = 0, text = event.text, start = event.start;
     let res = await db.collection("test-profile").count();
-    const total = res.total;
+    let total = res.total;
     while(skip <= total) {
       res = await db.collection("test-profile").skip(skip).limit(100).get();
       allProfile = allProfile.concat(res.data);
@@ -181,16 +192,21 @@ exports.main = async (event, context) => {
       }
     ])
 
-    res = await Promise.all(searchRes.map(item => {
-      return db.collection("avatar").where({
-        _openid: item._openid
-      }).get()
-    }))
+    total = searchRes.length;
 
-    let avatar = [];
-    res.map(item => avatar.push(item.data[0]));
+    if (total > 200) {
+      searchRes = searchRes.slice(start, start + 200);
+      start += 200;
+    }
+
     
-    console.log(avatar);
+    let avatar = [];
+    for (let i=0; i<searchRes.length; i++) {
+      res = await db.collection("avatar").where({
+        _openid: searchRes[i]._openid
+      }).get();
+      avatar.push(res.data[0]);
+    }
 
     for (item in searchRes) {
       for (subItem in avatar) {
@@ -205,7 +221,9 @@ exports.main = async (event, context) => {
 
     return {
       code: 1,
-      searchRes
+      searchRes,
+      start,
+      total
     }
 
   } catch (error) {

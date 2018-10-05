@@ -107,12 +107,21 @@
   background-color: #222;
 }
 
-swiper-item .main {
+.profile-wrapper.main {
   margin-top: 0;
 }
 
 #global {
   margin-top: 115rpx;
+}
+
+#global.main.no-highest {
+  margin-top: 30rpx;
+}
+
+.add-friend {
+  margin-top: 150rpx;
+  font-size: 33rpx;
 }
 
 .intro-wrapper {
@@ -130,6 +139,10 @@ swiper-item .main {
 .intro-wrapper .edit-btn {
   font-size: 35rpx;
   width: 40%;
+}
+
+.edit-btn {
+  margin-bottom: 100rpx;
 }
 
 .float-wrap {

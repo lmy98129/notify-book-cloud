@@ -42,7 +42,7 @@ const checkPhone = (that) => {
 const adjustSwiper = (swiperFirstHeight, index, height, that) => {
   if (index === 0) {
     that.setData({
-      swiperHeight: swiperFirstHeight
+      swiperHeight: height
     })
   } else if (index === 1) {
     let phone = wx.getSystemInfoSync().model;

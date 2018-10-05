@@ -45,7 +45,7 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-
+    // wx.setStorageSync("searchRes", []);
   },
 
   /**
@@ -103,32 +103,42 @@ Page({
     }
   },
   search: async function() {
-    let value = this.data.inputVal;
-    if (value === "" || value === undefined) {
-      toast("搜索关键字不能为空", "none");
-      return;
-    }
-    wx.showLoading({
-      title: "搜索中"
-    })
-    let res = await wx.cloud.callFunction({
-      name: "search",
-      data: {
-        text: value
+    try {
+      let value = this.data.inputVal;
+      if (value === "" || value === undefined) {
+        toast("搜索关键字不能为空", "none");
+        return;
       }
-    });
-    wx.hideLoading();
-    if (res.result.code === 1) {
-      console.log("搜索成功", res.result.searchRes);
-      this.setData({
-        searchRes: res.result.searchRes
+      wx.showLoading({
+        title: "搜索中"
       })
-      if (res.result.searchRes.length === 0) {
-        toast("搜索结果为空，请重新输入关键词","none");
+      let res = await wx.cloud.callFunction({
+        name: "search",
+        data: {
+          text: value,
+          start: 0
+        }
+      });
+      wx.hideLoading();
+      if (res.result.code === 1) {
+        let searchRes = res.result.searchRes
+        console.log("搜索成功", searchRes);
+        this.setData({
+          searchRes
+        })
+        if (searchRes.length === 0) {
+          toast("搜索结果为空，请重新输入关键词","none");
+        } else {
+          wx.setStorageSync("searchResult", searchRes);
+        }
+      } else {
+        toast("搜索请求出错", "none");
+        console.log("搜索失败", res.result.err);
       }
-    } else {
-      toast("搜索请求失败", "none");
-      console.log("搜索失败", res.result.error);
+    } catch (error) {
+      wx.hideLoading();
+      toast("搜索请求超时", "none");
+      console.log("搜索失败", error);
     }
   }
 })

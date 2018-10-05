@@ -1,20 +1,31 @@
 <!--pages/profile/profile.wxml-->
 <view class="root {{introStatus}}">
   <view class="container {{fixVeryTop ? 'fixed':''}}">
-    <top-widget avatarUrl="{{avatarUrl}}" bgImgUrl="{{bgImgUrl}}" nickname="{{nickname}}" fixTop="{{fixTop}}" class="top-widget-wrapper" isBack="{{true}}" mode="center">
-      <nav-btn slot="custom-style" btnType="custom-style" iconType="icon-gexinghua" bind:tapBtn="customBgImg"/>
-      <nav-btn slot="edit" btnType="edit" iconType="icon-bianji" bind:tapBtn="editProfile"/>
-    </top-widget>
+    <block wx:if="{{mode === 'normal'}}">
+      <top-widget avatarUrl="{{avatarUrl}}" bgImgUrl="{{bgImgUrl}}" nickname="{{nickname}}" fixTop="{{fixTop}}" class="top-widget-wrapper" isBack="{{true}}" mode="center">
+        <nav-btn slot="custom-style" btnType="custom-style" iconType="icon-gexinghua" bind:tapBtn="customBgImg"/>
+        <nav-btn slot="edit" btnType="edit" iconType="icon-bianji" bind:tapBtn="editProfile"/>
+      </top-widget>
+    </block>
+    <block wx:if="{{mode !== 'normal'}}">
+      <top-widget avatarUrl="{{avatarUrl}}" bgImgUrl="{{bgImgUrl}}" nickname="{{nickname}}" fixTop="{{fixTop}}" class="top-widget-wrapper" isBack="{{true}}" mode="center">
+      </top-widget>
+    </block>
+
+    <block wx:if="{{mode !== 'normal'}}">
+      <button class="add-friend" type="default" loading="{{isLoading}}" bindtap="addFriend">
+        {{addFriend}}
+      </button>
+    </block>
 
       <block wx:if="{{profileStatus === 1}}">
-        <view class="main" id="global">
+        <view class="main {{mode !== 'normal' ? 'no-highest' : ''}}" id="global">
           <view class="tabbar">
             <view class="tabbar-item {{tabIndex === 0 ? 'selected':''}}" bindtap="tabHandler" data-index="0">基本资料</view>
             <view class="tabbar-item {{tabIndex === 1 ? 'selected':''}}" bindtap="tabHandler" data-index="1">自我介绍</view>
           </view>
-          <swiper current="{{tabIndex}}" bindchange="bindSwiper" duration="{{500}}" style="height: {{swiperHeight}}px">
-            <swiper-item class="swipere-item">
-              <view class="main">
+            <block wx:if="{{tabIndex === 0}}">
+              <view class="profile-wrapper main">
                 <block wx:for="{{userInfo}}" wx:key="{{index}}">
                   <profile-item title="{{item.title}}" content="{{item.content}}" class="profile-item-wrapper"></profile-item>
                 </block>
@@ -36,10 +47,13 @@
                   </view>
                 </block>        
               </view>
-            </swiper-item>
-            <swiper-item>
+            </block>
+            <block wx:if="{{tabIndex === 1}}">
               <view class="intro-wrapper" id="intro">
-                <block wx:if="{{(intro === undefined || intro === '') && introStatus === 'default'}}">
+                <block wx:if="{{(intro === undefined || intro === '') && mode !== 'normal'}}">
+                  <view class="add-hint"><text>该用户暂无自我介绍</text></view>
+                </block>
+                <block wx:if="{{(intro === undefined || intro === '') && introStatus === 'default' && mode === 'normal'}}">
                   <view class="add-hint"><text>介绍自己\n让校友们更好地认识您</text></view>
                   <button class="add-btn" type="default" bindtap="addIntro">
                     添加自我介绍
@@ -53,13 +67,14 @@
                       </view>
                     <text class="quote" id="quote-right">”</text>
                   </view>
-                  <button class="edit-btn" type="default" bindtap="addIntro">
-                    修改自我介绍
-                  </button>
+                  <block wx:if="{{mode === 'normal'}}">
+                    <button class="edit-btn" type="default" bindtap="addIntro">
+                      修改自我介绍
+                    </button>
+                  </block>
                 </block>
               </view>
-            </swiper-item>
-          </swiper>
+            </block>
         </view> 
       </block>
 

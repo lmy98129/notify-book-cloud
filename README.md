@@ -10,6 +10,7 @@ A wechat mini-program for students of Television School, Communication Universit
 - [x] user authorization page/unauthoriazed-limit
 - [x] auditing page for administrator
 - [ ] address-book page & add/delete/edit/search
+- [ ] search-page with page-dividing
 - [ ] notification
 - [ ] invite code management
 - [ ] administrator management

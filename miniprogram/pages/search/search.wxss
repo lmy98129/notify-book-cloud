@@ -5,7 +5,7 @@
 
 .weui-search-bar {
   position: fixed;
-  padding: 8px 10px;
+  padding: 10px 10px;
   display: -webkit-box;
   display: -webkit-flex;
   display: flex;
