@@ -21,7 +21,8 @@ const download = async () => {
         msg: "new contact record added"
       }
     } else {
-      let result = [], openidArray = res.data[0].friendList, id = res.data[0]._id;
+      let result = [], openidArray = res.data[0].friendList, id = res.data[0]._id,
+        friendList = JSON.stringify(openidArray);
       for (let i=0; i<openidArray.length; i++ ) {
         res = await db.collection("profile").where({
           _openid: openidArray[i]
@@ -52,7 +53,7 @@ const download = async () => {
         code: 1,
         msg: "download contact record",
         data: result,
-        openidArray,
+        friendList,
         id,
       }
     }
@@ -103,7 +104,7 @@ const check = async (openid) => {
 const add = async (openid) => {
   try {
     let res = await download();
-    let friendList = res.openidArray, id = res.id;
+    let friendList = JSON.parse(res.friendList), id = res.id;
     friendList.push(openid);
     res = await db.collection("user-contact").doc(id).update({
       data: {
@@ -124,17 +125,19 @@ const add = async (openid) => {
   }
 }
 
-const del = async (openidArray) => {
+const del = async (openid) => {
   try {
     let res = await download();
-    let friendList = res.openidArray, id = res.id
-    for(const item in friendList) {
-      for (const subItem in openidArray) {
-        if (friendList[item] === openidArray[subItem]) {
-          friendList.splice(item, 1);
+    let friendList = JSON.parse(res.friendList), id = res.id;
+    for(let i=0; i<friendList.length; i++) {
+      for (let j=0; j<openid.length; j++) {
+        if (friendList[i] === openid[j]) {
+          friendList.splice(i, 1);
         }
       } 
     }
+
+    console.log(friendList);
     res = await db.collection("user-contact").doc(id).update({
       data: {
         friendList

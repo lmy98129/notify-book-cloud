@@ -5,7 +5,10 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    bgImgUrl: "",
+    nickName: "",
+    fixTop: false,
+    fixVeryTop: false,
   },
 
   /**
@@ -26,7 +29,13 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    let tmpUserInfo = wx.getStorageSync("userInfo");
+    let bgImgUrl = tmpUserInfo.bgImgUrl,
+    nickname = tmpUserInfo.nickName;
+    this.setData({
+      bgImgUrl,
+      nickname
+    });
   },
 
   /**
@@ -62,5 +71,23 @@ Page({
    */
   onShareAppMessage: function () {
 
-  }
+  },
+
+  onPageScroll: function(e) {
+    if (e.scrollTop > 0) {
+      this.setData({
+        fixVeryTop: true
+      })
+    } 
+    if (e.scrollTop > 80) {
+      this.setData({
+        fixTop: true
+      })
+    } else {
+      this.setData({
+        fixTop: false,
+        fixVeryTop: false
+      })
+    }
+  },
 })

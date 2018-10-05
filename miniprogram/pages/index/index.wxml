@@ -78,7 +78,9 @@
           <view class="btn">校友认证</view>
           <view class="red-dot" wx:if="{{isRedDot}}"></view>
         </navigator>
-        <view class="btn">消息</view>
+        <navigator url="../notification/notification">
+          <view class="btn">消息</view>
+        </navigator>
         <navigator url="../settings/settings">
           <view class="btn">设置</view>
         </navigator>

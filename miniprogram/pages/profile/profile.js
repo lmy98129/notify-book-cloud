@@ -297,7 +297,12 @@ Page({
 
   addFriend: async function() {
     try {
-      let openid = wx.getStorageSync("searchResult")[index]._openid;
+      let openid;
+      if (mode === "searchResult") {
+        openid = wx.getStorageSync("searchResult")[index]._openid;
+      } else if (mode === "contactResult") {
+        openid = wx.getStorageSync("contactResult")[index]._openid;
+      }
       this.setData({
         isLoading: true,
         addFriend: "数据上传中"

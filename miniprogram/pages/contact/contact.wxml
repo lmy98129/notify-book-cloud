@@ -1,9 +1,9 @@
 <!--pages/contact/contact.wxml-->
 <view class="root {{introStatus}}">
   <view class="container {{fixVeryTop ? 'fixed':''}}">
-    <top-widget mode="contact" bgImgUrl="{{bgImgUrl}}" nickname="{{nickname}}" fixTop="{{fixTop}}" class="top-widget-wrapper" isNavigateToProfile="true">
+    <top-widget mode="contact" bgImgUrl="{{bgImgUrl}}" title="通讯录" nickname="{{nickname}}" fixTop="{{fixTop}}" class="top-widget-wrapper" isNavigateToProfile="true">
       <nav-btn slot="add" btnType="add" iconType="icon-tianjiahaoyou" bind:tapBtn="goSearch"/>
-      <nav-btn slot="settings" btnType="manage" iconType="icon-guanli"/>
+      <!-- <nav-btn slot="settings" btnType="manage" iconType="icon-guanli"/> -->
     </top-widget>
     <block wx:if="{{contactArray.length === 0}}">
       <view class="hint-wrapper">

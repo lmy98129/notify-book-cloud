@@ -14,7 +14,7 @@
       </view>
     </block>
     <block wx:else>
-      <view class="contact-title">通讯录</view>
+      <view class="contact-title">{{title}}</view>
     </block>
     <view class="btn-wrap">
       <slot name="add"></slot>        
