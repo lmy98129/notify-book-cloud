@@ -11,3 +11,5 @@ A wechat mini-program for students of Television School, Communication Universit
 - [x] auditing page for administrator
 - [ ] address-book page & add/delete/edit/search
 - [ ] notification
+- [ ] invite code management
+- [ ] administrator management

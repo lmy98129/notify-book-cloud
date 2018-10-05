@@ -2,7 +2,7 @@
 <view class="root {{sideBar ? 'left' : ''}}">
   <view class="container {{sideBar ? 'left' : ''}}  {{fixVeryTop ? 'fixed':''}}">
     <top-widget avatarUrl="{{avatarUrl}}" bgImgUrl="{{bgImgUrl}}" nickname="{{nickname}}" fixTop="{{fixTop}}" class="top-widget-wrapper" isNavigateToProfile="true">
-      <nav-btn slot="add" btnType="add" iconType="icon-tianjiahaoyou"/>
+      <nav-btn slot="add" btnType="add" iconType="icon-tianjiahaoyou" bind:tapBtn="goSearch"/>
       <nav-btn slot="settings" btnType="settings" iconType="icon-option2" bind:tapBtn="switchSideBar" isRedDot="{{isRedDot}}"/>
     </top-widget>
     

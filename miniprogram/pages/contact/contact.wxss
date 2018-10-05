@@ -1,1 +1,29 @@
 /* pages/contact/contact.wxss */
+
+.hint-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 100%;
+  padding-bottom: 180rpx;
+  padding-top: 40%;
+}
+
+.upper {
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 35rpx;
+}
+
+.upper image{
+  margin: 40rpx auto;
+  width: 110rpx;
+  height: 110rpx;
+}
+
+.hint {
+  font-size: 35rpx;
+  text-align: center;
+}

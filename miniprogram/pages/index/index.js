@@ -67,6 +67,7 @@ Page({
      * 保证之后打开页面时只读取本地存储而不去执行函数，相比定时器设计更灵活地减少了函数调用次数
      */
     // 感觉有点蠢，实在没办法实时更新啊，还是只保持第一种情况就算了。
+    // 更蠢了，一直反复更新反而容易出问题。。。
     // if (app.globalData.isFirstLogin || app.globalData.isFirstLogin === undefined){
       login.getUserInfo(this);
       app.globalData.isFirstLogin = false;
@@ -122,5 +123,11 @@ Page({
       })
     }
   },
+
+  goSearch() {
+    wx.navigateTo({
+      url: "../search/search"
+    })
+  }
 
 })

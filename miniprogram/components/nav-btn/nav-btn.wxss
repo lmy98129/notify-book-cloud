@@ -48,3 +48,7 @@
   -webkit-transform: rotate(30deg);
 }
 
+.manage .icon {
+  font-size: 46rpx;
+}
+

@@ -1,2 +1,37 @@
 <!--pages/contact/contact.wxml-->
-<text>pages/contact/contact.wxml</text>
+<view class="root {{introStatus}}">
+  <view class="container {{fixVeryTop ? 'fixed':''}}">
+    <top-widget mode="contact" bgImgUrl="{{bgImgUrl}}" nickname="{{nickname}}" fixTop="{{fixTop}}" class="top-widget-wrapper" isNavigateToProfile="true">
+      <nav-btn slot="add" btnType="add" iconType="icon-tianjiahaoyou" bind:tapBtn="goSearch"/>
+      <nav-btn slot="settings" btnType="manage" iconType="icon-guanli"/>
+    </top-widget>
+    <block wx:if="{{contactArray.length === 0}}">
+      <view class="hint-wrapper">
+        <view class="upper">
+          <image src="/images/discover-hl.png"></image>
+        </view>
+        <view class="hint">
+          <text>点击右上角的小人或者首页推荐\n添加可能认识的人吧~</text>
+        </view>
+      </view>
+      <view class="hint"><text></text></view>
+    </block>
+    <block wx:for="{{contactArray}}" wx:key="{{index}}">
+      <view class="contact-wrap">
+        <image src="{{item.avatarUrl === '' ? '/images/user-unlogin.png' : item.avatarUrl}}" class="avatar" />
+        <view class="right">
+          <view class="profile">
+            <view class="nickname">{{item.nickName}}</view>
+            <view class="remark"> 
+            </view>
+          </view>
+        </view>
+        <block wx:if="{{useCheckBox}}">
+          <view class="check-box">
+            <checkbox value="{{item._openid}}"/>
+          </view>
+        </block>
+      </view>
+    </block>
+  </view>
+</view>

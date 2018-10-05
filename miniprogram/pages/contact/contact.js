@@ -1,11 +1,19 @@
 // pages/contact/contact.js
+const contact = require("../../utils/contact");
+import regeneratorRuntime, { async } from "../../utils/regenerator-runtime/runtime";
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-
+    bgImgUrl: "",
+    fixTop: false,
+    fixVeryTop: false,
+    testArray: [],
+    nickname: "",
+    contactArray: []
   },
 
   /**
@@ -25,7 +33,25 @@ Page({
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function () {
+  onShow: async function () {
+    let tmpUserInfo = wx.getStorageSync("userInfo");
+    let bgImgUrl = tmpUserInfo.bgImgUrl,
+    nickname = tmpUserInfo.nickName;
+    this.setData({
+      bgImgUrl,
+      nickname
+    });
+    wx.showLoading({
+      title: "加载中"
+    });
+    let res = await contact.download();
+    wx.hideLoading();
+    if (res.data != undefined) {
+      console.log("通讯录下载成功：", res.msg);
+      this.setData({
+        contactArray: res.data.friendList
+      })
+    }
 
   },
 
@@ -62,5 +88,29 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+
+  onPageScroll: function(e) {
+    if (e.scrollTop > 0) {
+      this.setData({
+        fixVeryTop: true
+      })
+    } 
+    if (e.scrollTop > 80) {
+      this.setData({
+        fixTop: true
+      })
+    } else {
+      this.setData({
+        fixTop: false,
+        fixVeryTop: false
+      })
+    }
+  },
+
+  goSearch() {
+    wx.navigateTo({
+      url: "../search/search"
+    })
   }
 })

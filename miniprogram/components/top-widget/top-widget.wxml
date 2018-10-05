@@ -1,5 +1,5 @@
 <!--components/top-widget/top-widget.wxml-->
-<block wx:if="{{mode === 'main' || mode === 'center'}}">
+<block wx:if="{{mode === 'main' || mode === 'center' || mode === 'contact'}}">
 
   <view class="top-widget {{fixTop ? 'fixed':''}} {{mode === 'center'? 'center':''}}">
     <block wx:if="{{isBack}}">
@@ -7,10 +7,15 @@
     </block>
     <!-- <view class="top-bg"></view> -->
     <image class="top-bg" src="{{bgImgUrl}}"></image>
-    <view class="user-info">
-      <image class="user-avatar {{fixTop ? 'fixed':''}}" src="{{avatarUrl}}" bindtap="goProfile"></image>
-      <view class="user-nickname">{{nickname}}</view>
-    </view>
+    <block wx:if="{{mode !== 'contact'}}">
+      <view class="user-info">
+        <image class="user-avatar {{fixTop ? 'fixed':''}}" src="{{avatarUrl}}" bindtap="goProfile"></image>
+        <view class="user-nickname">{{nickname}}</view>
+      </view>
+    </block>
+    <block wx:else>
+      <view class="contact-title">通讯录</view>
+    </block>
     <view class="btn-wrap">
       <slot name="add"></slot>        
       <slot name="settings"></slot>
@@ -20,10 +25,22 @@
   </view>
 
   <view class="top-widget-fixed {{fixTop ? 'fixed':''}} {{specialPhone}}">
-    <view class="user-info">
-      <image class="user-avatar" src="{{avatarUrl}}"></image>
-      <view class="user-nickname">{{nickname}}</view>
-    </view>
+    <block wx:if="{{mode !== 'contact'}}">
+      <view class="user-info">
+        <image class="user-avatar" src="{{avatarUrl}}"></image>
+        <view class="user-nickname">{{nickname}}</view>
+      </view>
+    </block>
+    <block wx:else>
+      <view class="contact-title">
+        <view class="user-nickname">
+          {{nickname}}
+        </view>
+        <view class="end">
+          的通讯录
+        </view>
+      </view>
+    </block>
   </view>
 
 </block>
@@ -33,7 +50,7 @@
     <block wx:if="{{!isBack}}">    
       <view class="iconfont icon-fanhui back-icon fixed" bindtap="goBack"></view>
     </block>
-    <view class="title">{{title}}</view>
+    <view class="title"><text decode="{{true}}">{{title}}</text></view>
   </view>
   <view class="top-widget-title-holder fixed {{specialPhone}}"></view>
 </block>

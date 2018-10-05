@@ -1,4 +1,4 @@
-// pages/message/message.js
+// pages/notification/notification.js
 Page({
 
   /**

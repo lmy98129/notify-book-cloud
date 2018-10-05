@@ -27,6 +27,19 @@
   width: auto;
 }
 
+.top-widget .contact-title {
+  position: absolute;
+  top: 190rpx;
+  left: 30rpx;
+  z-index: 10;
+  display: flex;
+  flex-direction: row;
+  width: auto;
+  font-size: 90rpx;
+  color: #fff;
+  text-shadow:2rpx 2rpx 5rpx #444;
+}
+
 .top-widget .user-info .user-avatar {
   width: 170rpx;
   height: 170rpx;
@@ -147,7 +160,7 @@
   top: 0;
   width: 100%;
   background: rgb(81, 81, 81);
-  padding-bottom: 85rpx;
+  padding-bottom: 30rpx;
   padding-top: 60rpx;
   color: #fff;
   display: flex;
@@ -156,11 +169,16 @@
 }
 
 .top-widget-title .title {
-  position: fixed;
-  width: 100%;
+  /* position: fixed; */
+  /* width: 100%; */
   text-align: center;
   font-size: 40rpx;
-  padding-top: 5rpx
+  padding-top: 5rpx;
+  max-width: 280rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0 auto;
 }
 
 .top-widget-title-holder {
@@ -241,4 +259,19 @@
   font-size: 35rpx;
   text-align: center;
   line-height: 60rpx;
+}
+
+.top-widget-fixed.fixed .contact-title {
+  display: flex;
+  flex-direction: row;
+  margin-left: 30rpx;
+  font-size: 40rpx;
+  line-height: 68rpx;
+}
+
+.top-widget-fixed.fixed .contact-title .user-nickname {
+  max-width: 300rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
