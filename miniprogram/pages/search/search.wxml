@@ -11,13 +11,89 @@
           <icon type="clear" size="17"></icon>
         </view>
       </view>
-      <!-- <label class="weui-search-bar__label" hidden="{{inputShowed}}" bindtap="showInput">
-        <icon class="weui-icon-search" type="search" size="14"></icon>
-        <view class="weui-search-bar__text">搜索</view>
-      </label> -->
     </view>
     <view class="weui-search-bar__cancel-btn" bindtap="search">
       搜索
     </view>
+  </view>
+  <block wx:if="{{searchRes.length === 0 && inputVal.length === 0}}">
+    <view class="hint"><text >提示：\n1. 当前暂不支持多关键词搜索。\n2. 如需输入日期，请用“-”代替年月，\n示例：“2018-01-01”</text></view>
+  </block>
+  <view class="result-list" wx:if="{{searchRes.length > 0}}">
+    <block wx:for="{{searchRes}}" wx:key="{{index}}">
+    <navigator url="../profile/profile?mode='searchResult'&index={{index}}">
+      <view class="result-wrap">
+          <image src="{{(item.avatarUrl === '' || item.avatarUrl === undefined) ? '/images/user-unlogin.png' : item.avatarUrl}}" class="avatar" />
+          <view class="right">
+            <view class="profile">
+              <view class="realname">{{item.realName}}</view>
+              <view class="keyfound">匹配: 
+                <block wx:for="{{item.keyFound}}" wx:key="{{index}}">
+                  <block wx:if="{{index <= 1}}">
+                    <view class="key">
+                      <block wx:if="{{item === 'nickName'}}">
+                        昵称
+                      </block>
+                      <block wx:if="{{item === 'realName'}}">
+                        真实姓名
+                      </block>
+                      <block wx:if="{{item === 'gender'}}">
+                        性别
+                      </block>
+                      <block wx:if="{{item === 'major'}}">
+                        专业
+                      </block>
+                      <block wx:if="{{item === 'address'}}">
+                        现住址
+                      </block>
+                      <block wx:if="{{item === 'wechatId'}}">
+                        微信
+                      </block>
+                      <block wx:if="{{item === 'institution'}}">
+                        工作单位
+                      </block>
+                      <block wx:if="{{item === 'job'}}">
+                        职务名称
+                      </block>
+                      <block wx:if="{{item === 'contactType'}}">
+                        联系方式类型
+                      </block>
+                      <block wx:if="{{item === 'content'}}">
+                        联系方式
+                      </block>
+                      <block wx:if="{{item === 'jobStartTime'}}">
+                        入职时间
+                      </block>
+                      <block wx:if="{{item === 'jobEndTime'}}">
+                        离职时间
+                      </block>
+                      <block wx:if="{{item === 'birthDate'}}">
+                        生日
+                      </block>
+                      <block wx:if="{{item === 'homeTown'}}">
+                        籍贯
+                      </block>
+                      <block wx:if="{{item === 'degree'}}">
+                        学历
+                      </block>
+                      <block wx:if="{{item === 'enterSchoolTime'}}">
+                        入校时间
+                      </block>
+                      <block wx:if="{{item === 'leaveSchoolTime'}}">
+                        离校时间
+                      </block>
+                      <block wx:if="{{item === 'intro'}}">
+                        自我介绍
+                      </block>
+                    </view>
+                  </block>
+                </block>
+              </view>
+            </view>
+          </view>
+          <view class="iconfont icon-fanhui1 icon"></view>
+        </view>
+    </navigator>
+    </block>
   </view>
 </view>

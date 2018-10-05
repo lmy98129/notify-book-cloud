@@ -27,7 +27,7 @@ const search = (data, text, keyArray, weight) => {
       case "jobStartTime":
       case "jobEndTime":
         data.map(item => {
-          if (item[key] === undefined) {
+          if (item.jobArray === undefined) {
             return;
           }
           item.jobArray.map(subItem => {
@@ -40,7 +40,7 @@ const search = (data, text, keyArray, weight) => {
       case "contactType":
       case "content":
         data.map(item => {
-          if (item[key] === undefined) {
+          if (item.contactArray === undefined) {
             return;
           }
           item.contactArray.map(subItem => {
@@ -131,7 +131,7 @@ const searchProfile = (data, requestArray) => {
 // 云函数入口函数
 exports.main = async (event, context) => {
   try {
-    let allProfile = [], skip = 0;
+    let allProfile = [], skip = 0, text = event.text;
     let res = await db.collection("test-profile").count();
     const total = res.total;
     while(skip <= total) {
@@ -140,10 +140,19 @@ exports.main = async (event, context) => {
       skip += 100;
     }
 
+    text = text.replace(/[\_\,\!\|\~\`\(\)\#\$\%\^\&\*\{\}\:\;\"\L\<\>\?]/g, '');
+
+    if (text === "" || text === "-") {
+      return {
+        code: 1,
+        searchRes: []
+      }
+    }
+
     let searchRes = 
     searchProfile(allProfile, [
       {
-        text: event.text,
+        text,
         keyArray: [
           "enterSchoolTime",
           "leaveSchoolTime",
@@ -171,6 +180,28 @@ exports.main = async (event, context) => {
         weight: 1
       }
     ])
+
+    res = await Promise.all(searchRes.map(item => {
+      return db.collection("avatar").where({
+        _openid: item._openid
+      }).get()
+    }))
+
+    let avatar = [];
+    res.map(item => avatar.push(item.data[0]));
+    
+    console.log(avatar);
+
+    for (item in searchRes) {
+      for (subItem in avatar) {
+        if (avatar[subItem] === undefined) {
+          continue;
+        } else if (avatar[subItem]._openid === searchRes[item]._openid) {
+          searchRes[item].avatarUrl = avatar[subItem].avatarUrl
+        }
+      }
+    }
+
 
     return {
       code: 1,

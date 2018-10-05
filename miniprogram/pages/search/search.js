@@ -10,6 +10,7 @@ Page({
   data: {
     inputVal: "",
     titleVal: "&nbsp;",
+    searchRes: []
   },
 
   /**
@@ -83,7 +84,8 @@ Page({
   clearInput: function () {
       this.setData({
           inputVal: "",
-          titleVal: "&nbsp;"
+          titleVal: "&nbsp;",
+          searchRes: []
       });
   },
   inputTyping: function (e) {
@@ -118,6 +120,12 @@ Page({
     wx.hideLoading();
     if (res.result.code === 1) {
       console.log("搜索成功", res.result.searchRes);
+      this.setData({
+        searchRes: res.result.searchRes
+      })
+      if (res.result.searchRes.length === 0) {
+        toast("搜索结果为空，请重新输入关键词","none");
+      }
     } else {
       toast("搜索请求失败", "none");
       console.log("搜索失败", res.result.error);
