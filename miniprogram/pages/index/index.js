@@ -68,19 +68,19 @@ Page({
      */
     // 感觉有点蠢，实在没办法实时更新啊，还是只保持第一种情况就算了。
     // 更蠢了，一直反复更新反而容易出问题。。。
-    // if (app.globalData.isFirstLogin || app.globalData.isFirstLogin === undefined){
+    if (app.globalData.isFirstLogin || app.globalData.isFirstLogin === undefined){
       login.getUserInfo(this);
       app.globalData.isFirstLogin = false;
-    // } else {
-    //   let tmpUserInfo = wx.getStorageSync("userInfo");
-    //   let avatarUrl = tmpUserInfo.avatarUrl,
-    //     nickname = tmpUserInfo.nickName,
-    //     bgImgUrl = tmpUserInfo.bgImgUrl;
-    //   this.setData({
-    //     avatarUrl: avatarUrl,
-    //     nickname: nickname,
-    //     bgImgUrl: bgImgUrl,
-    //   })
+    } else {
+      let tmpUserInfo = wx.getStorageSync("userInfo");
+      let avatarUrl = tmpUserInfo.avatarUrl,
+        nickname = tmpUserInfo.nickName,
+        bgImgUrl = tmpUserInfo.bgImgUrl;
+      this.setData({
+        avatarUrl: avatarUrl,
+        nickname: nickname,
+        bgImgUrl: bgImgUrl,
+      })
       if (wx.getStorageSync("authStatus") === "unauthorized") {
         this.setData({
           isRedDot: true
@@ -90,7 +90,7 @@ Page({
           isRedDot: false
         })
       }
-    // }
+    }
   },
 
 

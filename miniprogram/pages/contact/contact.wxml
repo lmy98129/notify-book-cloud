@@ -16,21 +16,26 @@
       </view>
       <view class="hint"><text></text></view>
     </block>
-    <block wx:for="{{contactArray}}" wx:key="{{index}}">
-      <view class="contact-wrap">
-        <image src="{{item.avatarUrl === '' ? '/images/user-unlogin.png' : item.avatarUrl}}" class="avatar" />
-        <view class="right">
-          <view class="profile">
-            <view class="nickname">{{item.nickName}}</view>
-            <view class="remark"> 
-            </view>
-          </view>
+    <block wx:else>
+      <view class="main">
+        <view class="contact-list">
+          <block wx:for="{{contactArray}}" wx:key="{{index}}">
+            <navigator url="../profile/profile?mode=contactResult&index={{index}}">
+              <view class="contact-wrap">
+                  <image src="{{(item.avatarUrl === '' || item.avatarUrl === undefined) ? '/images/user-unlogin.png' : item.avatarUrl}}" class="avatar" />
+                  <view class="right">
+                    <view class="profile">
+                      <view class="realname">{{item.realName}}</view>
+                      <view class="remark">
+                        <text>{{(item.gender === 1 || item.gender === '1') ? '男' : '女'}} {{item.enterSchoolTime[0]}}{{item.enterSchoolTime[1]}}{{item.enterSchoolTime[2]}}{{item.enterSchoolTime[3]}}级 {{item.degree}} {{item.major}}</text>
+                      </view>
+                    </view>
+                  </view>
+                  <view class="iconfont icon-fanhui1 icon"></view>
+              </view>
+            </navigator>
+          </block>
         </view>
-        <block wx:if="{{useCheckBox}}">
-          <view class="check-box">
-            <checkbox value="{{item._openid}}"/>
-          </view>
-        </block>
       </view>
     </block>
   </view>

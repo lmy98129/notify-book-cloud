@@ -125,9 +125,9 @@ const decode = (tmpUserInfo, that) => {
         delete tmpUserInfo[item];
         break;
       case "gender":
-        if (tmpUserInfo[item] === 1) {
+        if (tmpUserInfo[item] === 1 || parseInt(tmpUserInfo[item]) === 1) {
           tmpUserInfo[item] = "男";
-        } else if (tmpUserInfo[item] === 2) {
+        } else if (tmpUserInfo[item] === 2 || parseInt(tmpUserInfo[item]) === 2) {
           tmpUserInfo[item] = "女";
         }
         break;

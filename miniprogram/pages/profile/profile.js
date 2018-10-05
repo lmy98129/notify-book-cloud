@@ -6,7 +6,7 @@ const bgImg = require("../../utils/bg-img");
 const contact = require("../../utils/contact");
 import regeneratorRuntime, { async } from "../../utils/regenerator-runtime/runtime";
 
-let mode, index, isFriend;
+let mode = "normal", index, isFriend;
 
 Page({
 
@@ -46,6 +46,16 @@ Page({
     if (options.index !== undefined) {
       index = options.index;
     }
+    if (mode === "searchResult") {
+      let tmpUserInfo = wx.getStorageSync("searchResult")[index];
+      let openid = wx.getStorageSync("openid");
+      if (tmpUserInfo._openid === openid) {
+        mode = "normal";
+        this.setData({
+          mode: "normal"
+        })
+      }
+    }
     sys.checkPhone(this);
 
   },
@@ -61,9 +71,14 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: async function () {
-    if (mode === "searchResult") {
+    if (mode !== "normal") {
+      let tmpUserInfo
+      if (mode === "searchResult") {
+        tmpUserInfo = wx.getStorageSync("searchResult")[index];
+      } else if (mode === "contactResult") {
+        tmpUserInfo = wx.getStorageSync("contactResult")[index];
+      }
       try {
-        let tmpUserInfo = wx.getStorageSync("searchResult")[index];
         let avatarUrl = tmpUserInfo.avatarUrl,
         nickname = tmpUserInfo.nickName,
         bgImgUrl = tmpUserInfo.bgImgUrl;
@@ -77,19 +92,19 @@ Page({
         let res = await contact.check(tmpUserInfo._openid);
         profile.decode(tmpUserInfo, this); 
         if (res.code === 0) {
-          console.log("获取用户资料成功：", res);
+          console.log("获取用户资料成功：", res.msg);
           this.setData({
             addFriend: "添加到通讯录",
           })
           isFriend = false;
         } else if (res.code === 1) {
-          console.log("获取用户资料成功：", res);
+          console.log("获取用户资料成功：", res.msg);
           this.setData({
             addFriend: "取消关注"
           })
           isFriend = true;
         } else {
-          console.log("获取用户资料出错：", res);
+          console.log("获取用户资料出错：", res.error);
         }
       } catch (error) {
         console.log("获取用户资料出错：", error);
@@ -139,7 +154,7 @@ Page({
    */
   onUnload: function () {
     index = undefined;
-    mode = undefined;
+    mode = "normal";
     isFriend = undefined;
   },
 

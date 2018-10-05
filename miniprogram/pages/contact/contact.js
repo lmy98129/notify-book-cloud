@@ -44,13 +44,19 @@ Page({
     wx.showLoading({
       title: "加载中"
     });
-    let res = await contact.download();
-    wx.hideLoading();
-    if (res.data != undefined) {
-      console.log("通讯录下载成功：", res.msg);
-      this.setData({
-        contactArray: res.data.friendList
-      })
+    try {
+      let res = await contact.download();
+      wx.hideLoading();
+      if (res.data != undefined) {
+        console.log("通讯录下载成功：", res.msg);
+        this.setData({
+          contactArray: res.data
+        })
+        wx.setStorageSync("contactResult", res.data);
+      }
+
+    } catch (error) {
+      console.log("通讯录下载出错：", error);
     }
 
   },

@@ -142,11 +142,13 @@ const sleep = (numberMillis) => {
 // 云函数入口函数
 exports.main = async (event, context) => {
   try {
-    let allProfile = [], skip = 0, text = event.text, start = event.start;
-    let res = await db.collection("test-profile").count();
+    let allProfile = [], skip = 0, 
+      text = event.text, start = event.start, limit = event.limit, 
+      requestArray = event.requestArray;
+    let res = await db.collection("profile").count();
     let total = res.total;
     while(skip <= total) {
-      res = await db.collection("test-profile").skip(skip).limit(100).get();
+      res = await db.collection("profile").skip(skip).limit(100).get();
       allProfile = allProfile.concat(res.data);
       skip += 100;
     }
@@ -161,42 +163,17 @@ exports.main = async (event, context) => {
     }
 
     let searchRes = 
-    searchProfile(allProfile, [
-      {
-        text,
-        keyArray: [
-          "enterSchoolTime",
-          "leaveSchoolTime",
-          "homeTown",
-          "institution",
-          "realName",
-          "major",
-          "phoneNumber",
-          "wechatId",
-          "intro",
-          "job",
-          "content",
-          "degree"
-        ],
-        weight: 4
-      },
-      {
-        text: event.text,
-        keyArray: [
-          "birthDate",
-          "jobStartTime",
-          "nickName",
-          "address"
-        ],
-        weight: 1
-      }
-    ])
+    searchProfile(allProfile, requestArray);
 
     total = searchRes.length;
 
-    if (total > 200) {
+    if (total > 200 && start != undefined) {
       searchRes = searchRes.slice(start, start + 200);
       start += 200;
+    }
+
+    if (limit != undefined) {
+      searchRes = searchRes.slice(0, limit);
     }
 
     

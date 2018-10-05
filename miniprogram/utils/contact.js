@@ -21,10 +21,39 @@ const download = async () => {
         msg: "new contact record added"
       }
     } else {
+      let result = [], openidArray = res.data[0].friendList, id = res.data[0]._id;
+      for (let i=0; i<openidArray.length; i++ ) {
+        res = await db.collection("profile").where({
+          _openid: openidArray[i]
+        }).get();
+        result.push(res.data[0]);
+      }
+
+      let avatar = [];
+      for (let i=0; i<openidArray.length; i++) {
+        res = await db.collection("avatar").where({
+          _openid: openidArray[i]
+        }).get();
+        avatar.push(res.data[0])
+      }
+
+      for (const item in result) {
+        for (const subItem in avatar) {
+          if (avatar[subItem] === undefined) {
+            continue;
+          }
+          if (result[item]._openid === avatar[subItem]._openid) {
+            result[item].avatarUrl = avatar[subItem].avatarUrl;
+          }
+        }
+      }
+
       return {
         code: 1,
         msg: "download contact record",
-        data: res.data[0],
+        data: result,
+        openidArray,
+        id,
       }
     }
 
@@ -32,7 +61,8 @@ const download = async () => {
     console.log("通讯录下载出错", error)
     return {
       code: -1,
-      msg: "download contact failed"
+      msg: "download contact failed",
+      error
     }
   }
 }
@@ -40,7 +70,7 @@ const download = async () => {
 const check = async (openid) => {
   try {
     let res = await download();
-    let friendList = res.data.friendList
+    let friendList = res.data
     if (friendList.length === 0) {
       return {
         code: 0,
@@ -48,7 +78,7 @@ const check = async (openid) => {
       }
     } else {
       for (const item in friendList) {
-        if (friendList[item] === openid) {
+        if (friendList[item]._openid === openid) {
           return {
             code: 1,
             msg: "friend has been added"
@@ -64,7 +94,8 @@ const check = async (openid) => {
     console.log("好友检测出错", error)
     return {
       code: -1,
-      msg: "check contact failed"
+      msg: "check contact failed",
+      error
     }
   }
 } 
@@ -72,7 +103,7 @@ const check = async (openid) => {
 const add = async (openid) => {
   try {
     let res = await download();
-    let friendList = res.data.friendList, id = res.data._id;
+    let friendList = res.openidArray, id = res.id;
     friendList.push(openid);
     res = await db.collection("user-contact").doc(id).update({
       data: {
@@ -96,7 +127,7 @@ const add = async (openid) => {
 const del = async (openidArray) => {
   try {
     let res = await download();
-    let friendList = res.data.friendList, id = res.data._id;
+    let friendList = res.openidArray, id = res.id
     for(const item in friendList) {
       for (const subItem in openidArray) {
         if (friendList[item] === openidArray[subItem]) {
