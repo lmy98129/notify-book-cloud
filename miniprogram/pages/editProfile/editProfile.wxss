@@ -69,6 +69,7 @@ page {
   background: rgb(220, 220, 220);
   font-size: 35rpx;
   border-radius: 45rpx;
+  line-height: 50rpx;
 }
 
 .submit:active,

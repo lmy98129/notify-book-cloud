@@ -102,7 +102,8 @@ Page({
     })
   },
 
-  submit() {
-      auth.upload(this.data.authImgArray, this.data.remark, this);
+  submit(e) {
+    console.log(e);
+      // auth.upload(this.data.authImgArray, this.data.remark, this);
   }
 })

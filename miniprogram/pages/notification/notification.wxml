@@ -2,8 +2,8 @@
 <view class="root {{introStatus}}">
   <view class="container {{fixVeryTop ? 'fixed':''}}">
     <top-widget mode="contact" bgImgUrl="{{bgImgUrl}}" nickname="{{nickname}}" title="消息管理" fixTop="{{fixTop}}" class="top-widget-wrapper" isNavigateToProfile="true" isBack="true">
-      <nav-btn slot="add" btnType="add" iconType="icon-tianjiahaoyou" bind:tapBtn="goSearch"/>
-      <!-- <nav-btn slot="settings" btnType="manage" iconType="icon-guanli"/> -->
+      <!-- <nav-btn slot="add" btnType="add" iconType="icon-tianjiahaoyou" bind:tapBtn="goSearch"/> -->
+      <nav-btn slot="settings" btnType="manage" iconType="icon-guanli"/>
     </top-widget>
   </view>
 </view>

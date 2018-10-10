@@ -13,17 +13,19 @@
       <view class="item add-wrap">
         <view class="add-btn" bindtap="addBtn">+ 点击添加证件照片</view>
       </view>
-    
-      <profile-input title="备注" place-holder="请输入证件类型等信息" bind:input="inputRemark" asterisk="{{false}}"/>
 
-      <view class="hint">
-        <text>
-        1. 证件照片数量至少一张，在校学生/教职工请提供学生/职工证，已毕业人士请提供毕业证书。
-        2. 备注为选填项目，如有必要请主动提供证件的类型、发证单位等相关信息。
-        3. 管理人员将保证您的证件关键信息不会公开泄露，如有顾虑，您可以自行用马赛克等消去证件编号等关键信息，谢谢您的理解和配合。
-        </text>
-      </view>
-      <view class="submit" bindtap="submit">提交</view>
+      <form bindsubmit="submit" report-submit='true'>
+        <profile-input title="备注" place-holder="请输入证件类型等信息" bind:input="inputRemark" asterisk="{{false}}"/>
+        <view class="hint">
+          <text>
+          1. 证件照片数量至少一张，在校学生/教职工请提供学生/职工证，已毕业人士请提供毕业证书。
+          2. 备注为选填项目，如有必要请主动提供证件的类型、发证单位等相关信息。
+          3. 管理人员将保证您的证件关键信息不会公开泄露，如有顾虑，您可以自行用马赛克等消去证件编号等关键信息，谢谢您的理解和配合。
+          </text>
+        </view>
+        <button class="submit" form-type='submit'>提交</button>
+      </form>
+
     </block>
 
     <block wx:if="{{authStatus === 'auditing'}}">
