@@ -1,5 +1,7 @@
 // components/top-widget/top-widget.js
 const sys = require("../../utils/system");
+const app = getApp();
+
 Component({
   /**
    * 组件的设置
@@ -71,6 +73,13 @@ Component({
           url: '../profile/profile?isOtherUser=false',
         })
       }
+    },
+
+    getFormid(e) {
+      if (app.globalData.formidArray === undefined) {
+        app.globalData.formidArray = [];
+      }
+      app.globalData.formidArray.push(e.detail.formId);
     },
 
     goBack() {

@@ -58,7 +58,6 @@ page {
   padding-right: 0;
   border-radius: 0;
   font-size: 0rpx;
-  color: transparent;
 }
 
 .submit-no-style::after {

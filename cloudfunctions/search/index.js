@@ -145,10 +145,10 @@ exports.main = async (event, context) => {
     let allProfile = [], skip = 0, 
       text = event.text, start = event.start, limit = event.limit, 
       requestArray = event.requestArray;
-    let res = await db.collection("profile").count();
+    let res = await db.collection("test-profile").count();
     let total = res.total;
     while(skip <= total) {
-      res = await db.collection("profile").skip(skip).limit(100).get();
+      res = await db.collection("test-profile").skip(skip).limit(100).get();
       allProfile = allProfile.concat(res.data);
       skip += 100;
     }

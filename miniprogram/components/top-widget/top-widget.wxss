@@ -115,7 +115,9 @@
   position: fixed;
   left: 30rpx;
   padding-top:58rpx;
+  top: 0;
   text-shadow:2rpx 2rpx 5rpx #444;  
+  line-height: 50rpx;
 }
 
 .top-widget.center .user-info{
@@ -149,10 +151,11 @@
 
 .top-widget-title .back-icon {
   position: fixed;
-  padding-top: 10rpx;
   font-size: 42rpx;
   left: 35rpx;
   z-index: 60;
+  line-height: 65rpx;
+  color: #fff;
 }
 
 .top-widget-title {
@@ -274,4 +277,29 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.submit-no-style {
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  display: inline;
+  position: static;
+  border: 0;
+  padding-left: 0;
+  padding-right: 0;
+  border-radius: 0;
+  font-size: 0rpx;
+  color: transparent;
+}
+
+.submit-no-style::after {
+  content: '';
+  width: 0;
+  height: 0;
+  -webkit-transform: scale(1);
+  transform: scale(1);
+  display: none;
+  background-color: transparent;
+  border: 0px;
 }

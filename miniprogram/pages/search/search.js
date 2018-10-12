@@ -1,4 +1,5 @@
 // pages/search/search.js
+const app = getApp();
 const toast = require("../../utils/message").toast;
 import regeneratorRuntime, { async } from "../../utils/regenerator-runtime/runtime";
 
@@ -171,5 +172,12 @@ Page({
       toast("搜索请求超时", "none");
       console.log("搜索失败", error);
     }
+  },
+  
+  getFormid(e) {
+    if (app.globalData.formidArray === undefined) {
+      app.globalData.formidArray = [];
+    }
+    app.globalData.formidArray.push(e.detail.formId);
   }
 })

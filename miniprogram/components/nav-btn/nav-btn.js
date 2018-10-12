@@ -1,4 +1,6 @@
 // components/nav-btn/nav-btn.js
+const app = getApp();
+
 Component({
   /**
    * 组件的属性列表
@@ -31,6 +33,12 @@ Component({
   methods: {
     tapBtn: function() {
       this.triggerEvent("tapBtn");
+    },
+    getFormid(e) {
+      if (app.globalData.formidArray === undefined) {
+        app.globalData.formidArray = [];
+      }
+      app.globalData.formidArray.push(e.detail.formId);
     }
   }
 })
