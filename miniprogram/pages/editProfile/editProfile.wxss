@@ -48,8 +48,12 @@ page {
   text-align: center;
   padding-left: 0;
   width: 92%;
-  margin-top: -10rpx;
-  margin-bottom: 22rpx;
+  display: block;
+  margin-top: 0rpx;
+  margin-bottom: 0rpx;
+  color: rgb(110, 110, 110);
+  line-height: 70rpx;
+  border-radius: 0;
 }
 
 .item.add-wrap .add-btn {
@@ -106,7 +110,7 @@ page {
   color: #c00;
   font-size: 34rpx;
   position:absolute;
-  top:20rpx;
+  top:5rpx;
   right:32rpx;
 }
 

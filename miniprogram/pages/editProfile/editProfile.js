@@ -1,4 +1,5 @@
 // pages/editProfile/editProfile.js
+const app = getApp();
 const avatar = require("../../utils/avatar");
 const profile = require("../../utils/profile");
 const profModel = require("../../utils/profile-model");
@@ -352,92 +353,99 @@ Page({
     // console.log("current userInfo: ", newUserInfo);
   },
 
-  submit() {
-    if (!this.data.canSubmit) return;
-    let tmpJobArray, tmpContentArray;
-    for(let item in newUserInfo) {
-      switch(item) {
-        case "nickName":
-        case "realName":
-        case "major":
-        case "address":
-          if (newUserInfo[item] === undefined || newUserInfo[item] === "") {
-            comfirmOnly(initValue[item].name + "为空，此项为必填项");
-            return;
-          }
-          break;
-        case "birthDate":
-        case "homeTown":
-        case "degree":
-        case "enterSchoolTime":
-          if(newUserInfo[item] === initValue[item].default) {
-            comfirmOnly(initValue[item].name + "为空，此项为必填项");
-            return;
-          }
-          break;
-        case "leaveSchoolTime": 
-          if (newUserInfo[item] === initValue[item].default) {
-            newUserInfo[item] = "";
-          }
-          break;
-        case "contactArray":
-          tmpContentArray = newUserInfo[item];
-          for (let i=0; i<tmpContentArray.length; i++) {
-            for (let subItem in tmpContentArray[i]) {
-              if (tmpContentArray[i][subItem] === undefined || tmpContentArray[i][subItem] === "") {
-                comfirmOnly("“联系方式" + (i + 1) + "”的"+ initValue[subItem].name + "为空，此项为必填项");
-                return;
-              }
-            }
-          }
-          break;          
-        case "jobArray":
-          tmpJobArray = newUserInfo[item];
-          for (let i=0; i<tmpJobArray.length; i++) {
-            for (let subItem in tmpJobArray[i]) {
-              switch(subItem) {
-                case "institution":
-                case "job":
-                  if (tmpJobArray[i][subItem] === undefined || tmpJobArray[i][subItem] === "") {
-                    comfirmOnly("“工作职务" + (i + 1) + "”的" + initValue[subItem].name + "为空，此项为必填项");
-                    return;
-                  }
-                  break;
-                case "jobStartTime":
-                  if (tmpJobArray[i][subItem] === initValue[subItem].default) {
-                    comfirmOnly("“工作职务" + (i + 1) + "”的" + initValue[subItem].name + "为空，此项为必填项");
-                    return;
-                  }
-                  break;
-                case "jobEndTime": 
-                  if (tmpJobArray[i][subItem] === initValue[subItem].default) {
-                    newUserInfo[item][i][subItem] = "";
-                  }
-                  break;
-              }
-            }
-          }
-          break;
-        case "phoneNumber": 
-          if (newUserInfo[item] !== "" && isNaN(newUserInfo[item])) {
-            comfirmOnly(initValue[item].name + "应为数字");
-            return;
-          }
-          break;
-      }
+  getFormid(e) {
+    if (app.globalData.formidArray === undefined) {
+      app.globalData.formidArray = [];
     }
-    console.log("上传用户资料：", newUserInfo);
-    profile.upload(newUserInfo)
-    .then(res => {
-      console.log("上传用户资料成功：", res);
-      toast("资料上传成功");
-      let tmpUserInfo = wx.getStorageSync("userInfo");
-      tmpUserInfo.nickname = newUserInfo.nickName;
-      wx.setStorageSync("userInfo", tmpUserInfo);
-    })
-    .catch(err => {
-      console.log("上传用户资料失败：", err);
-      toast("资料上传失败", "none");
-    })
+    app.globalData.formidArray.push(e.detail.formId);
+  },
+
+  submit() {
+    // if (!this.data.canSubmit) return;
+    // let tmpJobArray, tmpContentArray;
+    // for(let item in newUserInfo) {
+    //   switch(item) {
+    //     case "nickName":
+    //     case "realName":
+    //     case "major":
+    //     case "address":
+    //       if (newUserInfo[item] === undefined || newUserInfo[item] === "") {
+    //         comfirmOnly(initValue[item].name + "为空，此项为必填项");
+    //         return;
+    //       }
+    //       break;
+    //     case "birthDate":
+    //     case "homeTown":
+    //     case "degree":
+    //     case "enterSchoolTime":
+    //       if(newUserInfo[item] === initValue[item].default) {
+    //         comfirmOnly(initValue[item].name + "为空，此项为必填项");
+    //         return;
+    //       }
+    //       break;
+    //     case "leaveSchoolTime": 
+    //       if (newUserInfo[item] === initValue[item].default) {
+    //         newUserInfo[item] = "";
+    //       }
+    //       break;
+    //     case "contactArray":
+    //       tmpContentArray = newUserInfo[item];
+    //       for (let i=0; i<tmpContentArray.length; i++) {
+    //         for (let subItem in tmpContentArray[i]) {
+    //           if (tmpContentArray[i][subItem] === undefined || tmpContentArray[i][subItem] === "") {
+    //             comfirmOnly("“联系方式" + (i + 1) + "”的"+ initValue[subItem].name + "为空，此项为必填项");
+    //             return;
+    //           }
+    //         }
+    //       }
+    //       break;          
+    //     case "jobArray":
+    //       tmpJobArray = newUserInfo[item];
+    //       for (let i=0; i<tmpJobArray.length; i++) {
+    //         for (let subItem in tmpJobArray[i]) {
+    //           switch(subItem) {
+    //             case "institution":
+    //             case "job":
+    //               if (tmpJobArray[i][subItem] === undefined || tmpJobArray[i][subItem] === "") {
+    //                 comfirmOnly("“工作职务" + (i + 1) + "”的" + initValue[subItem].name + "为空，此项为必填项");
+    //                 return;
+    //               }
+    //               break;
+    //             case "jobStartTime":
+    //               if (tmpJobArray[i][subItem] === initValue[subItem].default) {
+    //                 comfirmOnly("“工作职务" + (i + 1) + "”的" + initValue[subItem].name + "为空，此项为必填项");
+    //                 return;
+    //               }
+    //               break;
+    //             case "jobEndTime": 
+    //               if (tmpJobArray[i][subItem] === initValue[subItem].default) {
+    //                 newUserInfo[item][i][subItem] = "";
+    //               }
+    //               break;
+    //           }
+    //         }
+    //       }
+    //       break;
+    //     case "phoneNumber": 
+    //       if (newUserInfo[item] !== "" && isNaN(newUserInfo[item])) {
+    //         comfirmOnly(initValue[item].name + "应为数字");
+    //         return;
+    //       }
+    //       break;
+    //   }
+    // }
+    // console.log("上传用户资料：", newUserInfo);
+    // profile.upload(newUserInfo)
+    // .then(res => {
+    //   console.log("上传用户资料成功：", res);
+    //   toast("资料上传成功");
+    //   let tmpUserInfo = wx.getStorageSync("userInfo");
+    //   tmpUserInfo.nickname = newUserInfo.nickName;
+    //   wx.setStorageSync("userInfo", tmpUserInfo);
+    // })
+    // .catch(err => {
+    //   console.log("上传用户资料失败：", err);
+    //   toast("资料上传失败", "none");
+    // })
   }
 })

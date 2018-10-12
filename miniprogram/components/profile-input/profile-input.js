@@ -1,4 +1,6 @@
 // components/profile-input/profile-input.js
+const app = getApp();
+
 Component({
   /**
    * 组件的属性列表
@@ -90,6 +92,13 @@ Component({
         index: props.index,
         arrayType: props.arrayType
       })
+    },
+
+    getFormid(e) {
+      if (app.globalData.formidArray === undefined) {
+        app.globalData.formidArray = [];
+      }
+      app.globalData.formidArray.push(e.detail.formId);
     }
   }
 })

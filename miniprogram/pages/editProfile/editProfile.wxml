@@ -39,14 +39,15 @@
         <profile-input title="入职时间" mode="picker" picker-fields="month" value="{{item.jobStartTime}}" bind:input="inputHandler" input-type="jobStartTime" index="{{index}}" array-type="jobArray" bind:del="pickerDel"/>
 
         <profile-input title="离职时间" asterisk="{{false}}" mode="picker" picker-fields="month" value="{{item.jobEndTime}}" bind:input="inputHandler" input-type="jobEndTime" index="{{index}}" array-type="jobArray" bind:del="pickerDel"/>
-
-        <view wx:if="{{index !== 0 || jobArray.length !== 1}}" class="del-btn" data-type="jobArray" bindtap="delBtn" data-index="{{index}}">删除</view>
+          <form bindsubmit="getFormid" report-submit="true">
+            <button wx:if="{{index !== 0 || jobArray.length !== 1}}" class="del-btn submit-no-style" data-type="jobArray" bindtap="delBtn" data-index="{{index}}" form-type="submit">删除</button>
+          </form>
       </view>
     </block>
 
-    <view class="item add-wrap">
-      <view class="add-btn" data-type="jobArray" bindtap="addBtn">+ 点击添加工作职务</view>
-    </view>
+    <form bindsubmit="getFormid" report-submit='true'>
+      <button class="item add-wrap add-btn submit-no-style" data-type="jobArray" bindtap="addBtn" form-type="submit">+ 点击添加工作职务</button>
+    </form>
 
     <block wx:for="{{contactArray}}" wx:key="{{index}}">
       <view class="item-wrapper">
@@ -55,14 +56,17 @@
         <profile-input title="类型" place-holder="请输入联系方式的类型" value="{{item.contactType}}" bind:input="inputHandler" input-type="contactType" index="{{index}}" array-type="contactArray"/>
         
         <profile-input title="内容" place-holder="请输入联系方式内容" value="{{item.content}}" bind:input="inputHandler" input-type="content" index="{{index}}" array-type="contactArray"/>
-
-        <view wx:if="{{index !== 0 || contactArray.length !== 1}}" class="del-btn" data-type="contactArray" bindtap="delBtn" data-index="{{index}}">删除</view>
+        
+        <form bindsubmit="getFormid" report-submit="true">
+          <button wx:if="{{index !== 0 || contactArray.length !== 1}}" class="del-btn submit-no-style" data-type="contactArray" bindtap="delBtn" data-index="{{index}}" form-type="submit">删除</button>
+        </form>
+        
       </view>
     </block>
 
-    <view class="item add-wrap">
-      <view class="add-btn" data-type="contactArray" bindtap="addBtn">+ 点击添加联系方式</view>
-    </view>
+    <form bindsubmit="getFormid" report-submit='true'>
+      <button class="item add-wrap add-btn submit-no-style" data-type="contactArray" bindtap="addBtn" form-type="submit">+ 点击添加联系方式</button>
+    </form>
 
     <profile-input title="微信号" asterisk="{{false}}" place-holder="请输入微信号（非昵称）" value="{{wechatId}}" bind:input="inputHandler" input-type="wechatId"/>
 
@@ -71,5 +75,8 @@
     <view class="hint"><text>1. 标注<text class="asterisk">*</text>的选项为必填项。\n2. 对于一些弹出选择框的选项，可以通过长按该选项右侧内容的方式清空原有的输入内容。\n3. 点击“修改头像”并上传的新头像将立即生效，无需点击“提交”按钮。\n4. 如需撤销当前更改，请退出本页面后重新操作。</text></view>
 
   </scroll-view>
-  <view class="submit {{canSubmit ? '': 'disabled'}}" bindtap="submit">{{pagePos}}</view>
+  <form bindsubmit="getFormid" report-submit='true'>
+    <button class="submit {{canSubmit ? '': 'disabled'}}" bindtap="submit" form-type="submit">{{pagePos}}</button>
+  </form>
+
 </view>
