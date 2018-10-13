@@ -4,6 +4,10 @@ const bgImg = require("./bg-img");
 const auth = require("./auth");
 const admin = require("./admin");
 
+const app = getApp();
+
+import regeneratorRuntime, { async } from "./regenerator-runtime/runtime";
+
 const getUserInfo = (that) => {
   // 获取用户信息
   let nickname, avatarUrl, bgImgUrl, tmpUserInfo;
@@ -16,19 +20,25 @@ const getUserInfo = (that) => {
       } else {
         // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
         wx.getUserInfo({
-          success: res => {
-            wx.cloud.callFunction({
-              name: "router",
-              data: {
-                $url: "login",
-                detailedUserInfo: res.userInfo
-              }
-            }).then(res => {
-              console.log(res.result);
-            })
+          success: async res => {
+            // let loginRes = await wx.cloud.callFunction({
+            //   name: "router",
+            //   data: {
+            //     $url: "login",
+            //     detailedUserInfo: res.userInfo
+            //   }
+            // })
+
+            // console.log(loginRes.result);
             nickname = res.userInfo.nickName;
             avatarUrl = res.userInfo.avatarUrl;
             wx.setStorageSync("userInfo", res.userInfo);
+
+            let loginRes = await wx.cloud.callFunction({
+              name: "login",
+              data: {}
+            })
+            wx.setStorageSync("openid", loginRes.result.openid);
             
             Promise.all([
               (() => {

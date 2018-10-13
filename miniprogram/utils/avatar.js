@@ -30,20 +30,9 @@ const checkAvatar = (avatarUrl) => {
   // }
 
   // 查询用户的openid 
-  return (wx.cloud.callFunction({
-    name: "login",
-    data: {}
-  })
-  // 存储openid，使用openid查询是否存在该用户的头像记录
-  .then(res => {
-    let openid = res.result.openid;
-    wx.setStorageSync("openid", openid);
-
-    return db.collection("avatar").where({
-      _openid: openid
+  return (db.collection("avatar").where({
+      _openid: wx.getStorageSync("openid")
     }).get()
-
-  })
   // 根据查询结果判断是否需要添加或更新头像记录
   .then(res => {
 

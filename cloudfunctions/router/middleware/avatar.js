@@ -17,7 +17,7 @@ module.exports = {
         }
       })
 
-      msg += ", wechat avatar record updated ";
+      msg += ", wechat avatar record updated";
     }
 
     return {
