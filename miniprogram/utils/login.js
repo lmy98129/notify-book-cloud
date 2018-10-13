@@ -9,10 +9,23 @@ const getUserInfo = (that) => {
   let nickname, avatarUrl, bgImgUrl, tmpUserInfo;
   wx.getSetting({
     success: res => {
-      if (res.authSetting['scope.userInfo']) {
+      if (!res.authSetting['scope.userInfo']) {
+        wx.navigateTo({
+          url: '../login/login',
+        })
+      } else {
         // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
         wx.getUserInfo({
           success: res => {
+            wx.cloud.callFunction({
+              name: "router",
+              data: {
+                $url: "login",
+                detailedUserInfo: res.userInfo
+              }
+            }).then(res => {
+              console.log(res.result);
+            })
             nickname = res.userInfo.nickName;
             avatarUrl = res.userInfo.avatarUrl;
             wx.setStorageSync("userInfo", res.userInfo);
@@ -114,11 +127,7 @@ const getUserInfo = (that) => {
             })
           }
         })
-      } else {
-        wx.navigateTo({
-          url: '../login/login',
-        })
-      }
+      } 
     }
   })
 }
