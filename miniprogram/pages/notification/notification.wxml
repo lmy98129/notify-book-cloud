@@ -1,9 +1,21 @@
 <!--pages/notification/notification.wxml-->
 <view class="root {{introStatus}}">
   <view class="container {{fixVeryTop ? 'fixed':''}}">
-    <top-widget mode="contact" bgImgUrl="{{bgImgUrl}}" nickname="{{nickname}}" title="消息管理" fixTop="{{fixTop}}" class="top-widget-wrapper" isNavigateToProfile="true" isBack="true">
+    <top-widget mode="contact" bgImgUrl="{{bgImgUrl}}" nickname="{{nickname}}" title="我的消息" fixTop="{{fixTop}}" class="top-widget-wrapper" isNavigateToProfile="true" isBack="true">
       <!-- <nav-btn slot="add" btnType="add" iconType="icon-tianjiahaoyou" bind:tapBtn="goSearch"/> -->
       <nav-btn slot="settings" btnType="manage" iconType="icon-guanli"/>
     </top-widget>
+    <view class="main">
+      <block wx:if="{{isEmpty}}">
+        <view class="hint-wrapper">
+          <view class="upper">
+            <image src="/images/contact-hl.png"></image>
+          </view>
+          <view class="hint">
+            <text>消息暂时为空</text>
+          </view>
+        </view>
+      </block>
+    </view>
   </view>
 </view>

@@ -92,7 +92,6 @@ const codeCheck = async (remark) => {
 
 const uploadAuth = async (authImgArray, remark, that) => {
   let tmpAuthImgArray = [], cloudPath, filePath, openid = wx.getStorageSync("openid");
-
   try {
     let res = await codeCheck(remark);
     if (res.code === 1) {

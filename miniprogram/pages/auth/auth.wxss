@@ -7,9 +7,10 @@ page {
 
 .item-wrapper .del-btn {
   position: inherit;
-  margin-top: 10rpx;
+  /* margin-top: 10rpx; */
   text-align: right;
-  margin-bottom: 25rpx;
+  /* margin-bottom: 25rpx; */
+  background: transparent;
 }
 
 .item.add-wrap {

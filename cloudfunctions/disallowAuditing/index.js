@@ -37,7 +37,7 @@ exports.main = async (event, context) => {
     });
 
     await Promise.all(openidList.map(item => {
-      return db.collection("user-message").add({
+      return db.collection("user-notification").add({
         data: {
           userOpenid: item,
           msgId: "W7ZFZA6qgQy38id8",

@@ -1,6 +1,7 @@
 // pages/auth/auth.js
 const app = getApp();
 const auth = require("../../utils/auth");
+const formid = require("../../utils/formid");
 const toast = require("../../utils/message").toast;
 
 Page({
@@ -113,7 +114,8 @@ Page({
 
   submit(e) {
     this.getFormid(e);
-      // auth.upload(this.data.authImgArray, this.data.remark, this);
+    formid.upload();
+    auth.upload(this.data.authImgArray, this.data.remark, this);
   },
 
 })

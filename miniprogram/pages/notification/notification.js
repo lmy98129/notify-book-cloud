@@ -1,4 +1,6 @@
 // pages/notification/notification.js
+import regeneratorRuntime, { async } from "../../utils/regenerator-runtime/runtime";
+
 Page({
 
   /**
@@ -9,6 +11,7 @@ Page({
     nickName: "",
     fixTop: false,
     fixVeryTop: false,
+    isEmpty: false,
   },
 
   /**
@@ -28,7 +31,7 @@ Page({
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function () {
+  onShow: async function () {
     let tmpUserInfo = wx.getStorageSync("userInfo");
     let bgImgUrl = tmpUserInfo.bgImgUrl,
     nickname = tmpUserInfo.nickName;
@@ -36,6 +39,28 @@ Page({
       bgImgUrl,
       nickname
     });
+    try {
+      let res = await wx.cloud.callFunction({
+        name: "notification",
+        data: {
+          $url: "download"
+        }
+      });
+      switch(res.result.code) {
+        case 0:
+        case -1:
+          this.setData({
+            isEmpty: true
+          });
+          break;
+        case 1: 
+          this.setData({
+            notifiArray: res.result.notification
+          })
+      }
+    } catch (error) {
+      console.log(error)
+    }
   },
 
   /**
