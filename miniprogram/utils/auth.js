@@ -1,12 +1,13 @@
 const db = wx.cloud.database();
 const toast = require("./message").toast;
+const app = getApp();
 import regeneratorRuntime, { async } from "./regenerator-runtime/runtime";
 
 const checkAuth = () => {
   let msg = {};
 
   return (db.collection("auth").where({
-    _openid: wx.getStorageSync("openid")
+    _openid: app.globalData.openid
   }).get()
   .then(res => {
     if (res.data.length === 0) {

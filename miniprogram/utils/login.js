@@ -33,11 +33,12 @@ const getUserInfo = (that) => {
             nickname = res.userInfo.nickName;
             avatarUrl = res.userInfo.avatarUrl;
             wx.setStorageSync("userInfo", res.userInfo);
-
+            
             let loginRes = await wx.cloud.callFunction({
               name: "login",
               data: {}
             })
+            app.globalData.openid = loginRes.result.openid;
             wx.setStorageSync("openid", loginRes.result.openid);
             
             Promise.all([

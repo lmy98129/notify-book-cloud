@@ -1,6 +1,7 @@
 // avatar.js
 const db = wx.cloud.database();
 const toast = require("./message").toast;
+const app = getApp();
 
 /**
  * 维护用户头像记录状态为最新
@@ -31,7 +32,8 @@ const checkAvatar = (avatarUrl) => {
 
   // 查询用户的openid 
   return (db.collection("avatar").where({
-      _openid: wx.getStorageSync("openid")
+      _openid: app.globalData.openid
+      // wx.getStorageSync("openid")
     }).get()
   // 根据查询结果判断是否需要添加或更新头像记录
   .then(res => {

@@ -6,7 +6,8 @@ const profModel = require("./profile-model");
 const download = () => {
   let msg = {};
   return (db.collection("profile").where({
-    _openid: wx.getStorageSync("openid")
+    _openid: app.globalData.openid
+    // wx.getStorageSync("openid")
   })).get()
     .then(res => {
       if (res.data.length === 0) {

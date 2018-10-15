@@ -1,13 +1,14 @@
 // bg-img.js
 const db = wx.cloud.database();
 const toast = require("./message").toast;
+const app = getApp();
 const defaultImgUrl = "cloud://test-5c133c.7465-test-5c133c/tvs-bg.jpg";
 
 const checkImg = () => {
   let msg = {};
 
   return db.collection("profile").where({
-    _openid: wx.getStorageSync("openid")
+    _openid: app.globalData.openid
   }).get()
   .then(res => {
     if (res.data.length === 0 || res.data[0].bgImgUrl === undefined || res.data[0].bgImgUrl === "") {
