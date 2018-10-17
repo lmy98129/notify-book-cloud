@@ -142,11 +142,7 @@ exports.main = async (event, context) => {
     }
   });
 
-  app.router("check", async (ctx) => {
-    ctx.body = check();
-  })
-
-  app.router("send", async (ctx) => {
+  app.router("sendTemplateMessage", async (ctx) => {
     let result;
     try {
       while(1) {
@@ -167,14 +163,14 @@ exports.main = async (event, context) => {
         _openid: item
       }).get();
       console.log(res);
-      if (res.data.length === 0 || res.data[0].formidArray.length === 0) return;
+      if (res.data.length === 0 || res.data[0].formidArray.length === 0) break;
       else {
         let tmpArray = res.data[0].formidArray;
         let formid;
         while(tmpArray.length > 0) {
           formid = tmpArray.shift();
           if (Date.parse(myDate) < Date.parse(formid.timeout)) break;
-          if (tmpArray.length == 0) return;
+          if (tmpArray.length == 0) break;
         }
         let tmpData = data;
         tmpData["touser"] = item;

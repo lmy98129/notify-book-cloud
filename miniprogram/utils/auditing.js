@@ -64,8 +64,9 @@ const allowAuditing = async (openidList) => {
   })
 
   let res = await wx.cloud.callFunction({
-    name: "allowAuditing",
+    name: "auditing",
     data: {
+      $url: "allow",
       openidList
     }
   });
@@ -91,12 +92,14 @@ const disallowAuditing = async (openidList) => {
   })
 
   let res = await wx.cloud.callFunction({
-    name: "disallowAuditing",
+    name: "auditing",
     data: {
+      $url: "disallow",
       openidList
     }
   });
 
+  console.log(res);
   wx.hideLoading();
 
   if (res.result.code === 0) {
