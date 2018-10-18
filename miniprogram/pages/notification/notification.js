@@ -1,6 +1,7 @@
 // pages/notification/notification.js
 const app = getApp();
 const toast = require("../../utils/message").toast;
+const notify = require("../../utils/notification");
 import regeneratorRuntime, { async } from "../../utils/regenerator-runtime/runtime";
 
 Page({
@@ -17,6 +18,8 @@ Page({
     tabIndex: 0,
     hasReadArray: [],
     unReadArray: [],
+    isEdit: false,
+    selectedList: []
   },
 
   /**
@@ -37,45 +40,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: async function () {
-    toast("加载中", "loading", 4000);
-    let tmpUserInfo = wx.getStorageSync("userInfo");
-    let bgImgUrl = tmpUserInfo.bgImgUrl,
-    nickname = tmpUserInfo.nickName;
-    this.setData({
-      bgImgUrl,
-      nickname
-    });
-    try {
-      let res = await wx.cloud.callFunction({
-        name: "notification",
-        data: {
-          $url: "download"
-        }
-      });
-      switch(res.result.code) {
-        case 0:
-        case -1:
-          this.setData({
-            isEmpty: true
-          });
-          break;
-        case 1: 
-          let hasReadArray = res.result.hasReadArray,
-            unReadArray = res.result.unReadArray;
-            for (let i=0; i<2; i++) {
-              unReadArray = unReadArray.concat(unReadArray);
-            }
-          this.setData({
-            hasReadArray,
-            unReadArray,
-          });
-          wx.setStorageSync("hasReadArray", hasReadArray);
-          wx.setStorageSync("unReadArray", unReadArray);
-      }
-      wx.hideToast();
-    } catch (error) {
-      console.log(error)
-    }
+    await notify.download(this);
   },
 
   /**
@@ -118,6 +83,13 @@ Page({
     this.setData({
       tabIndex: index
     })
+    if (this.data.isEdit) {
+      this.setData({
+        isEdit: false,
+        selectedList: []
+      })
+
+    }
   },
 
   onPageScroll: function(e) {
@@ -143,5 +115,51 @@ Page({
       app.globalData.formidArray = [];
     }
     app.globalData.formidArray.push(e.detail.formId);
+  },
+
+  bindEdit() {
+    this.setData({
+      isEdit: !this.data.isEdit
+    })
+  },
+
+  bindChecked(e) {
+    this.setData({
+      selectedList: e.detail.value
+    })
+  },
+
+  changeStatus: async function() {
+    let selectedList = this.data.selectedList;
+    if (selectedList.length === 0) return;
+    else if (selectedList.length > 20) {
+      toast("暂不支持同时更改20条以上数据", "none");     
+      return; 
+    }
+    let status;
+    switch(this.data.tabIndex) {
+      case 0: status="has-read";
+        break;
+      case 1: status="un-read";
+        break;
+    }
+    let res = await notify.changeStatus(selectedList, status);
+    if (res.code === 1) {
+      res = await notify.download(this);
+    }
+  },
+
+  delete: async function() {
+    let selectedList = this.data.selectedList;
+    if (selectedList.length === 0) return;
+    else if (selectedList.length > 20) {
+      toast("暂不支持同时更改20条以上数据", "none");     
+      return; 
+    }
+    let res = await notify.deleteItems(selectedList);
+    if (res.code === 1) {
+      res = await notify.download(this);
+    }
   }
+
 })

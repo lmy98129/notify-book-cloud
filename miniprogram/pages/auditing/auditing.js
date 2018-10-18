@@ -99,6 +99,7 @@ Page({
       return;
     } else if (length > 20) {
       toast("暂不支持同时更改20条以上数据", "none");
+      return;
     }
     let res = await auditing.allow(this.data.selectedList);
     if (res.code === 0) {
@@ -116,6 +117,7 @@ Page({
       return;
     } else if (length > 20) {
       toast("暂不支持同时更改20条以上数据", "none");
+      return;
     }
     let res = await auditing.disallow(this.data.selectedList);
     if (res.code === 0) {

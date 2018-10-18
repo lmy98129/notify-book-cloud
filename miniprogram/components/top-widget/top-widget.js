@@ -52,6 +52,10 @@ Component({
     contactFixTitle: {
       type: String,
       value: ""
+    },
+    contactFixTitleUsername: {
+      type: Boolean,
+      value: true
     }
   },
 
@@ -91,9 +95,15 @@ Component({
     },
 
     goBack() {
-      wx.navigateBack({
-        delta: 1
-      })
+      if (getCurrentPages().length === 1) {
+        wx.switchTab({
+          url: "/pages/index/index"
+        })
+      } else {
+        wx.navigateBack({
+          delta: 1
+        })
+      }
     }
   }
 })

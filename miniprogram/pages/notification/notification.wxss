@@ -45,12 +45,7 @@
   -webkit-box-align: center;
   -webkit-align-items: center;
           align-items: center;
-  border-bottom: .5rpx solid #ddd;
   text-align: left;
-}
-
-.notify-wrap.first {
-  border-top: .5rpx solid #ddd;
 }
 
 .notify-wrap .right {
@@ -103,11 +98,29 @@
   line-height: 50rpx;
 }
 
+.notify-navigator {
+  width: 100%;
+}
+
+.notify-navigator.editing {
+  width: 85%;
+}
+
 /* .notify-wrap .right .btn-wrap {
   float: right;
   position: relative;
   top: 60rpx;
 } */
+
+.notify-outer-wrap {
+  display: flex;
+  border-bottom: .5rpx solid #ddd;
+  align-items: center;
+}
+
+.notify-outer-wrap.first {
+  border-top: .5rpx solid #ddd;
+}
 
 .icon-fanhui1.icon {
   font-size: 45rpx;

@@ -1,2 +1,23 @@
 <!--pages/notification-detail/notification-detail.wxml-->
-<text>pages/notification-detail/notification-detail.wxml</text>
+<view class="root">
+  <view class="container {{fixVeryTop ? 'fixed':''}}">
+    <top-widget mode="contact" bgImgUrl="{{bgImgUrl}}" nickname="{{nickname}}" title="消息内容" contactFixTitleUsername="{{false}}" contactFixTitle="{{notifyDetail.title}}" fixTop="{{fixTop}}" class="top-widget-wrapper" isNavigateToProfile="true" isBack="true" fixVeryTop="{{fixVeryTop}}">
+    </top-widget>
+    <view class="main">
+      <view class="top">
+        <view class="title">{{notifyDetail.title}}</view>
+        <view class="date">{{notifyDetail.date}}</view>
+      </view>
+      <view class="content">{{notifyDetail.content}}</view>
+      <view class="bottom-wrap">
+        <view class="btn" bindtap="delete">删除消息</view>
+        <block wx:if="{{mode == 'unReadArray'}}">
+          <view class="btn" bindtap="changeStatus">设为已读</view>
+        </block>
+        <block wx:if="{{mode == 'hasReadArray'}}">
+          <view class="btn" bindtap="changeStatus">设为未读</view>
+        </block>
+      </view>
+    </view>
+  </view>
+</view>

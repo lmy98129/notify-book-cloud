@@ -52,6 +52,44 @@ exports.main = async (event, context) => {
 
   app.router(["sendTemplateMessage"], async (ctx) => {
     ctx.body = await notify.sendTemplateMessage(event);
+  });
+
+  app.router("delete", async (ctx) => {
+    try {
+      let idArray = event.idArray;
+      for (let item of idArray) {
+        await db.collection("user-notification").doc(item).remove();
+      }
+      ctx.body = {
+        code: 1,
+      }
+    } catch (error) {
+      ctx.body = {
+        code: -1,
+      }
+      console.log(error);
+    }
+  })
+
+  app.router("changeStatus", async (ctx) => {
+    try {
+      let idArray = event.idArray;
+      for (let item of idArray) {
+        await db.collection("user-notification").doc(item).update({
+          data: {
+            status: event.status
+          }
+        })
+      }
+      ctx.body = {
+        code: 1,
+      }
+    } catch (error) {
+      ctx.body = {
+        code: -1,
+      }
+      console.log(error);
+    }
   })
 
   return app.serve();

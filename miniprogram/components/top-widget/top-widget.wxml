@@ -32,7 +32,7 @@
     </block>
     <block wx:else>
       <view class="contact-title">
-        <view class="user-nickname">
+        <view class="user-nickname" wx:if="{{contactFixTitleUsername}}">
           {{nickname}}
         </view>
         <view class="end">

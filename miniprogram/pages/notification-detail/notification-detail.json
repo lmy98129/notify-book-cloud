@@ -1,1 +1,7 @@
-{}
+{
+  "usingComponents": {
+    "top-widget": "/components/top-widget/top-widget",
+    "nav-btn": "/components/nav-btn/nav-btn",
+    "profile-item": "/components/profile-item/profile-item"
+  }
+}

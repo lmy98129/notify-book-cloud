@@ -3,7 +3,7 @@
   <view class="container {{fixVeryTop ? 'fixed':''}}">
     <top-widget mode="contact" bgImgUrl="{{bgImgUrl}}" nickname="{{nickname}}" title="我的消息" contactFixTitle="的消息" fixTop="{{fixTop}}" class="top-widget-wrapper" isNavigateToProfile="true" isBack="true" fixVeryTop="{{fixVeryTop}}">
       <!-- <nav-btn slot="add" btnType="add" iconType="icon-tianjiahaoyou" bind:tapBtn="goSearch"/> -->
-      <nav-btn slot="settings" btnType="manage" iconType="icon-guanli"/>
+      <nav-btn slot="settings" btnType="manage" iconType="icon-guanli" bind:tapBtn="bindEdit"/>
     </top-widget>
     <view class="main">
       <block wx:if="{{isEmpty}}">
@@ -34,24 +34,31 @@
               </view>
             </block>
             <block wx:else>
-              <block wx:for="{{unReadArray}}" wx:key="{{index}}">
-                <form bindsubmit="getFormid" report-submit='true'>
-                  <button class="submit-no-style" form-type='submit'>
-                    <navigator url="../notification-detail/notification-detail?index={{index}}">
-                      <view class="notify-wrap {{index==0 ? 'first' : ''}}">
-                          <view class="right">
-                            <view class="top">
-                              <view class="title">{{item.title}}</view>
-                              <view class="date">{{item.date}}</view>
+              <checkbox-group bindchange="bindChecked">
+                <block wx:for="{{unReadArray}}" wx:key="{{index}}">
+                  <form bindsubmit="getFormid" report-submit='true'>
+                    <button class="submit-no-style" form-type='submit'>
+                      <view class="notify-outer-wrap {{index==0 ? 'first' : ''}}">
+                        <navigator url="../notification-detail/notification-detail?index={{index}}&mode=unReadArray" class="notify-navigator  {{isEdit ? 'editing': ''}}">
+                          <view class="notify-wrap">
+                            <view class="right">
+                              <view class="top">
+                                <view class="title">{{item.title}}</view>
+                                <view class="date">{{item.date}}</view>
+                              </view>
+                              <view class="content">{{item.content}}</view>
                             </view>
-                            <view class="content">{{item.content}}</view>
+                            <view class="iconfont icon-fanhui1 icon"></view>
                           </view>
-                          <view class="iconfont icon-fanhui1 icon"></view>
+                        </navigator>
+                        <view class="check-box" wx:if="{{isEdit}}">
+                          <checkbox value="{{item._id}}"/>
                         </view>
-                      </navigator>
+                      </view>
                     </button>
                   </form>
-              </block>
+                </block>
+              </checkbox-group>
             </block>
           </view>
         </block>
@@ -68,24 +75,42 @@
               </view>
             </block>
             <block wx:else>
-              <block wx:for="{{hasReadArray}}" wx:key="{{index}}">
-                <form bindsubmit="getFormid" report-submit='true'>
-                  <button class="submit-no-style" form-type='submit'>
-                    <navigator url="../notification-detail/notification-detail?index={{index}}">
-                      <view class="notify-wrap {{index==0 ? 'first' : ''}}">
-                          <view class="right">
-                            <view class="top">
-                              <view class="title">{{item.title}}</view>
-                              <view class="date">{{item.date}}</view>
+              <checkbox-group bindchange="bindChecked">
+                <block wx:for="{{hasReadArray}}" wx:key="{{index}}">
+                  <form bindsubmit="getFormid" report-submit='true'>
+                    <button class="submit-no-style" form-type='submit'>
+                      <view class="notify-outer-wrap {{index==0 ? 'first' : ''}}">
+                        <navigator url="../notification-detail/notification-detail?index={{index}}&mode=hasReadArray" class="notify-navigator  {{isEdit ? 'editing': ''}}">
+                          <view class="notify-wrap">
+                            <view class="right">
+                              <view class="top">
+                                <view class="title">{{item.title}}</view>
+                                <view class="date">{{item.date}}</view>
+                              </view>
+                              <view class="content">{{item.content}}</view>
                             </view>
-                            <view class="content">{{item.content}}</view>
+                            <view class="iconfont icon-fanhui1 icon"></view>
                           </view>
-                          <view class="iconfont icon-fanhui1 icon"></view>
+                        </navigator>
+                        <view class="check-box" wx:if="{{isEdit}}">
+                          <checkbox value="{{item._id}}"/>
                         </view>
-                      </navigator>
+                      </view>
                     </button>
                   </form>
-              </block>
+                </block>
+              </checkbox-group>
+            </block>
+          </view>
+        </block>
+        <block wx:if="{{isEdit}}">
+          <view class="bottom-wrap">
+            <view class="btn" bindtap="delete">删除消息</view>
+            <block wx:if="{{tabIndex == 0}}">
+              <view class="btn" bindtap="changeStatus">设为已读</view>
+            </block>
+            <block wx:if="{{tabIndex == 1}}">
+              <view class="btn" bindtap="changeStatus">设为未读</view>
             </block>
           </view>
         </block>

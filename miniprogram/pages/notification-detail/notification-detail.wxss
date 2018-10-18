@@ -1,1 +1,23 @@
 /* pages/notification-detail/notification-detail.wxss */
+.top {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
+  width: 83%;
+  align-items: baseline;
+}
+
+.title {
+  font-size: 54rpx;
+}
+
+.date {
+  font-size: 30rpx;
+  margin-right: 20rpx;
+}
+
+.content {
+  margin: 30rpx auto 50rpx;
+  width: 83%;
+  font-size: 35rpx;
+}
