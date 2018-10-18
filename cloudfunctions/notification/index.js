@@ -15,28 +15,31 @@ exports.main = async (event, context) => {
 
   app.router("download", async (ctx) => {
     try {
-      let notification = [], tmpRes;
+      let hasReadArray = [], unReadArray = [], tmpRes;
       let res = await db.collection("user-notification").where({
         userOpenid: openid 
       }).get();
-
-
+      
       if (res.data.length === 0) {
         ctx.body = {
           code: 0,
         }
       } else {
-        res.data.map(async item => {
+        for (let item of res.data) {
           tmpRes = await db.collection("notification").where({
             _id: item.msgId
           }).get();
-          item.detail = tmpRes.data[0];
-          notification.push(item);
-        })
+          item.content = tmpRes.data[0].content;
+          item.title = tmpRes.data[0].title;
+          item.date = new Date(item.createTime).toLocaleString().slice(5, -3);
+          if (item.status === "un-read") unReadArray.push(item);
+          else if (item.status === "has-read") hasReadArray.push(item);
+        }
   
         ctx.body = {
           code: 1,
-          notification,
+          hasReadArray,
+          unReadArray,
         }
       }
     } catch (error) {

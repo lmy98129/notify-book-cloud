@@ -24,6 +24,7 @@ module.exports = {
       })
     })
   },
+
   apiReqPost(url, body) {
     return new Promise((resolve, reject) => {
       request({url, method: "POST", json: true, body}, (err, res, body) => {
@@ -35,6 +36,7 @@ module.exports = {
       })
     })
   },
+
   async check(){
     try {
       let msg;
@@ -102,6 +104,7 @@ module.exports = {
       return msg;
     }
   },
+
   async sendTemplateMessage(event) {
     let result;
     try {

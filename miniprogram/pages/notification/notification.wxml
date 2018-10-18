@@ -1,7 +1,7 @@
 <!--pages/notification/notification.wxml-->
 <view class="root {{introStatus}}">
   <view class="container {{fixVeryTop ? 'fixed':''}}">
-    <top-widget mode="contact" bgImgUrl="{{bgImgUrl}}" nickname="{{nickname}}" title="我的消息" fixTop="{{fixTop}}" class="top-widget-wrapper" isNavigateToProfile="true" isBack="true">
+    <top-widget mode="contact" bgImgUrl="{{bgImgUrl}}" nickname="{{nickname}}" title="我的消息" contactFixTitle="的消息" fixTop="{{fixTop}}" class="top-widget-wrapper" isNavigateToProfile="true" isBack="true" fixVeryTop="{{fixVeryTop}}">
       <!-- <nav-btn slot="add" btnType="add" iconType="icon-tianjiahaoyou" bind:tapBtn="goSearch"/> -->
       <nav-btn slot="settings" btnType="manage" iconType="icon-guanli"/>
     </top-widget>
@@ -15,6 +15,80 @@
             <text>消息暂时为空</text>
           </view>
         </view>
+      </block>
+      <block wx:else>
+        <view class="tabbar">
+          <view class="tabbar-item {{tabIndex === 0 ? 'selected':''}}" bindtap="tabHandler" data-index="0">未读消息</view>
+          <view class="tabbar-item {{tabIndex === 1 ? 'selected':''}}" bindtap="tabHandler" data-index="1">已读消息</view>
+        </view>
+        <block wx:if="{{tabIndex === 0}}">
+          <view class="notify-list">
+            <block wx:if="{{unReadArray.length === 0}}">
+              <view class="hint-wrapper">
+                <view class="upper">
+                  <image src="/images/contact-hl.png"></image>
+                </view>
+                <view class="hint">
+                  <text>消息暂时为空</text>
+                </view>
+              </view>
+            </block>
+            <block wx:else>
+              <block wx:for="{{unReadArray}}" wx:key="{{index}}">
+                <form bindsubmit="getFormid" report-submit='true'>
+                  <button class="submit-no-style" form-type='submit'>
+                    <navigator url="../notification-detail/notification-detail?index={{index}}">
+                      <view class="notify-wrap {{index==0 ? 'first' : ''}}">
+                          <view class="right">
+                            <view class="top">
+                              <view class="title">{{item.title}}</view>
+                              <view class="date">{{item.date}}</view>
+                            </view>
+                            <view class="content">{{item.content}}</view>
+                          </view>
+                          <view class="iconfont icon-fanhui1 icon"></view>
+                        </view>
+                      </navigator>
+                    </button>
+                  </form>
+              </block>
+            </block>
+          </view>
+        </block>
+        <block wx:if="{{tabIndex === 1}}">
+          <view class="notify-list">
+            <block wx:if="{{hasReadArray.length === 0}}">
+              <view class="hint-wrapper">
+                <view class="upper">
+                  <image src="/images/contact-hl.png"></image>
+                </view>
+                <view class="hint">
+                  <text>消息暂时为空</text>
+                </view>
+              </view>
+            </block>
+            <block wx:else>
+              <block wx:for="{{hasReadArray}}" wx:key="{{index}}">
+                <form bindsubmit="getFormid" report-submit='true'>
+                  <button class="submit-no-style" form-type='submit'>
+                    <navigator url="../notification-detail/notification-detail?index={{index}}">
+                      <view class="notify-wrap {{index==0 ? 'first' : ''}}">
+                          <view class="right">
+                            <view class="top">
+                              <view class="title">{{item.title}}</view>
+                              <view class="date">{{item.date}}</view>
+                            </view>
+                            <view class="content">{{item.content}}</view>
+                          </view>
+                          <view class="iconfont icon-fanhui1 icon"></view>
+                        </view>
+                      </navigator>
+                    </button>
+                  </form>
+              </block>
+            </block>
+          </view>
+        </block>
       </block>
     </view>
   </view>

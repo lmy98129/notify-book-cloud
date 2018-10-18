@@ -2,10 +2,9 @@
 <block wx:if="{{mode === 'main' || mode === 'center' || mode === 'contact'}}">
 
   <view class="top-widget {{fixTop ? 'fixed':''}} {{mode === 'center'? 'center':''}}">
-    <block wx:if="{{isBack}}">
+    <block wx:if="{{isBack && !fixVeryTop}}">
       <view class="iconfont icon-fanhui back-icon fixed {{specialPhone}}" bindtap="goBack"></view>
     </block>
-    <!-- <view class="top-bg"></view> -->
     <image class="top-bg" src="{{bgImgUrl}}"></image>
     <block wx:if="{{mode !== 'contact'}}">
       <view class="user-info">
@@ -37,7 +36,7 @@
           {{nickname}}
         </view>
         <view class="end">
-          的通讯录
+          {{contactFixTitle}}
         </view>
       </view>
     </block>

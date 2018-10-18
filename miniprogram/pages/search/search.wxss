@@ -149,7 +149,7 @@
   line-height: 50rpx;
 }
 
-.result-wrap right .btn-wrap {
+.result-wrap .right .btn-wrap {
   float: right;
   position: relative;
   top: 60rpx;

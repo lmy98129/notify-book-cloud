@@ -2,13 +2,13 @@
 <view class="root {{introStatus}}">
   <view class="container {{fixVeryTop ? 'fixed':''}}">
     <block wx:if="{{mode === 'normal'}}">
-      <top-widget avatarUrl="{{avatarUrl}}" bgImgUrl="{{bgImgUrl}}" nickname="{{nickname}}" fixTop="{{fixTop}}" class="top-widget-wrapper" isBack="{{true}}" mode="center">
+      <top-widget avatarUrl="{{avatarUrl}}" bgImgUrl="{{bgImgUrl}}" nickname="{{nickname}}" fixTop="{{fixTop}}" fixVeryTop="{{fixVeryTop}}" class="top-widget-wrapper" isBack="{{true}}" mode="center">
         <nav-btn slot="custom-style" btnType="custom-style" iconType="icon-gexinghua" bind:tapBtn="customBgImg"/>
         <nav-btn slot="edit" btnType="edit" iconType="icon-bianji" bind:tapBtn="editProfile"/>
       </top-widget>
     </block>
     <block wx:if="{{mode !== 'normal'}}">
-      <top-widget avatarUrl="{{avatarUrl}}" bgImgUrl="{{bgImgUrl}}" nickname="{{nickname}}" fixTop="{{fixTop}}" class="top-widget-wrapper" isBack="{{true}}" mode="center">
+      <top-widget avatarUrl="{{avatarUrl}}" bgImgUrl="{{bgImgUrl}}" nickname="{{nickname}}" fixVeryTop="{{fixVeryTop}}" fixTop="{{fixTop}}" class="top-widget-wrapper" isBack="{{true}}" mode="center">
       </top-widget>
     </block>
 
@@ -24,57 +24,57 @@
             <view class="tabbar-item {{tabIndex === 0 ? 'selected':''}}" bindtap="tabHandler" data-index="0">基本资料</view>
             <view class="tabbar-item {{tabIndex === 1 ? 'selected':''}}" bindtap="tabHandler" data-index="1">自我介绍</view>
           </view>
-            <block wx:if="{{tabIndex === 0}}">
-              <view class="profile-wrapper main">
-                <block wx:for="{{userInfo}}" wx:key="{{index}}">
-                  <profile-item title="{{item.title}}" content="{{item.content}}" class="profile-item-wrapper"></profile-item>
+          <block wx:if="{{tabIndex === 0}}">
+            <view class="profile-wrapper main">
+              <block wx:for="{{userInfo}}" wx:key="{{index}}">
+                <profile-item title="{{item.title}}" content="{{item.content}}" class="profile-item-wrapper"></profile-item>
+              </block>
+        
+              <view class="item-wrapper">
+                <view class="item-title">联系方式</view>
+                <block wx:for="{{contactArray}}" wx:key="{{index}}">
+                  <profile-item title="{{item.contactType.content}}" content="{{item.content.content}}" class="profile-item-wrapper"></profile-item>
                 </block>
-          
-                <view class="item-wrapper">
-                  <view class="item-title">联系方式</view>
-                  <block wx:for="{{contactArray}}" wx:key="{{index}}">
-                    <profile-item title="{{item.contactType.content}}" content="{{item.content.content}}" class="profile-item-wrapper"></profile-item>
-                  </block>
-                </view>
-            
-                <block wx:for="{{jobArray}}" wx:key="{{index}}">
-                  <view class="item-wrapper">
-                    <view class="item-title">工作职务 {{index + 1}}</view>
-                    <profile-item title="{{item.institution.title}}" content="{{item.institution.content}}" class="profile-item-wrapper"></profile-item>
-                    <profile-item title="{{item.job.title}}" content="{{item.job.content}}" class="profile-item-wrapper"></profile-item>
-                    <profile-item title="{{item.jobStartTime.title}}" content="{{item.jobStartTime.content}}" class="profile-item-wrapper"></profile-item>
-                    <profile-item title="{{item.jobEndTime.title}}" content="{{item.jobEndTime.content}}" class="profile-item-wrapper"></profile-item>
-                  </view>
-                </block>        
               </view>
-            </block>
-            <block wx:if="{{tabIndex === 1}}">
-              <view class="intro-wrapper" id="intro">
-                <block wx:if="{{(intro === undefined || intro === '') && mode !== 'normal'}}">
-                  <view class="add-hint"><text>该用户暂无自我介绍</text></view>
-                </block>
-                <block wx:if="{{(intro === undefined || intro === '') && introStatus === 'default' && mode === 'normal'}}">
-                  <view class="add-hint"><text>介绍自己\n让校友们更好地认识您</text></view>
-                  <button class="add-btn" type="default" bindtap="addIntro">
-                    添加自我介绍
+          
+              <block wx:for="{{jobArray}}" wx:key="{{index}}">
+                <view class="item-wrapper">
+                  <view class="item-title">工作职务 {{index + 1}}</view>
+                  <profile-item title="{{item.institution.title}}" content="{{item.institution.content}}" class="profile-item-wrapper"></profile-item>
+                  <profile-item title="{{item.job.title}}" content="{{item.job.content}}" class="profile-item-wrapper"></profile-item>
+                  <profile-item title="{{item.jobStartTime.title}}" content="{{item.jobStartTime.content}}" class="profile-item-wrapper"></profile-item>
+                  <profile-item title="{{item.jobEndTime.title}}" content="{{item.jobEndTime.content}}" class="profile-item-wrapper"></profile-item>
+                </view>
+              </block>        
+            </view>
+          </block>
+          <block wx:if="{{tabIndex === 1}}">
+            <view class="intro-wrapper" id="intro">
+              <block wx:if="{{(intro === undefined || intro === '') && mode !== 'normal'}}">
+                <view class="add-hint"><text>该用户暂无自我介绍</text></view>
+              </block>
+              <block wx:if="{{(intro === undefined || intro === '') && introStatus === 'default' && mode === 'normal'}}">
+                <view class="add-hint"><text>介绍自己\n让校友们更好地认识您</text></view>
+                <button class="add-btn" type="default" bindtap="addIntro">
+                  添加自我介绍
+                </button>
+              </block>
+              <block wx:elif="{{(intro !== undefined && intro !== '') && introStatus === 'default'}}">
+                <view class="intro-content">
+                  <text class="quote" id="quote-left">“</text>
+                    <view class="intro">
+                        {{intro}}
+                    </view>
+                  <text class="quote" id="quote-right">”</text>
+                </view>
+                <block wx:if="{{mode === 'normal'}}">
+                  <button class="edit-btn" type="default" bindtap="addIntro">
+                    修改自我介绍
                   </button>
                 </block>
-                <block wx:elif="{{(intro !== undefined && intro !== '') && introStatus === 'default'}}">
-                  <view class="intro-content">
-                    <text class="quote" id="quote-left">“</text>
-                      <view class="intro">
-                          {{intro}}
-                      </view>
-                    <text class="quote" id="quote-right">”</text>
-                  </view>
-                  <block wx:if="{{mode === 'normal'}}">
-                    <button class="edit-btn" type="default" bindtap="addIntro">
-                      修改自我介绍
-                    </button>
-                  </block>
-                </block>
-              </view>
-            </block>
+              </block>
+            </view>
+          </block>
         </view> 
       </block>
 

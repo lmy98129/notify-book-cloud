@@ -1,5 +1,9 @@
 /* pages/notification/notification.wxss */
 
+.main {
+  margin-top: 25rpx;
+}
+
 .hint-wrapper {
   display: flex;
   flex-direction: column;
@@ -26,4 +30,89 @@
 .hint {
   font-size: 35rpx;
   text-align: center;
+}
+
+.notify-list {
+  margin-top: 36rpx;
+}
+
+.notify-wrap {
+  padding: 40rpx 20rpx;
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  border-bottom: .5rpx solid #ddd;
+  text-align: left;
+}
+
+.notify-wrap.first {
+  border-top: .5rpx solid #ddd;
+}
+
+.notify-wrap .right {
+  -webkit-box-flex:1;
+  -webkit-flex:1;
+  flex:1;
+  min-width:0;  
+  margin-top: -12rpx;
+  margin-left: 15rpx;
+  margin-right: 5rpx;
+}
+
+.notify-wrap .right .top {
+  font-size: 47rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  /* max-width: 280rpx; */
+  margin-bottom: 10rpx;
+  line-height: 85rpx;
+  display: flex;
+  justify-content: space-between;
+}
+
+.notify-wrap .right .top .date {
+  font-size: 30rpx;
+  color: #888;
+  margin-right: 5rpx;
+}
+
+.notify-wrap .right .content {
+  font-size: 35rpx;
+  line-height: 55rpx;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 100%;
+  margin-bottom: 10rpx;
+  line-height: 85rpx;
+}
+
+.notify-wrap .right .profile .keyfound .key {
+  padding: 0rpx 7rpx;
+  background: #bbb;
+  color: #fff;
+  font-size: 29rpx;
+  border-radius: 6rpx;
+  margin-left: 10rpx;
+  line-height: 50rpx;
+}
+
+/* .notify-wrap .right .btn-wrap {
+  float: right;
+  position: relative;
+  top: 60rpx;
+} */
+
+.icon-fanhui1.icon {
+  font-size: 45rpx;
+  transform: rotate(180deg) scale(1.3, 1);
+  margin-top: 10rpx;
+  margin-bottom: 10rpx;
+  color: #666;  
 }

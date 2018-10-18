@@ -1,4 +1,6 @@
 // pages/notification/notification.js
+const app = getApp();
+const toast = require("../../utils/message").toast;
 import regeneratorRuntime, { async } from "../../utils/regenerator-runtime/runtime";
 
 Page({
@@ -12,6 +14,9 @@ Page({
     fixTop: false,
     fixVeryTop: false,
     isEmpty: false,
+    tabIndex: 0,
+    hasReadArray: [],
+    unReadArray: [],
   },
 
   /**
@@ -32,6 +37,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: async function () {
+    toast("加载中", "loading", 4000);
     let tmpUserInfo = wx.getStorageSync("userInfo");
     let bgImgUrl = tmpUserInfo.bgImgUrl,
     nickname = tmpUserInfo.nickName;
@@ -54,10 +60,19 @@ Page({
           });
           break;
         case 1: 
+          let hasReadArray = res.result.hasReadArray,
+            unReadArray = res.result.unReadArray;
+            for (let i=0; i<2; i++) {
+              unReadArray = unReadArray.concat(unReadArray);
+            }
           this.setData({
-            notifiArray: res.result.notification
-          })
+            hasReadArray,
+            unReadArray,
+          });
+          wx.setStorageSync("hasReadArray", hasReadArray);
+          wx.setStorageSync("unReadArray", unReadArray);
       }
+      wx.hideToast();
     } catch (error) {
       console.log(error)
     }
@@ -98,6 +113,13 @@ Page({
 
   },
 
+  tabHandler(e) {
+    let index = parseInt(e.target.dataset.index), that = this;
+    this.setData({
+      tabIndex: index
+    })
+  },
+
   onPageScroll: function(e) {
     if (e.scrollTop > 0) {
       this.setData({
@@ -115,4 +137,11 @@ Page({
       })
     }
   },
+
+  getFormid(e) {
+    if (app.globalData.formidArray === undefined) {
+      app.globalData.formidArray = [];
+    }
+    app.globalData.formidArray.push(e.detail.formId);
+  }
 })

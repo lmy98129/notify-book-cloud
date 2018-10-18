@@ -206,7 +206,7 @@
   width: 100%;
   background: #fff;
   z-index: 50;
-  padding-top: 70rpx;
+  padding-top: 60rpx;
   padding-bottom: 20rpx;
 }
 

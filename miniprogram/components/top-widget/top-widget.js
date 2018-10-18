@@ -44,6 +44,14 @@ Component({
     bgImgUrl: {
       type: String,
       value: ""
+    },
+    fixVeryTop: {
+      type: Boolean,
+      value: false
+    },
+    contactFixTitle: {
+      type: String,
+      value: ""
     }
   },
 

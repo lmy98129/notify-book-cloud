@@ -4,34 +4,7 @@
 }
 
 .tabbar {
-  width: 85%;
   margin-top: -8rpx;
-  margin-bottom: 15rpx;
-  display: flex;
-  flex-direction: row;
-  margin-left: auto;
-  margin-right: auto;
-  justify-content: space-around;
-}
-
-.tabbar .tabbar-item {
-  font-size: 40rpx;
-  color: #555;
-}
-
-.tabbar .tabbar-item.selected {
-  color: #222;
-}
-
-.tabbar .tabbar-item.selected:after {
-  content: "";
-  display: block;
-  position: relative;
-  bottom: -5rpx;
-  left: 0;
-  right: 0;
-  height: 5rpx;
-  background-color: #222;
 }
 
 .auditing-wrap {
@@ -75,7 +48,7 @@
   max-width: 280rpx;
 }
 
-.auditing-wrap right .btn-wrap {
+.auditing-wrap .right .btn-wrap {
   float: right;
   position: relative;
   top: 60rpx;
