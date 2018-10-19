@@ -15,6 +15,7 @@ exports.main = async (event, context) => {
 
   app.router("download", async (ctx) => {
     try {
+      // NOTE: 兼顾全体用户性质的消息
       let hasReadArray = [], unReadArray = [], tmpRes;
       let res = await db.collection("user-notification").where({
         userOpenid: openid 
@@ -56,6 +57,7 @@ exports.main = async (event, context) => {
 
   app.router("delete", async (ctx) => {
     try {
+      // NOTE: 还要继续改，如果是全体用户性质的反而要添加已删除数据
       let idArray = event.idArray;
       for (let item of idArray) {
         await db.collection("user-notification").doc(item).remove();
@@ -83,6 +85,24 @@ exports.main = async (event, context) => {
       }
       ctx.body = {
         code: 1,
+      }
+    } catch (error) {
+      ctx.body = {
+        code: -1,
+      }
+      console.log(error);
+    }
+  })
+
+  app.router("adminDownload", async (ctx) => {
+    try {
+      let res = await db.collection("notification").where({
+        special: _.neq("accessToken")
+      }).get();
+
+      ctx.body = {
+        code: 1,
+        notification: res.data
       }
     } catch (error) {
       ctx.body = {

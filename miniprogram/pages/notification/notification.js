@@ -14,7 +14,6 @@ Page({
     nickName: "",
     fixTop: false,
     fixVeryTop: false,
-    isEmpty: false,
     tabIndex: 0,
     hasReadArray: [],
     unReadArray: [],

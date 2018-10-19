@@ -13,7 +13,9 @@
     "pages/auditing/auditing",
     "pages/auditing-detail/auditing-detail",
     "pages/notification/notification",
-    "pages/notification-detail/notification-detail"
+    "pages/notification-detail/notification-detail",
+    "pages/notification-manage/notification-manage",
+    "pages/notification-manage-edit/notification-manage-edit"    
   ],
   "window": {
     "backgroundColor": "#F6F6F6",

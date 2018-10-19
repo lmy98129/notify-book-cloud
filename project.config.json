@@ -30,7 +30,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 10,
+			"current": 11,
 			"list": [
 				{
 					"id": -1,
@@ -97,6 +97,11 @@
 					"name": "消息内容",
 					"pathName": "pages/notification-detail/notification-detail",
 					"query": "index=0&mode=unReadArray"
+				},
+				{
+					"id": -1,
+					"name": "用户消息管理",
+					"pathName": "pages/notification-manage/notification-manage"
 				}
 			]
 		}

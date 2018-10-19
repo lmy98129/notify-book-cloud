@@ -1,0 +1,37 @@
+<!--pages/notification-manage/notification-manage.wxml-->
+<top-widget mode="title" title="用户消息管理">
+</top-widget>
+
+<view class="main">
+  <block wx:if="{{notification.length === 0}}">
+    <view class="hint">暂无用户消息</view>
+  </block>
+  <block wx:else>
+    <view class="notify-list">
+      <checkbox-group bindchange="bindChecked">
+        <block wx:for="{{notification}}" wx:key="{{index}}">
+          <view class="notify-outer-wrap {{index==0 ? 'first' : ''}}">
+            <!-- <navigator url="../notification-manage-edit/notification-manage-edit?index={{index}}" class="notify-navigator editing"> -->
+            <view class="notify-wrap">
+              <view class="right">
+                <view class="top">
+                  <view class="title">{{item.title}}</view>
+                </view>
+                <view class="content">{{item.content}}</view>
+              </view>
+            </view>
+            <!-- </navigator> -->
+            <button class="edit-btn" data-index="{{index}}" bindtap="goEdit">编辑</button>
+            <view class="check-box">
+              <checkbox value="{{item._id}}"/>
+            </view>
+          </view>
+        </block>
+      </checkbox-group>
+    </view>
+  </block>
+  <view class="bottom-wrap">
+    <view class="btn" bindtap="disallow">删除</view>
+    <view class="btn" bindtap="allow">新建</view>
+  </view>
+</view>

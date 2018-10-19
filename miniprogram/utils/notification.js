@@ -25,9 +25,9 @@ module.exports = {
       switch(res.result.code) {
         case 0:
         case -1:
-          that.setData({
-            isEmpty: true
-          });
+          // that.setData({
+          //   isEmpty: true
+          // });
           break;
         case 1: 
           let hasReadArray = res.result.hasReadArray,
@@ -93,5 +93,29 @@ module.exports = {
     }
     
     return res.result;
+  },
+
+  adminDownload: async () => {
+    wx.showLoading({
+      title: "加载审核列表"
+    })
+    let res = await wx.cloud.callFunction({
+      name: 'notification',
+      data: {
+        $url: 'adminDownload',
+      }
+    })
+    
+    wx.hideLoading();
+
+    if (res.result.code === 1) {
+      toast("列表加载成功");
+      console.log("用户消息管理列表加载成功：", res.result.notification);
+    } else {
+      toast("列表加载失败", "none");
+      console.log("用户消息管理列表加载失败：", res.err);
+    }
+
+    return res.result.notification;
   }
 }
