@@ -1,5 +1,7 @@
 // pages/search/search.js
 const app = getApp();
+const getFormid = require("../../utils/formid").getFormid;
+const formid = require("../../utils/formid");
 const toast = require("../../utils/message").toast;
 import regeneratorRuntime, { async } from "../../utils/regenerator-runtime/runtime";
 
@@ -32,7 +34,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    formid.upload();
   },
 
   /**
@@ -175,9 +177,7 @@ Page({
   },
   
   getFormid(e) {
-    if (app.globalData.formidArray === undefined) {
-      app.globalData.formidArray = [];
-    }
-    app.globalData.formidArray.push(e.detail.formId);
+    getFormid(e.detail.formId);
+
   }
 })

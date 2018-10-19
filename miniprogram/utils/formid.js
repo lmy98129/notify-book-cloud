@@ -4,6 +4,13 @@ const app = getApp();
 import regeneratorRuntime, { async } from "./regenerator-runtime/runtime";
 
 module.exports = {
+  getFormid: (formid) => {
+    if (app.globalData.formidArray === undefined) {
+      app.globalData.formidArray = [];
+    }
+    if (formid === "the formId is a mock one") return;
+    app.globalData.formidArray.push(formid);
+  },
   upload: async () => {
     let curFormidArray = app.globalData.formidArray, formidArray = [];
     if (curFormidArray.length !== 0) {

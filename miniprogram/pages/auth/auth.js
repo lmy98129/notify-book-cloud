@@ -3,6 +3,7 @@ const app = getApp();
 const auth = require("../../utils/auth");
 const formid = require("../../utils/formid");
 const toast = require("../../utils/message").toast;
+const getFormid = require("../../utils/formid").getFormid;
 
 Page({
 
@@ -106,10 +107,7 @@ Page({
 
 
   getFormid(e) {
-    if (app.globalData.formidArray === undefined) {
-      app.globalData.formidArray = [];
-    }
-    app.globalData.formidArray.push(e.detail.formId);
+    getFormid(e.detail.formId);
   },
 
   submit(e) {

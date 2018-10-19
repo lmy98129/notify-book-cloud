@@ -131,7 +131,6 @@ Page({
         url: "../auth/auth"
       })
     } else {
-      formid.upload();
       wx.navigateTo({
         url: "../search/search"
       })

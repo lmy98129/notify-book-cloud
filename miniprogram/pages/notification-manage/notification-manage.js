@@ -82,4 +82,10 @@ Page({
       selectedList: e.detail.value
     })
   },
+
+  goEdit(e) {
+    wx.navigateTo({
+      url: "../notification-manage-edit/notification-manage-edit?index="+e.target.dataset.index+"&mode=edit"
+    })
+  }
 })

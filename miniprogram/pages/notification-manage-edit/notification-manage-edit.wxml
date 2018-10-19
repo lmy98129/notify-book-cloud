@@ -1,2 +1,10 @@
 <!--pages/notification-manage-edit/notification-manage-edit.wxml-->
-<text>pages/notification-manage-edit/notification-manage-edit.wxml</text>
+<top-widget mode="title" title="编辑用户消息">
+</top-widget>
+
+<view class="main">
+
+  <view class="bottom-wrap">
+    <view class="btn" bindtap="submit">提交</view>
+  </view>
+</view>

@@ -11,7 +11,7 @@
       <checkbox-group bindchange="bindChecked">
         <block wx:for="{{notification}}" wx:key="{{index}}">
           <view class="notify-outer-wrap {{index==0 ? 'first' : ''}}">
-            <!-- <navigator url="../notification-manage-edit/notification-manage-edit?index={{index}}" class="notify-navigator editing"> -->
+            <!-- <navigator url="" class="notify-navigator editing"> -->
             <view class="notify-wrap">
               <view class="right">
                 <view class="top">

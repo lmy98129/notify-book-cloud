@@ -111,6 +111,7 @@ module.exports = {
     if (res.result.code === 1) {
       toast("列表加载成功");
       console.log("用户消息管理列表加载成功：", res.result.notification);
+      wx.setStorageSync("adminNotification", res.result.notification);
     } else {
       toast("列表加载失败", "none");
       console.log("用户消息管理列表加载失败：", res.err);

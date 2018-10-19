@@ -1,5 +1,7 @@
 // components/profile-input/profile-input.js
 const app = getApp();
+const getFormid = require("../../utils/formid").getFormid;
+
 
 Component({
   /**
@@ -95,10 +97,7 @@ Component({
     },
 
     getFormid(e) {
-      if (app.globalData.formidArray === undefined) {
-        app.globalData.formidArray = [];
-      }
-      app.globalData.formidArray.push(e.detail.formId);
+      getFormid(e.detail.formId);
     }
   }
 })

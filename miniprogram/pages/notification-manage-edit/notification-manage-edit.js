@@ -5,14 +5,19 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    notifyDetail: {}
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    switch(options.mode) {
+      case "edit":
+        this.setData({
+          notifyDetail: wx.getStorageSync("adminNotification")[options.index]
+        })
+    }
   },
 
   /**
