@@ -13,6 +13,6 @@ A wechat mini-program for students of Television School, Communication Universit
 - [x] search-page
 - [x] notification
 - [ ] address-book add/delete/edit/search
-- [ ] notification management
+- [x] notification management
 - [ ] invite code management
 - [ ] administrator management

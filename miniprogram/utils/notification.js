@@ -28,6 +28,8 @@ module.exports = {
             hasReadArray: [],
             unReadArray: []
           });
+          wx.setStorageSync("hasReadArray", []);
+          wx.setStorageSync("unReadArray", []);
           break;
         case 1: 
           let hasReadArray = res.result.hasReadArray,

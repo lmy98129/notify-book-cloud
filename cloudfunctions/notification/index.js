@@ -139,6 +139,7 @@ exports.main = async (event, context) => {
       for (let item of idArray) {
         if (item.indexOf("ALL,") >= 0) {
           let res = await db.collection("user-notification").where({
+            userOpenid: openid,  
             msgId: item.split(",")[1]
           }).get();
           if (res.data.length === 0) {
