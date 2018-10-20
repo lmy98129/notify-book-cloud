@@ -16,7 +16,7 @@ exports.main = async (event, context) => {
   app.router("download", async (ctx) => {
     try {
       // NOTE: 兼顾全体用户性质的消息
-      let hasReadArray = [], unReadArray = [], tmpRes;
+      let hasReadArray = [], unReadArray = [], tmpRes, myDate;
       let res = await db.collection("user-notification").where({
         userOpenid: openid,
         status: _.neq("delete")
@@ -27,9 +27,10 @@ exports.main = async (event, context) => {
             _id: item.msgId
           }).get();
           if (tmpRes.data[0].userList !== "0") {
+            myDate = new Date(item.createTime);
             item.content = tmpRes.data[0].content;
             item.title = tmpRes.data[0].title;
-            item.date = new Date(item.createTime).toLocaleString().slice(5, -3);
+            item.date = new Date(myDate.setHours(myDate.getHours() + 8)).toLocaleString().slice(5, -3);
             if (item.status === "un-read") unReadArray.push(item);
             else if (item.status === "has-read") hasReadArray.push(item);
           }
@@ -48,17 +49,20 @@ exports.main = async (event, context) => {
           delete item.userList;
           item._id = "ALL,"+item._id;
           if (tmpRes.data.length !== 0) {
-            item.date = new Date(tmpRes.data[0].createTime).toLocaleString().slice(5, -3);
+            myDate = new Date(item.createTime);
+            item.date = new Date(myDate.setHours(myDate.getHours() + 8)).toLocaleString().slice(5, -3);
             item.status = tmpRes.data[0].status;
             if (tmpRes.data[0].status === "un-read") unReadArray.push(item);
             else if (tmpRes.data[0].status === "has-read") hasReadArray.push(item);
           } else {
             tmpRes = await db.collection("user-notification").where({
+              userOpenid: openid,
               status: _.eq("delete")
             }).get();
             if (tmpRes.data.length === 0) {
+              myDate = new Date(item.createTime);
               item.status = "un-read";
-              item.date = new Date(item.createTime).toLocaleString().slice(5, -3);
+              item.date = new Date(myDate.setHours(myDate.getHours() + 8)).toLocaleString().slice(5, -3);
               unReadArray.push(item);
             }
           }
@@ -94,6 +98,7 @@ exports.main = async (event, context) => {
       for (let item of idArray) {
         if (item.indexOf("ALL,") >= 0) {
           let res = await db.collection("user-notification").where({
+            userOpenid: openid,            
             msgId: item.split(",")[1]
           }).get();
           if (res.data.length === 0) {
