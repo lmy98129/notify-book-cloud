@@ -4,7 +4,7 @@
 
 <view class="main">
   <block wx:if="{{notification.length === 0}}">
-    <view class="hint">暂无用户消息</view>
+    <view class="hint">暂无推送消息</view>
   </block>
   <block wx:else>
     <view class="notify-list">

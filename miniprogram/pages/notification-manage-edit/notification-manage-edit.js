@@ -38,7 +38,10 @@ Page({
           special: notifyDetail.special
         })
       }
-      if (notifyDetail.userList !== undefined) {
+      if (notifyDetail.userList !== undefined && notifyDetail.userList !== "0") {
+        if (typeof notifyDetail.userList === "string") {
+          notifyDetail.userList = [notifyDetail.userList]
+        }
         this.setData({
           userList: notifyDetail.userList.join("，")
         })
@@ -128,7 +131,16 @@ Page({
     newNotifyDetail.content = this.data.content;
     if (this.data.mode === "edit") {
       if (this.data.special === "") {
-        newNotifyDetail.userList = this.data.userList;
+        if (this.data.userList !== "") {
+          newNotifyDetail.userList = this.data.userList.split("，");
+          for (let i=0; i<newNotifyDetail.userList.length; i++) {
+            if (newNotifyDetail.userList[i] === "") {
+              newNotifyDetail.userList = newNotifyDetail.userList.splice(i-1,1);
+            }
+          }
+        } else {
+          newNotifyDetail.userList = "0";
+        }
       } else {
         newNotifyDetail.userList = "0";
       }

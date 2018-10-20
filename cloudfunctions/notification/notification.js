@@ -264,7 +264,7 @@ module.exports = {
           for (let item2 of newUserList) {
             if (item1 === item2) flag = true;
           }
-          if (!flag) deleteUserList.push(itme1);
+          if (!flag) deleteUserList.push(item1);
         }
         let extraUserOpenidList = await this.getUserOpenid(extraUserList);
         let deleteUserOpenidList = await this.getUserOpenid(deleteUserList);

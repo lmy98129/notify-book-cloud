@@ -200,6 +200,8 @@ exports.main = async (event, context) => {
       let notifyDetail = event.notifyDetail, newUserList, oldUserList
       if (notifyDetail.userList === "0") {
         newUserList = []
+      } else if (typeof notifyDetail.userList === "string") {
+        newUserList = [notifyDetail.userList]
       } else {
         newUserList = notifyDetail.userList
       }
@@ -220,13 +222,14 @@ exports.main = async (event, context) => {
         }
       }
       let res = await db.collection("notification").doc(event.id).get();
-      if (res.data[0].userList === "0") {
+      if (res.data.userList === "0") {
         oldUserList = [];
+      } else if (typeof res.data.userList === "string") {
+        oldUserList = [res.data.userList]
       } else {
-        oldUserList = res.data[0].userList;
+        oldUserList = res.data.userList;
       }
       res = await notify.updateUserListChecker(newUserList, oldUserList, event.id);
-      console.log(res.msg);
       switch(res.code) {
         case 1:
         case 2:
@@ -331,6 +334,9 @@ exports.main = async (event, context) => {
       });
       let _id = res._id;
       let openidList = [];
+      if (typeof event.notifyDetail.userList === "string" && event.notifyDetail.userList !== "0") {
+        event.notifyDetail.userList = [event.notifyDetail.userList];
+      }
       if (event.notifyDetail.userList !== "0") {
         for(let item of event.notifyDetail.userList) {
           res = await db.collection("profile").where({
