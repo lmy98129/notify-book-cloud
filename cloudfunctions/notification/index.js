@@ -43,7 +43,7 @@ exports.main = async (event, context) => {
           tmpRes = await db.collection("user-notification").where({
             msgId: item._id,
             userOpenid: openid,
-            status: _.eq("un-read").and(_.eq("has-read"))
+            status: _.neq("delete")
           }).get();
           delete item.userList;
           item._id = "ALL,"+item._id;
@@ -53,9 +53,14 @@ exports.main = async (event, context) => {
             if (tmpRes.data[0].status === "un-read") unReadArray.push(item);
             else if (tmpRes.data[0].status === "has-read") hasReadArray.push(item);
           } else {
-            item.status = "un-read";
-            item.date = new Date(item.createTime).toLocaleString().slice(5, -3);
-            unReadArray.push(item);
+            tmpRes = await db.collection("user-notification").where({
+              status: _.eq("delete")
+            }).get();
+            if (tmpRes.data.length === 0) {
+              item.status = "un-read";
+              item.date = new Date(item.createTime).toLocaleString().slice(5, -3);
+              unReadArray.push(item);
+            }
           }
         }
       }
