@@ -123,7 +123,8 @@ const getUserInfo = (that) => {
                     
                     if (res.status === "unauthorized") {
                       that.setData({
-                        isRedDot: true
+                        isRedDot: true,
+                        isAuthRedDot: true
                       });
                     }
                     wx.setStorageSync("authStatus", res.status);

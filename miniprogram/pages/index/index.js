@@ -25,6 +25,8 @@ Page({
     specialPhone: '',
     realname: "",
     isRedDot: false,
+    isAuthRedDot: false,
+    isNotifyRedDot: false
   },
 
   onLoad: function() {
@@ -82,15 +84,37 @@ Page({
         nickname: nickname,
         bgImgUrl: bgImgUrl,
       })
-      if (wx.getStorageSync("authStatus") === "unauthorized") {
-        this.setData({
-          isRedDot: true
-        })
-      } else {
-        this.setData({
-          isRedDot: false
-        })
-      }
+    }
+    let isRedDotFlag = false;
+    if (wx.getStorageSync("authStatus") === "unauthorized" ) {
+      this.setData({
+        isRedDot: true,
+        isAuthRedDot: true,
+      })
+      isRedDotFlag = true;
+    } else {
+      this.setData({
+        isAuthRedDot: false
+      })
+    }
+    if (wx.getStorageSync("unReadArray")!==undefined 
+    && wx.getStorageSync("unReadArray").length > 0) {
+      this.setData({
+        isRedDot: true,
+        isNotifyRedDot: true
+      })
+      isRedDotFlag = true
+    } else {
+      this.setData({
+        isNotifyRedDot: false
+      })
+    }
+    if (!isRedDotFlag) {
+      this.setData({
+        isRedDot: false,
+        isAuthRedDot: false,
+        isNotifyRedDot: false
+      })
     }
   },
 

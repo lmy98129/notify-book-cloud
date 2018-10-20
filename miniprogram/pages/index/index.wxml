@@ -76,10 +76,11 @@
         </navigator>
         <navigator url="../auth/auth">
           <view class="btn">校友认证</view>
-          <view class="red-dot" wx:if="{{isRedDot}}"></view>
+          <view class="red-dot" wx:if="{{isAuthRedDot}}"></view>
         </navigator>
         <navigator url="../notification/notification">
           <view class="btn">消息</view>
+          <view class="red-dot" wx:if="{{isNotifyRedDot}}"></view>
         </navigator>
         <navigator url="../settings/settings">
           <view class="btn">设置</view>
