@@ -3,9 +3,10 @@ const app = getApp();
 const avatar = require("../../utils/avatar");
 const profile = require("../../utils/profile");
 const profModel = require("../../utils/profile-model");
-const comfirmOnly = require("../../utils/message").comfirmOnly;
+const confirmOnly = require("../../utils/message").confirmOnly;
 const toast = require("../../utils/message").toast;
 const getFormid = require("../../utils/formid").getFormid;
+const formid = require("../../utils/formid");
 
 const initValue = profModel.initValue;
 let newUserInfo = profModel.userInfo;
@@ -154,7 +155,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    
+    formid.upload()
   },
 
   /**
@@ -359,6 +360,7 @@ Page({
   },
 
   submit() {
+    formid.upload()
     if (!this.data.canSubmit) return;
     let tmpJobArray, tmpContentArray;
     for(let item in newUserInfo) {
@@ -368,7 +370,7 @@ Page({
         case "major":
         case "address":
           if (newUserInfo[item] === undefined || newUserInfo[item] === "") {
-            comfirmOnly(initValue[item].name + "为空，此项为必填项");
+            confirmOnly(initValue[item].name + "为空，此项为必填项");
             return;
           }
           break;
@@ -377,7 +379,7 @@ Page({
         case "degree":
         case "enterSchoolTime":
           if(newUserInfo[item] === initValue[item].default) {
-            comfirmOnly(initValue[item].name + "为空，此项为必填项");
+            confirmOnly(initValue[item].name + "为空，此项为必填项");
             return;
           }
           break;
@@ -391,7 +393,7 @@ Page({
           for (let i=0; i<tmpContentArray.length; i++) {
             for (let subItem in tmpContentArray[i]) {
               if (tmpContentArray[i][subItem] === undefined || tmpContentArray[i][subItem] === "") {
-                comfirmOnly("“联系方式" + (i + 1) + "”的"+ initValue[subItem].name + "为空，此项为必填项");
+                confirmOnly("“联系方式" + (i + 1) + "”的"+ initValue[subItem].name + "为空，此项为必填项");
                 return;
               }
             }
@@ -405,13 +407,13 @@ Page({
                 case "institution":
                 case "job":
                   if (tmpJobArray[i][subItem] === undefined || tmpJobArray[i][subItem] === "") {
-                    comfirmOnly("“工作职务" + (i + 1) + "”的" + initValue[subItem].name + "为空，此项为必填项");
+                    confirmOnly("“工作职务" + (i + 1) + "”的" + initValue[subItem].name + "为空，此项为必填项");
                     return;
                   }
                   break;
                 case "jobStartTime":
                   if (tmpJobArray[i][subItem] === initValue[subItem].default) {
-                    comfirmOnly("“工作职务" + (i + 1) + "”的" + initValue[subItem].name + "为空，此项为必填项");
+                    confirmOnly("“工作职务" + (i + 1) + "”的" + initValue[subItem].name + "为空，此项为必填项");
                     return;
                   }
                   break;
@@ -426,7 +428,7 @@ Page({
           break;
         case "phoneNumber": 
           if (newUserInfo[item] !== "" && isNaN(newUserInfo[item])) {
-            comfirmOnly(initValue[item].name + "应为数字");
+            confirmOnly(initValue[item].name + "应为数字");
             return;
           }
           break;

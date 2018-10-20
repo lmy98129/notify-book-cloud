@@ -279,6 +279,13 @@
   white-space: nowrap;
 }
 
+.top-widget-fixed.fixed .contact-title .end{
+  max-width: 500rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .submit-no-style {
   background-color: transparent;
   padding: 0;

@@ -168,5 +168,122 @@ module.exports = {
         err: error
       }
     }
+  },
+
+  getAll: async function (collection) {
+    try {
+      let res = await db.collection(collection).count();
+      let total = res.total, allRecords = [], skip = 0;
+      while(skip <= total) {
+        res = await db.collection(collection).skip(skip).limit(100).get();
+        allRecords = allRecords.concat(res.data);
+        skip += 100;
+      }
+      return allRecords;
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  getUserOpenid: async function(userList) {
+    let res, openidList = [];
+    try {
+      for (let item of userList) {
+        res = await db.collection("profile").where({
+          realName: item
+        }).get();
+        if(res.data.length === 0) {
+          res = await db.collection("profile").where({
+            nickName: item
+          }).get();
+          if (res.data.length === 0) break;
+        } 
+        openidList.push(res.data[0]._openid);
+      }
+      return openidList;
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  updateUserListChecker: async function (newUserList, oldUserList, id) {
+    try {
+      if (newUserList.length === 0 && oldUserList.length !== 0) {
+        // await db.collection("notification").doc(id).update({
+        //   data: {
+        //     userList: "0"
+        //   }
+        // });
+        // let allRecords = await this.getAll("profile");
+        // let flag, extraUserList = [];
+        // for (let item1 of allRecords) {
+        //   flag = false;
+        //   for (let item2 of oldUserList) {
+        //     if (item1.realName === item2 || item1.nickName === item2) {
+        //       flag = true;
+        //       break;
+        //     }
+        //   }
+        //   if (!flag)  extraUserList.push(item1._openid);
+        // }
+        return {
+          code: 1,
+          msg: "spec -> all, original message with relationships deleted, new message will be set, every user will get the new message",
+          // extraUserList,
+        }
+      }
+      else if (newUserList.length !== 0 && oldUserList.length === 0) {
+        // await db.collection("notification").doc(id).update({
+        //   data: {
+        //     userList: newUserList
+        //   }
+        // });
+        // let extraUserList = await this.getUserOpenid(newUserList);
+        return {
+          code: 2,
+          msg: "all -> spec, original message with relationships deleted, new message will be set, specific user will get the new message",
+          // extraUserList
+        }
+      }
+      else if (newUserList.length !== 0 && oldUserList.length !== 0){
+        await db.collection("notification").doc(id).update({
+          data: {
+            userList: newUserList
+          }
+        });
+        let extraUserList = [], deleteUserList = [], flag;
+        for (let item1 of newUserList) {
+          flag = false;
+          for (let item2 of oldUserList) {
+            if (item1 === item2) flag = true;
+          }
+          if (!flag) extraUserList.push(item1);
+        }
+        for (let item1 of oldUserList) {
+          flag = false;
+          for (let item2 of newUserList) {
+            if (item1 === item2) flag = true;
+          }
+          if (!flag) deleteUserList.push(itme1);
+        }
+        let extraUserOpenidList = await this.getUserOpenid(extraUserList);
+        let deleteUserOpenidList = await this.getUserOpenid(deleteUserList);
+        return {
+          code: 3, 
+          msg: "spec -> spec, re-send for users in extraUserOpenidList, delete for users in deleteUserOpenidList",
+          extraUserOpenidList,
+          deleteUserOpenidList
+        }
+      }
+      else if (newUserList.length === 0 && oldUserList.length === 0) {
+        return {
+          code: 4,
+          msg: "all -> all, nothing has to be changed"
+        }
+      }
+      
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

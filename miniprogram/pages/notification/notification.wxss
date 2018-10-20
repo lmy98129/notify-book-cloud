@@ -63,12 +63,18 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  overflow: hidden;
   /* max-width: 280rpx; */
   margin-bottom: 10rpx;
   line-height: 85rpx;
   display: flex;
   justify-content: space-between;
+}
+
+.notify-wrap .right .top .title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }
 
 .notify-wrap .right .top .date {

@@ -1,1 +1,43 @@
 /* pages/notification-manage-edit/notification-manage-edit.wxss */
+
+.main {
+  margin-top: 10rpx;
+}
+
+.bottom-wrap .btn {
+  width: 100%;
+}
+
+.item-wrapper {
+  background: rgb(240,240,240);
+  width: 91%;
+  margin: 0 auto;
+  padding-bottom: 10rpx;
+  position: relative;
+  height: 440rpx;
+}
+
+.intro-input {
+  width: 88%;
+  color: rgb(60, 60, 60);
+  margin: 20rpx auto 30rpx;
+  font-size: 35rpx;
+  min-height: 80%;
+}
+
+.item-wrapper .item-title {
+  font-size: 36rpx;
+  padding-top: 20rpx;
+  color: rgb(100, 100, 100);
+  margin-bottom: -5rpx;
+  text-align: center;
+}
+
+.hint {
+  font-size: 28rpx;
+  color: rgb(110,110,110);
+  width: 90%;
+  margin: 10rpx auto;
+  text-align: left;
+  margin-top: -50rpx;
+}

@@ -8,7 +8,11 @@
         <view class="title">{{notifyDetail.title}}</view>
         <view class="date">{{notifyDetail.date}}</view>
       </view>
-      <view class="content">{{notifyDetail.content}}</view>
+      <view class="content">
+        <text decode="{{true}}">
+          {{notifyDetail.content}}
+        </text>
+      </view>
       <view class="bottom-wrap">
         <view class="btn" bindtap="delete">删除消息</view>
         <block wx:if="{{mode == 'unReadArray'}}">

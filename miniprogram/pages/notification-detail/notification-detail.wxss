@@ -1,6 +1,5 @@
 /* pages/notification-detail/notification-detail.wxss */
 .top {
-  display: flex;
   justify-content: space-between;
   margin: 0 auto;
   width: 83%;
@@ -14,10 +13,16 @@
 .date {
   font-size: 30rpx;
   margin-right: 20rpx;
+  text-align: right;
 }
 
 .content {
-  margin: 30rpx auto 50rpx;
+  margin: 0rpx auto 180rpx;
   width: 83%;
   font-size: 35rpx;
+}
+
+.container {
+  transform: none;
+  -webkit-transform: none;
 }

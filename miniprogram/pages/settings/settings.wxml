@@ -5,7 +5,7 @@
   <block wx:if="{{isAdmin}}">
     <view class="settings-wrapper">
       <settings-item url="/pages/auditing/auditing" title="校友认证审核" hint="仅管理员可见"></settings-item>
-      <settings-item url="/pages/notification-manage/notification-manage" title="用户消息管理" hint="仅管理员可见"></settings-item>      
+      <settings-item url="/pages/notification-manage/notification-manage" title="推送消息管理" hint="仅管理员可见"></settings-item>      
     </view>
     </block>
     <view class="settings-wrapper">

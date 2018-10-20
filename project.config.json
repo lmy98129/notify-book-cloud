@@ -99,14 +99,14 @@
 					"query": "index=0&mode=unReadArray"
 				},
 				{
-					"id": -1,
-					"name": "用户消息管理",
+					"id": 11,
+					"name": "推送消息管理",
 					"pathName": "pages/notification-manage/notification-manage",
 					"query": ""
 				},
 				{
-					"id": -1,
-					"name": "编辑用户消息",
+					"id": 12,
+					"name": "编辑推送消息",
 					"pathName": "pages/notification-manage-edit/notification-manage-edit",
 					"query": "index=0&mode=edit"
 				}

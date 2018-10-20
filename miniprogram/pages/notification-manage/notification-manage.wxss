@@ -44,17 +44,10 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  /* max-width: 280rpx; */
   margin-bottom: 10rpx;
   line-height: 85rpx;
-  display: flex;
   justify-content: space-between;
-}
-
-.notify-wrap .right .top .date {
-  font-size: 30rpx;
-  color: #888;
-  margin-right: 5rpx;
+  max-width: 100%;
 }
 
 .notify-wrap .right .content {

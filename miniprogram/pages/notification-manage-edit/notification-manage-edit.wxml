@@ -1,9 +1,22 @@
 <!--pages/notification-manage-edit/notification-manage-edit.wxml-->
-<top-widget mode="title" title="编辑用户消息">
+<top-widget mode="title" title="编辑推送消息">
 </top-widget>
 
 <view class="main">
-
+  <profile-input title="推送标题" place-holder="请输入推送消息的标题" input-type="title" bind:input="inputHandler" asterisk="{{false}}" value="{{title}}"/>
+  <view class="item-wrapper">
+    <view class="item-title">推送内容</view>
+    <textarea placeholder="请输入推送内容" maxlength="-1" fixed="{{true}}" class="intro-input" data-input-type="content" bindinput="inputHandler" value="{{content}}"></textarea>
+  </view>
+  <profile-input title="覆盖用户" place-holder="留空则默认为全体用户" input-type="userList" bind:input="inputHandler" asterisk="{{false}}" value="{{userList}}"/>
+  <view class="hint">
+    <text>
+      1. 输入的推送内容较长时，可以通过上下拖动的方式来进行浏览和编辑。
+      2. 覆盖用户若为特定用户，请输入其真实姓名或昵称（真实姓名优先，由于未过审用户无权填写资料故可以使用昵称），并用中文逗号隔开。
+      3. 编辑后若新增覆盖用户会对其补发该消息，减少则对其撤回消息，但已发送的微信模板消息将无法撤回。
+      3. 若想放弃当前更改，可以直接退出本界面，再次进入即可重新编辑。
+    </text>
+  </view>
   <view class="bottom-wrap">
     <view class="btn" bindtap="submit">提交</view>
   </view>

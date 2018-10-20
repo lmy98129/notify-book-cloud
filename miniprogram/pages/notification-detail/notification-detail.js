@@ -24,9 +24,15 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    let array = wx.getStorageSync(options.mode);
+    let notifyDetail = wx.getStorageSync(options.mode)[options.index];
+    let tmpContent = notifyDetail.content.split("\n");
+    let content = "";
+    for (let item of tmpContent) {
+      content += "&emsp;&emsp;"+item+"\n";
+    }
+    notifyDetail.content = content;
     this.setData({
-      notifyDetail: array[options.index],
+      notifyDetail,
       mode: options.mode
     })
   },

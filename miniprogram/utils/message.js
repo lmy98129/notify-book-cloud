@@ -1,4 +1,4 @@
-const comfirmOnly = (content) => {
+const confirmOnly = (content) => {
   wx.showModal({
     title: '提示',
     content: content,
@@ -21,6 +21,6 @@ const toast = (title, icon, duration) => {
 }
 
 module.exports = {
-  comfirmOnly: comfirmOnly,
+  confirmOnly: confirmOnly,
   toast: toast
 }

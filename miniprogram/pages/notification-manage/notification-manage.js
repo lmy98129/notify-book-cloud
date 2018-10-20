@@ -87,5 +87,30 @@ Page({
     wx.navigateTo({
       url: "../notification-manage-edit/notification-manage-edit?index="+e.target.dataset.index+"&mode=edit"
     })
+  },
+
+  delete: async function () {
+    let tmpList = [];
+    if (this.data.selectedList.length === 0) return;
+    for(let item1 of this.data.selectedList) {
+      for (let item2 of this.data.notification) {
+        if (item2._id === item1 && item2.special === undefined) {
+          tmpList.push(item1);
+        }
+      }
+    }
+    let res = await notify.adminDelete(tmpList);
+    if (res.code === 1) {
+      res = await notify.adminDownload();
+      this.setData({
+        notification: res
+      })  
+    }
+  },
+
+  new() {
+    wx.navigateTo({
+      url: "../notification-manage-edit/notification-manage-edit?mode=new"
+    })
   }
-})
+}) 

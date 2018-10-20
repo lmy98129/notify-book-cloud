@@ -1,5 +1,5 @@
 <!--pages/notification-manage/notification-manage.wxml-->
-<top-widget mode="title" title="用户消息管理">
+<top-widget mode="title" title="推送消息管理">
 </top-widget>
 
 <view class="main">
@@ -15,7 +15,7 @@
             <view class="notify-wrap">
               <view class="right">
                 <view class="top">
-                  <view class="title">{{item.title}}</view>
+                  {{item.title}}
                 </view>
                 <view class="content">{{item.content}}</view>
               </view>
@@ -31,7 +31,7 @@
     </view>
   </block>
   <view class="bottom-wrap">
-    <view class="btn" bindtap="disallow">删除</view>
-    <view class="btn" bindtap="allow">新建</view>
+    <view class="btn" bindtap="delete">删除</view>
+    <view class="btn" bindtap="new">新建</view>
   </view>
 </view>

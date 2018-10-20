@@ -24,10 +24,10 @@ module.exports = {
       });
       switch(res.result.code) {
         case 0:
-        case -1:
-          // that.setData({
-          //   isEmpty: true
-          // });
+          that.setData({
+            hasReadArray: [],
+            unReadArray: []
+          });
           break;
         case 1: 
           let hasReadArray = res.result.hasReadArray,
@@ -46,77 +46,175 @@ module.exports = {
   },
 
   changeStatus: async (idArray, status) => {
-    wx.showLoading({
-      title: "提交数据中"
-    })
-    let res = await wx.cloud.callFunction({
-      name: 'notification',
-      data: {
-        $url: 'changeStatus',
-        idArray,
-        status,
+    try {
+      wx.showLoading({
+        title: "提交数据中"
+      })
+      let res = await wx.cloud.callFunction({
+        name: 'notification',
+        data: {
+          $url: 'changeStatus',
+          idArray,
+          status,
+        }
+      })
+  
+      wx.hideLoading();
+      if (res.result.code === 1) {
+        toast("数据提交成功");
+        console.log("更改消息状态操作成功：", res.result);
+      } else {
+        toast("数据提交失败", "none");
+        console.log("更改消息状态操作失败：", res.err);
       }
-    })
-
-    wx.hideLoading();
-    if (res.result.code === 1) {
-      toast("数据提交成功");
-      console.log("更改消息状态操作成功：", res.result);
-    } else {
-      toast("数据提交失败", "none");
-      console.log("更改消息状态操作失败：", res.err);
+  
+      return res.result;
+    } catch (error) {
+      console.log(error);
     }
-
-    return res.result;
   },
 
   deleteItems: async (idArray) => {
-    wx.showLoading({
-      title: "提交数据中"
-    })
-
-    let res = await wx.cloud.callFunction({
-      name: 'notification',
-      data: {
-        $url: 'delete',
-        idArray,
+    try {
+      wx.showLoading({
+        title: "提交数据中"
+      })
+  
+      let res = await wx.cloud.callFunction({
+        name: 'notification',
+        data: {
+          $url: 'delete',
+          idArray,
+        }
+      })
+      
+      wx.hideLoading();
+      if (res.result.code === 1) {
+        toast("数据提交成功");
+        console.log("删除消息操作成功：", res.result);
+      } else {
+        toast("数据提交失败", "none");
+        console.log("删除消息操作失败：", res.err);
       }
-    })
-    
-    wx.hideLoading();
-    if (res.result.code === 1) {
-      toast("数据提交成功");
-      console.log("删除消息操作成功：", res.result);
-    } else {
-      toast("数据提交失败", "none");
-      console.log("删除消息操作失败：", res.err);
+      
+      return res.result;
+    } catch (error) {
+      console.log(error);
     }
-    
-    return res.result;
   },
 
   adminDownload: async () => {
-    wx.showLoading({
-      title: "加载审核列表"
-    })
-    let res = await wx.cloud.callFunction({
-      name: 'notification',
-      data: {
-        $url: 'adminDownload',
+    try {
+      wx.showLoading({
+        title: "加载消息列表"
+      })
+      let res = await wx.cloud.callFunction({
+        name: 'notification',
+        data: {
+          $url: 'adminDownload',
+        }
+      })
+      
+      wx.hideLoading();
+  
+      if (res.result.code === 1) {
+        toast("列表加载成功");
+        console.log("推送消息管理列表加载成功：", res.result.notification);
+        wx.setStorageSync("adminNotification", res.result.notification);
+      } else {
+        toast("列表加载失败", "none");
+        console.log("推送消息管理列表加载失败：", res.err);
       }
-    })
-    
-    wx.hideLoading();
-
-    if (res.result.code === 1) {
-      toast("列表加载成功");
-      console.log("用户消息管理列表加载成功：", res.result.notification);
-      wx.setStorageSync("adminNotification", res.result.notification);
-    } else {
-      toast("列表加载失败", "none");
-      console.log("用户消息管理列表加载失败：", res.err);
+  
+      return res.result.notification;
+    } catch (error) {
+      console.log(error);
     }
+  },
 
-    return res.result.notification;
+  adminUpdate: async (notifyDetail, id) => {
+    try {
+      wx.showLoading({
+        title: "提交数据中"
+      })
+      let res = await wx.cloud.callFunction({
+        name: "notification",
+        data: {
+          $url: "adminUpdate",
+          id,
+          notifyDetail
+        }
+      });
+  
+      wx.hideLoading();
+  
+      if (res.result.code === 1) {
+        toast("数据提交成功");
+        console.log("推送消息更新成功：", res.result);
+      } else {
+        toast("数据提交失败", "none");
+        console.log("推送消息更新失败：", res.err);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  adminDelete: async (idArray) => {
+    try {
+      wx.showLoading({
+        title: "提交数据中"
+      })
+  
+      let res = await wx.cloud.callFunction({
+        name: "notification",
+        data: {
+          $url: "adminDelete",
+          idArray
+        }
+      });
+  
+      wx.hideLoading();
+  
+      if (res.result.code === 1) {
+        toast("数据提交成功");
+        console.log("删除消息操作成功：", res.result);
+      } else {
+        toast("数据提交失败", "none");
+        console.log("删除消息操作失败：", res.err);
+      }
+
+      return res.result;
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  adminAdd: async (notifyDetail) => {
+    try {
+      wx.showLoading({
+        title: "提交数据中"
+      })
+  
+      let res = await wx.cloud.callFunction({
+        name: "notification",
+        data: {
+          $url: "adminAdd",
+          notifyDetail
+        }
+      });
+  
+      wx.hideLoading();
+  
+      if (res.result.code === 1) {
+        toast("数据提交成功");
+        console.log("新建消息操作成功：", res.result);
+      } else {
+        toast("数据提交失败", "none");
+        console.log("新建消息操作失败：", res.err);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

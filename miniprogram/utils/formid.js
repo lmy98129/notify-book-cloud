@@ -12,6 +12,10 @@ module.exports = {
     app.globalData.formidArray.push(formid);
   },
   upload: async () => {
+    if (app.globalData.formidArray === undefined) {
+      app.globalData.formidArray = [];
+      return;
+    }
     let curFormidArray = app.globalData.formidArray, formidArray = [];
     if (curFormidArray.length !== 0) {
       curFormidArray.map(item => {
@@ -33,7 +37,6 @@ module.exports = {
         });
       } else {
         formidArray = res.data[0].formidArray.concat(formidArray);
-        console.log(formidArray);
         app.globalData.formidArray = [];
         await db.collection("formid").doc(res.data[0]._id).update({
           data: {

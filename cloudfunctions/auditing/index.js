@@ -51,8 +51,8 @@ exports.main = async (event, context) => {
         })
       }));
   
-      let myDate = new Date();
-      myDate = new Date(myDate.setHours(myDate.getHours() + 8));
+      // let myDate = new Date();
+      // myDate = new Date(myDate.setHours(myDate.getHours() + 8));
       let data = {
         "touser": "",
         "template_id": "PClhDQdJsQMWpqDjdzdR2zWsk87EAOA05kLRw9Oyagg",
@@ -131,8 +131,8 @@ exports.main = async (event, context) => {
         })
       }));
   
-      let myDate = new Date();
-      myDate = new Date(myDate.setHours(myDate.getHours() + 8));
+      // let myDate = new Date();
+      // myDate = new Date(myDate.setHours(myDate.getHours() + 8));
       let data = {
         "touser": "",
         "template_id": "PClhDQdJsQMWpqDjdzdR2zWsk87EAOA05kLRw9Oyagg",
