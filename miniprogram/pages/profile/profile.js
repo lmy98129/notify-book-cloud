@@ -72,12 +72,7 @@ Page({
    */
   onShow: async function () {
     if (mode !== "normal") {
-      let tmpUserInfo
-      if (mode === "searchResult") {
-        tmpUserInfo = wx.getStorageSync("searchResult")[index];
-      } else if (mode === "contactResult") {
-        tmpUserInfo = wx.getStorageSync("contactResult")[index];
-      }
+      let tmpUserInfo = wx.getStorageSync(mode)[index];
       try {
         let avatarUrl = tmpUserInfo.avatarUrl,
         nickname = tmpUserInfo.nickName,

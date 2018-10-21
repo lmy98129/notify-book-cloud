@@ -47,6 +47,32 @@ module.exports = {
     }
   },
 
+  checkDownload: async () => {
+    try {
+      let res = await wx.cloud.callFunction({
+        name: "notification",
+        data: {
+          $url: "download"
+        }
+      });
+      switch(res.result.code) {
+        case 0:
+          wx.setStorageSync("hasReadArray", []);
+          wx.setStorageSync("unReadArray", []);
+          break;
+        case 1: 
+          let hasReadArray = res.result.hasReadArray,
+            unReadArray = res.result.unReadArray;
+          wx.setStorageSync("hasReadArray", hasReadArray);
+          wx.setStorageSync("unReadArray", unReadArray);
+      }
+      console.log("消息更新成功：", res.result.code);
+      return res.result.code;
+    } catch (error) {
+      console.log(error)
+    }
+  },
+
   changeStatus: async (idArray, status) => {
     try {
       wx.showLoading({

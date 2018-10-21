@@ -16,17 +16,20 @@ Page({
     requestResult: '',
     sideBar: false,
     moveY: 0,
-    randRecList: [],
+    possibleKnowList: [],
     sameYearRecList: [],
-    sameClassRecList: [],
-    randListLength: 0,
+    sameYearFixList: [],
+    sameMajorRecList: [],
+    sameMajorFixList: [],
+    possibleKnowListLength: 0,
     fixTop: false,
     fixVeryTop: false,
     specialPhone: '',
     realname: "",
     isRedDot: false,
     isAuthRedDot: false,
-    isNotifyRedDot: false
+    isNotifyRedDot: false,
+    profileEmpty: 0
   },
 
   onLoad: function() {
@@ -38,30 +41,34 @@ Page({
     }
 
     // 导入可能认识的人信息
-    let rand = localData.rand;
-    this.setData({
-      randListLength: rand.length
-    })
-    if (rand.length < 9) {
-      for (var i=rand.length; i<9; i++) {
-        rand[i] = {avatarUrl: "/images/user-unlogin.png"}
-      }
-    }
-    let year = localData.year, classmate = localData.classmate;
-    this.setData({
-      randRecList: rand,
-      sameYearRecList: year, 
-      sameClassRecList: classmate
-    })
+    // let rand = localData.rand;
+    // this.setData({
+    //   randListLength: rand.length
+    // })
+    // if (rand.length < 9) {
+    //   for (var i=rand.length; i<9; i++) {
+    //     rand[i] = {avatarUrl: "/images/user-unlogin.png"}
+    //   }
+    // }
+    // let year = localData.year, classmate = localData.classmate;
+    // this.setData({
+    //   randRecList: rand,
+    //   sameYearRecList: year, 
+    //   sameClassRecList: classmate
+    // })
 
     sys.checkPhone(this);
+
+    // setInterval(() => {
+    //   login.download();
+    // }, 10000)
 
   },
 
   onShow: function() {
     /**
      * 这个条件涵盖了两个情况：
-     * 1）若用户首次使用，则会在执行onReady时就跳转到了login页面，
+     * 1）若用户首次使用，则会在执行onShow时就跳转到了login页面，
      * 在login页面授权成功后，跳转回index页面，执行onShow，app.globalData.isFirstLogin === true，
      * 这时执行了login.getUserInfo()
      * 2）若用户是首次使用之后任意时刻第一次打开，则会执行到onShow，此时app.globalData.isFirstLogin === undefined，
@@ -86,7 +93,8 @@ Page({
       })
     }
     let isRedDotFlag = false;
-    if (wx.getStorageSync("authStatus") === "unauthorized" ) {
+    if (wx.getStorageSync("authStatus")!==undefined 
+    && wx.getStorageSync("authStatus") === "unauthorized" ) {
       this.setData({
         isRedDot: true,
         isAuthRedDot: true,

@@ -144,11 +144,12 @@ exports.main = async (event, context) => {
   try {
     let allProfile = [], skip = 0, 
       text = event.text, start = event.start, limit = event.limit, 
-      requestArray = event.requestArray;
-    let res = await db.collection("profile").count();
+      requestArray = event.requestArray, pageLength = event.pageLength,
+      collection = event.collection;
+    let res = await db.collection(collection).count();
     let total = res.total;
     while(skip <= total) {
-      res = await db.collection("profile").skip(skip).limit(100).get();
+      res = await db.collection(collection).skip(skip).limit(100).get();
       allProfile = allProfile.concat(res.data);
       skip += 100;
     }
@@ -167,9 +168,9 @@ exports.main = async (event, context) => {
 
     total = searchRes.length;
 
-    if (total > 200 && start != undefined) {
-      searchRes = searchRes.slice(start, start + 200);
-      start += 200;
+    if (total > pageLength && start != undefined) {
+      searchRes = searchRes.slice(start, start + pageLength);
+      start += pageLength;
     }
 
     if (limit != undefined) {

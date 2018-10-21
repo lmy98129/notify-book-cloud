@@ -150,7 +150,9 @@ Page({
         data: {
           text: value,
           start: 0,
-          requestArray
+          pageLength: 50,
+          requestArray,
+          collection: "profile"
         }
       });
       wx.hideLoading();
