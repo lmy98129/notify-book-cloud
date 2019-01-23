@@ -158,7 +158,7 @@ Page({
   },
 
   goSearch() {
-    if (wx.getStorageSync("authStatus") !== "authorized") {
+    if (wx.getStorageSync("curUserProfile").authStatus !== "authorized") {
       wx.navigateTo({
         url: "../auth/auth"
       })

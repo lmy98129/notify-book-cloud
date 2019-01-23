@@ -74,17 +74,20 @@ const codeCheck = async (remark) => {
       });
     } else {
   
-      let profileRes = await db.collection("profile-new").where({
-        _openid: app.globalData.openid
-      }).get();
+      let curUserProfile = await profile.check();
+
+      let data = {
+        authStatus: "authorized",
+        authIsCode: true,
+      }
+
+      await db.collection("profile-new")
+        .doc(curUserProfile._id).update({ data });
   
-      await db.collection("auth").doc(profileRes.data[0]._id).update({
-        data: {
-          status: "authorized",
-          isCode: true,
-        }
-      });
-  
+      curUserProfile.authIsCode = data.authIsCode;
+      curUserProfile.authStatus = data.authStatus;
+      wx.setStorage({ key: "curUserProfile", data: curUserProfile });
+
       return Promise.resolve({
         code: 1,
         msg: "is auth-code & authorized",
@@ -96,14 +99,13 @@ const codeCheck = async (remark) => {
 }
 
 const uploadAuth = async (authImgArray, remark, that) => {
-  let tmpAuthImgArray = [], cloudPath, filePath, openid = wx.getStorageSync("openid");
+  let tmpAuthImgArray = [], cloudPath, filePath, openid = app.globalData.openid;
   try {
     let res = await codeCheck(remark);
     if (res.code === 1) {
       wx.hideLoading();
       console.log("授权码检测成功：", res.msg);
       toast("数据上传成功");
-      wx.setStorageSync("authStatus", "authorized");
       that.setData({
         authStatus: "authorized"
       });
@@ -118,56 +120,53 @@ const uploadAuth = async (authImgArray, remark, that) => {
     return;
   }
 
-  if (that.data.authImgArray.length === 0) {
-    toast("请至少上传一张图片", "none");
-    return;
-  }
+  try {
+    if (that.data.authImgArray.length === 0) {
+      toast("请至少上传一张图片", "none");
+      return;
+    }
 
-  wx.showLoading({
-    title: "数据上传中"
-  });
-  (async () => {
+    wx.showLoading({
+      title: "数据上传中"
+    });
+
     for (let i=0; i<authImgArray.length; i++) {
       filePath = authImgArray[i];
       cloudPath = "authImg-"+ openid + (new Date()).getTime() + filePath.match(/\.[^.]+?$/)[0];
       // 用await关键字异步转同步
-      await wx.cloud.uploadFile({
+      let uploadFileRes = await wx.cloud.uploadFile({
         cloudPath,
         filePath,
       })
-      .then(res => {
-        tmpAuthImgArray.push(res.fileID);
-      })
+      tmpAuthImgArray.push(uploadFileRes.fileID);
     }
-  })().then(() => {
-    return db.collection("auth").where({
-        _openid: openid
-      }).get()
-  })
-  .then(res => {
-    return db.collection("auth").doc(res.data[0]._id).update({
+
+    let curUserProfile = await profile.check();
+    
+    await db.collection("profile-new").doc(curUserProfile._id).update({
       data: {
         authImgUrl: tmpAuthImgArray,
-        remark: remark,
+        remark,
         status: "auditing"
       }
     })
-  })
-  .then(res => {
+
     wx.hideLoading();
     console.log("认证数据上传成功：", res);
     toast("数据上传成功");
-    
-    wx.setStorageSync("authStatus", "auditing");
+
+    curUserProfile.authStatus = "auditing";
+    wx.setStorage({ key:"curUserProfile", data: curUserProfile });
+
     that.setData({
       authStatus: "auditing"
     });
-  })
-  .catch(err => {
+
+  } catch (error) {
     wx.hideLoading();
     console.log("认证数据上传失败：", err);
     toast("上传失败", "none");
-  })
+  }
   
 }
 

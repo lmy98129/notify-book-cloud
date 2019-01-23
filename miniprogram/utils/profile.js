@@ -6,6 +6,15 @@ const toast = require("./message").toast;
 
 import regeneratorRuntime, { async } from "./regenerator-runtime/runtime";
 
+const check = async () => {
+  let curUserProfile = wx.getStorageSync("curUserProfile");
+  if (curUserProfile === undefined || curUserProfile === "") {
+    await profile.download();
+    curUserProfile = wx.getStorageSync("curUserProfile");
+  }
+  return curUserProfile;
+}
+
 const downloadNew = async (that, callback) => {
   wx.getUserInfo({
     success: async result => {
@@ -83,24 +92,12 @@ const downloadNew = async (that, callback) => {
         }
 
         // 汇总并存储到本地
-        wx.setStorage({key: "curUserProfile", data: curUserProfile});
-        
-        // 根据当前已经得到的信息，判断用户审核状态、身份（是否管理员等信息）
-        if (!curUserProfile.isAdmin) {
-          switch(curUserProfile.authStatus) {
-            case "unauthorized":
-              that.setData({
-                isRedDot: true,
-                isAuthRedDot: true
-              })
-              break;
-            case "auditing":
-            case "authorized": 
-              break;
-          }
-        }
+        wx.setStorage({ key: "curUserProfile", data: curUserProfile });
 
-        callback(that, curUserProfile);
+        // 回调函数用于不同功能用途
+        if (callback !== undefined) {
+          callback(that, curUserProfile);
+        }
 
         if (curUserProfile.isProfileEmpty) {
           msg = "用户资料为空";
@@ -346,4 +343,5 @@ module.exports = {
   download: downloadNew,
   introUpload,
   decode,
+  check,
 }

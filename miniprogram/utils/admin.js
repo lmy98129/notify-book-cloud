@@ -7,7 +7,6 @@ const checkAdmin = async () => {
   try {
     let res = await db.collection("admin-list").where({
       adminOpenId: app.globalData.openid
-      // wx.getStorageSync("openid")
     }).get()
   
     if (res.data.length !== 0) {

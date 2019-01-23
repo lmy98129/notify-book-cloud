@@ -33,6 +33,20 @@ const getUserInfoNew = (that) => {
       }
 
       profile.download(that, (that, curUserProfile) => {
+        // 根据当前已经得到的信息，判断用户审核状态、身份（是否管理员等信息）
+        if (!curUserProfile.isAdmin) {
+          switch(curUserProfile.authStatus) {
+            case "unauthorized":
+              that.setData({
+                isRedDot: true,
+                isAuthRedDot: true
+              })
+              break;
+            case "auditing":
+            case "authorized": 
+              break;
+          }
+        }
         // 消息列表、推荐列表（待重构）
         // Promise.all([(async () => {
         //   let code = await notify.checkDownload();
