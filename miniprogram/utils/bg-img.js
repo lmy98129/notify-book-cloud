@@ -71,7 +71,7 @@ const defaultImg = (that) => {
       toast("更新背景成功");
 
       // 更新本地存储的userInfo
-      let tmpUserInfo = wx.getStorageSync("userInfo");
+      let tmpUserInfo = wx.getStorageSync("curUserProfile");
       tmpUserInfo.bgImgUrl = defaultImgUrl;
       wx.setStorageSync("userInfo", tmpUserInfo);
 
@@ -141,7 +141,7 @@ const uploadImg = (that) => {
         toast("上传自定义背景成功");
 
         // 更新本地存储的userInfo
-        let tmpUserInfo = wx.getStorageSync("userInfo");
+        let tmpUserInfo = wx.getStorageSync("curUserProfile");
         tmpUserInfo.bgImgUrl = bgImgUrl;
         wx.setStorageSync("userInfo", tmpUserInfo);
 

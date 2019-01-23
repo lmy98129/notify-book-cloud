@@ -4,6 +4,7 @@ const profile = require("../../utils/profile");
 const toast = require("../../utils/message").toast;
 const bgImg = require("../../utils/bg-img");
 const contact = require("../../utils/contact");
+const app = getApp()
 import regeneratorRuntime, { async } from "../../utils/regenerator-runtime/runtime";
 
 let mode = "normal", index, isFriend;
@@ -47,9 +48,9 @@ Page({
       index = options.index;
     }
     if (mode === "searchResult") {
-      let tmpUserInfo = wx.getStorageSync("searchResult")[index];
+      let curUserProfile = wx.getStorageSync("searchResult")[index];
       let openid = wx.getStorageSync("openid");
-      if (tmpUserInfo._openid === openid) {
+      if (curUserProfile._openid === openid) {
         mode = "normal";
         this.setData({
           mode: "normal"
@@ -72,11 +73,11 @@ Page({
    */
   onShow: async function () {
     if (mode !== "normal") {
-      let tmpUserInfo = wx.getStorageSync(mode)[index];
+      let curUserProfile = wx.getStorageSync(mode)[index];
       try {
-        let avatarUrl = tmpUserInfo.avatarUrl,
-        nickname = tmpUserInfo.nickName,
-        bgImgUrl = tmpUserInfo.bgImgUrl;
+        let avatarUrl = curUserProfile.avatarUrl,
+        nickname = curUserProfile.nickName,
+        bgImgUrl = curUserProfile.bgImgUrl;
         if (avatarUrl !== undefined) {
           this.setData({avatarUrl});
         }
@@ -84,8 +85,13 @@ Page({
           nickname,
           bgImgUrl
         })
-        let res = await contact.check(tmpUserInfo._openid);
-        profile.decode(tmpUserInfo, this); 
+        if (bgImgUrl === "" || bgImgUrl === undefined) {
+          this.setData({
+            bgImgUrl: app.globalData.DEFAULT_BGIMGURL
+          })
+        }
+        let res = await contact.check(curUserProfile._openid);
+        profile.decode(curUserProfile, this); 
         if (res.code === 0) {
           console.log("获取用户资料成功：", res.msg);
           this.setData({
@@ -108,32 +114,42 @@ Page({
         })
       }
     } else {
-      let tmpUserInfo = wx.getStorageSync("userInfo");
-      let avatarUrl = tmpUserInfo.avatarUrl,
-        nickname = tmpUserInfo.nickName,
-        bgImgUrl = tmpUserInfo.bgImgUrl;
-      this.setData({
-        avatarUrl,
-        nickname,
-        bgImgUrl
-      })
-      profile.download()
-        .then(res => {
-          console.log("获取用户资料成功：", res);
-          if (res.code === 2) {
-            profile.decode(res.data, this);
-          } else {
-            this.setData({
-              profileStatus: -1
-            })
-          }
-        })
-        .catch(err => {
-          console.log("获取用户资料出错：", err);
-          this.setData({
-            profileStatus: -2
+      let curUserProfile = wx.getStorageSync("curUserProfile");
+      if (curUserProfile === "" || curUserProfile === undefined) {
+        profile.download()
+          .then(res => {
+            console.log("获取用户资料成功：", res);
+            if (res.code === 2) {
+              profile.decode(res.data, this);
+            } else {
+              this.setData({
+                profileStatus: -1
+              })
+            }
           })
+          .catch(err => {
+            console.log("获取用户资料出错：", err);
+            this.setData({
+              profileStatus: -2
+            })
+          })
+      } else {
+        let avatarUrl = curUserProfile.avatarUrl,
+          nickname = curUserProfile.nickName,
+          bgImgUrl = curUserProfile.bgImgUrl;
+        this.setData({
+          avatarUrl,
+          nickname,
+          bgImgUrl
         })
+        if (curUserProfile.isProfileEmpty && curUserProfile.authStatus == "authorized" ) {
+          profile.decode(curUserProfile, this);
+        } else {
+          this.setData({
+            profileStatus: -1
+          })
+        }
+      }
     }
   },
 

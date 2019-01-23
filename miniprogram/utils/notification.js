@@ -8,7 +8,7 @@ module.exports = {
     wx.showLoading({
       title: "加载中"
     })
-    let tmpUserInfo = wx.getStorageSync("userInfo");
+    let tmpUserInfo = wx.getStorageSync("curUserProfile");
     let bgImgUrl = tmpUserInfo.bgImgUrl,
     nickname = tmpUserInfo.nickName;
     that.setData({

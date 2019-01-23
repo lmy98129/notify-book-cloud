@@ -10,6 +10,9 @@ App({
       })
     }
 
-    this.globalData = {}
+    this.globalData = {
+      DEFAULT_BGIMGURL: "cloud://test-5c133c.7465-test-5c133c/tvs-bg.jpeg",
+      forcedRefresh: true,
+    }
   }
 })

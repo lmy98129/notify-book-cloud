@@ -76,7 +76,7 @@ const checkAvatar = (avatarUrl) => {
     } else if(res.data[0].isCustom) {
 
       // 头像采用用户自定义头像, 更新本地存储的userInfo
-      let tmpUserInfo = wx.getStorageSync("userInfo");
+      let tmpUserInfo = wx.getStorageSync("curUserProfile");
       tmpUserInfo.avatarUrl = res.data[0].avatarUrl;
       wx.setStorageSync("userInfo", tmpUserInfo);
 
@@ -161,7 +161,7 @@ const uploadAvatar = (that) => {
             toast("上传图片成功");
 
             // 更新本地存储的userInfo
-            let tmpUserInfo = wx.getStorageSync("userInfo");
+            let tmpUserInfo = wx.getStorageSync("curUserProfile");
             tmpUserInfo.avatarUrl = avatarUrl;
             wx.setStorageSync("userInfo", tmpUserInfo);
 
@@ -232,7 +232,7 @@ const wechatAvatar = (that) => {
           toast("更新头像成功");
 
           // 更新本地存储的userInfo
-          let tmpUserInfo = wx.getStorageSync("userInfo");
+          let tmpUserInfo = wx.getStorageSync("curUserProfile");
           tmpUserInfo.avatarUrl = wechatAvatarUrl;
           wx.setStorageSync("userInfo", tmpUserInfo);
 

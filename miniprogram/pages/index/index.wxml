@@ -1,18 +1,18 @@
 <!--index.wxml-->
 <view class="root {{sideBar ? 'left' : ''}}">
   <view class="container {{sideBar ? 'left' : ''}}  {{fixVeryTop ? 'fixed':''}}">
-    <top-widget avatarUrl="{{avatarUrl}}" bgImgUrl="{{bgImgUrl}}" nickname="{{nickname}}" fixTop="{{fixTop}}" class="top-widget-wrapper" isNavigateToProfile="true">
+    <top-widget avatarUrl="{{avatarUrl}}" bgImgUrl="{{bgImgUrl}}" nickname="{{nickName}}" fixTop="{{fixTop}}" class="top-widget-wrapper" isNavigateToProfile="true">
       <nav-btn slot="add" btnType="add" iconType="icon-tianjiahaoyou" bind:tapBtn="goSearch"/>
       <nav-btn slot="settings" btnType="settings" iconType="icon-option2" bind:tapBtn="switchSideBar" isRedDot="{{isRedDot}}"/>
     </top-widget>
     
     <view class="main">
       
-      <block wx:if="{{profileEmpty === 0}}">
+      <block wx:if="{{isProfileEmpty === 0}}">
 
       </block>
 
-      <block wx:if="{{profileEmpty === false}}">
+      <block wx:if="{{isProfileEmpty === false}}">
         <view class="recommend">
           <scroll-view class="scroll" scroll-x style="width: 100%; height: 240rpx;" scroll-with-animation="true">
             <view class="list">
@@ -102,7 +102,7 @@
         </view>
       
       </block>
-      <block wx:if="{{profileEmpty === true}}">
+      <block wx:if="{{isProfileEmpty === true}}">
         <view class="hint-wrapper">
             <view class="upper">
               <image src="/images/discover-hl.png"></image>

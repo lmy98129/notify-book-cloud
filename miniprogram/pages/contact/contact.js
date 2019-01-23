@@ -34,7 +34,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: async function () {
-    let tmpUserInfo = wx.getStorageSync("userInfo");
+    let tmpUserInfo = wx.getStorageSync("curUserProfile");
     let bgImgUrl = tmpUserInfo.bgImgUrl,
     nickname = tmpUserInfo.nickName;
     this.setData({

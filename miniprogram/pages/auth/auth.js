@@ -35,7 +35,7 @@ Page({
    */
   onShow: function () {
     this.setData({
-      authStatus: wx.getStorageSync("authStatus")
+      authStatus: wx.getStorageSync("curUserProfile").authStatus
     })
   },
 

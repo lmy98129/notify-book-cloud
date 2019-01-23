@@ -439,7 +439,7 @@ Page({
     .then(res => {
       console.log("上传用户资料成功：", res);
       toast("资料上传成功");
-      let tmpUserInfo = wx.getStorageSync("userInfo");
+      let tmpUserInfo = wx.getStorageSync("curUserProfile");
       tmpUserInfo.nickname = newUserInfo.nickName;
       wx.setStorageSync("userInfo", tmpUserInfo);
     })

@@ -9,7 +9,7 @@ Page({
   data: {
     avatarUrl: "/images/user-unlogin.png",
     bgImgUrl: "",
-    nickname: "",
+    nickName: "",
     userInfo: {},
     logged: false,
     takeSession: false,
@@ -29,7 +29,7 @@ Page({
     isRedDot: false,
     isAuthRedDot: false,
     isNotifyRedDot: false,
-    profileEmpty: 0
+    isProfileEmpty: 0
   },
 
   onLoad: function() {
@@ -78,52 +78,52 @@ Page({
      */
     // 感觉有点蠢，实在没办法实时更新啊，还是只保持第一种情况就算了。
     // 更蠢了，一直反复更新反而容易出问题。。。
-    if (app.globalData.isFirstLogin || app.globalData.isFirstLogin === undefined){
+    // if (app.globalData.isFirstLogin || app.globalData.isFirstLogin === undefined){
       login.getUserInfo(this);
-      app.globalData.isFirstLogin = false;
-    } else {
-      let tmpUserInfo = wx.getStorageSync("userInfo");
-      let avatarUrl = tmpUserInfo.avatarUrl,
-        nickname = tmpUserInfo.nickName,
-        bgImgUrl = tmpUserInfo.bgImgUrl;
-      this.setData({
-        avatarUrl: avatarUrl,
-        nickname: nickname,
-        bgImgUrl: bgImgUrl,
-      })
-    }
-    let isRedDotFlag = false;
-    if (wx.getStorageSync("authStatus")!==undefined 
-    && wx.getStorageSync("authStatus") === "unauthorized" ) {
-      this.setData({
-        isRedDot: true,
-        isAuthRedDot: true,
-      })
-      isRedDotFlag = true;
-    } else {
-      this.setData({
-        isAuthRedDot: false
-      })
-    }
-    if (wx.getStorageSync("unReadArray")!==undefined 
-    && wx.getStorageSync("unReadArray").length > 0) {
-      this.setData({
-        isRedDot: true,
-        isNotifyRedDot: true
-      })
-      isRedDotFlag = true
-    } else {
-      this.setData({
-        isNotifyRedDot: false
-      })
-    }
-    if (!isRedDotFlag) {
-      this.setData({
-        isRedDot: false,
-        isAuthRedDot: false,
-        isNotifyRedDot: false
-      })
-    }
+      // app.globalData.isFirstLogin = false;
+    // } else {
+    //   let tmpUserInfo = wx.getStorageSync("curUserProfile");
+    //   let avatarUrl = tmpUserInfo.avatarUrl,
+    //     nickname = tmpUserInfo.nickName,
+    //     bgImgUrl = tmpUserInfo.bgImgUrl;
+    //   this.setData({
+    //     avatarUrl: avatarUrl,
+    //     nickname: nickname,
+    //     bgImgUrl: bgImgUrl,
+    //   })
+    // }
+    // let isRedDotFlag = false;
+    // if (wx.getStorageSync("authStatus")!==undefined 
+    // && wx.getStorageSync("authStatus") === "unauthorized" ) {
+    //   this.setData({
+    //     isRedDot: true,
+    //     isAuthRedDot: true,
+    //   })
+    //   isRedDotFlag = true;
+    // } else {
+    //   this.setData({
+    //     isAuthRedDot: false
+    //   })
+    // }
+    // if (wx.getStorageSync("unReadArray")!==undefined 
+    // && wx.getStorageSync("unReadArray").length > 0) {
+    //   this.setData({
+    //     isRedDot: true,
+    //     isNotifyRedDot: true
+    //   })
+    //   isRedDotFlag = true
+    // } else {
+    //   this.setData({
+    //     isNotifyRedDot: false
+    //   })
+    // }
+    // if (!isRedDotFlag) {
+    //   this.setData({
+    //     isRedDot: false,
+    //     isAuthRedDot: false,
+    //     isNotifyRedDot: false
+    //   })
+    // }
   },
 
 
