@@ -1,4 +1,6 @@
 //app.js
+const DEFAULT_BGIMGURL = "cloud://test-5c133c.7465-test-5c133c/tvs-bg.jpeg";
+
 App({
   onLaunch: function () {
     
@@ -11,7 +13,18 @@ App({
     }
 
     this.globalData = {
-      DEFAULT_BGIMGURL: "cloud://test-5c133c.7465-test-5c133c/tvs-bg.jpeg",
+      DEFAULT_BGIMGURL,
+      DEFAULT_PROFILE: {
+        bgImgUrl: `${DEFAULT_BGIMGURL}`,
+        authImgUrl: [],
+        authRemark: "",
+        authStatus: "unauthorized",
+        authIsCode: false,
+        isAdmin: false,
+        isAvatarCustomed: false,
+        isNickNameCustomed: false,
+        isBgImgCustomed: false
+      },
       forcedRefresh: true,
     }
   }

@@ -1,8 +1,12 @@
 const db = wx.cloud.database();
 const toast = require("./message").toast;
 const app = getApp();
+const profile = require("./profile");
 import regeneratorRuntime, { async } from "./regenerator-runtime/runtime";
 
+/**
+ * @todo 只在login.getUserInfo中出现过，改造结束后即可废弃
+ */
 const checkAuth = () => {
   let msg = {};
 
@@ -59,22 +63,22 @@ const checkAuth = () => {
 
 const codeCheck = async (remark) => {
   try {
-    let res = await db.collection("auth-code").where({
+    let authCodeRes = await db.collection("auth-code").where({
       code: remark
     }).get();
 
-    if (res.data.length === 0) {
+    if (authCodeRes.data === undefined || authCodeRes.data.length === 0) {
       return Promise.resolve({
         code: 0,
         msg: "not auth-code"
       });
     } else {
   
-      res = await db.collection("auth").where({
-        _openid: wx.getStorageSync("openid")
+      let profileRes = await db.collection("profile-new").where({
+        _openid: app.globalData.openid
       }).get();
   
-      res = await db.collection("auth").doc(res.data[0]._id).update({
+      await db.collection("auth").doc(profileRes.data[0]._id).update({
         data: {
           status: "authorized",
           isCode: true,

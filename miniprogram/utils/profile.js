@@ -2,6 +2,122 @@
 const db = wx.cloud.database();
 const app = getApp();
 const profModel = require("./profile-model");
+const toast = require("./message").toast;
+
+import regeneratorRuntime, { async } from "./regenerator-runtime/runtime";
+
+const downloadNew = async (that, callback) => {
+  wx.getUserInfo({
+    success: async result => {
+
+      let curUserProfile = app.globalData.DEFAULT_PROFILE;
+      let msg = "";
+      
+      try {
+        // 获取本地存储的用户自身信息
+
+        curUserProfile.nickName = result.userInfo.nickName;
+        if (result.userInfo.avatarUrl === undefined || result.userInfo.avatarUrl === "") {
+          curUserProfile.avatarUrl = "/images/user-unlogin.png";
+        } else {
+          curUserProfile.avatarUrl = result.userInfo.avatarUrl;
+        }
+  
+        // 利用云函数完成openid获取工作
+        let loginRes = await wx.cloud.callFunction({
+          name: "login",
+          data: {}
+        });
+        app.globalData.openid = loginRes.result.openid;
+        wx.setStorage({ key: "openid", data: loginRes.result.openid });
+        
+        // 查询用户资料信息
+        let profileRes = await db.collection("profile-new").where({
+          _openid: app.globalData.openid
+        }).get();
+
+        console.log(profileRes);
+
+        // 首次登录
+        if (profileRes.data === undefined || profileRes.data.length === 0) {
+          curUserProfile.isProfileEmpty = true;
+          let data = curUserProfile;
+
+          // 自动添加认证相关的记录以及当前获取到的信息
+          db.collection("profile-new").add({ data })
+          msg = "首次登陆，自动添加认证相关记录";
+
+        // 云端存在用户资料，取第一个
+        } else {
+          curUserProfile.isProfileEmpty = false;
+          let cloudProfile = profileRes.data[0];
+
+          // 用户自定义变量的遍历数组
+          let isAttrArray = ["isAvatarCustomed", "isNickNameCustomed", "isBgImgCustomed"];
+          let attrArray = ["avatarUrl", "nickName", "bgImgUrl"];
+
+          // 遍历用户自定义变量的标志属性
+          isAttrArray.forEach((attr, index) => {
+            // 判空操作
+            if (cloudProfile[attr] === undefined) {
+              return;
+            }
+            // 若该标志属性且为true，则按照云端资料内容
+            if (cloudProfile[attr]) {
+              curUserProfile[attrArray[index]] = cloudProfile[attrArray[index]];
+            // 若该标志属性为false，则按照本地获取的内容，以保证数据出现变动时及时更新数据库  
+            } else if (curUserProfile[attrArray[index]] !== cloudProfile[attrArray[index]]) {
+              db.collection("profile-new").doc(cloudProfile._id).update({data: {
+                [attrArray[index]]: curUserProfile[attrArray[index]]
+              }});
+            }
+          });
+          
+          // 其余的属性均按照云端的来拷贝
+          for (let attr in cloudProfile) {
+            if (!attrArray.includes(attr)) {
+              curUserProfile[attr] = cloudProfile[attr]
+            }
+          }
+
+        }
+
+        // 汇总并存储到本地
+        wx.setStorage({key: "curUserProfile", data: curUserProfile});
+        
+        // 根据当前已经得到的信息，判断用户审核状态、身份（是否管理员等信息）
+        if (!curUserProfile.isAdmin) {
+          switch(curUserProfile.authStatus) {
+            case "unauthorized":
+              that.setData({
+                isRedDot: true,
+                isAuthRedDot: true
+              })
+              break;
+            case "auditing":
+            case "authorized": 
+              break;
+          }
+        }
+
+        callback(that, curUserProfile);
+
+        if (curUserProfile.isProfileEmpty) {
+          msg = "用户资料为空";
+        } else {
+          msg = "用户资料内容正常";
+        }
+        console.log("获取用户资料成功：" + msg);
+      } catch (e) {
+        msg = e.message;
+        console.log("获取用户资料出错：" + msg);
+        console.log(e);
+        toast("获取用户资料出错", "none");
+      }
+    }
+  })
+
+}
 
 const download = () => {
   let msg = {};
@@ -227,7 +343,7 @@ const decode = (tmpUserInfo, that) => {
 
 module.exports = {
   upload,
-  download,
+  download: downloadNew,
   introUpload,
   decode,
 }
