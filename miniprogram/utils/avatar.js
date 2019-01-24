@@ -1,10 +1,14 @@
 // avatar.js
 const db = wx.cloud.database();
 const toast = require("./message").toast;
+const profile = require("./profile");
 const app = getApp();
 
+import regeneratorRuntime, { async } from "./regenerator-runtime/runtime";
+
+
 /**
- * 维护用户头像记录状态为最新
+ * 维护用户头像记录状态为最新，目测可以弃用了
  * @param {*} that 
  * @param {string} avatarUrl 
  */
@@ -120,63 +124,54 @@ const uploadAvatar = (that) => {
     count: 1,
     sizeType: ['compressed'],
     sourceType: ['album', 'camera'],
-    success: function(res) {
+    success: async function(res) {
       wx.showLoading({
         title: '上传图片中',
       })
 
-      const curAvatarUrl = wx.getStorageSync("userInfo").avatarUrl;
+      let curUserProfile = await profile.check();
+
+      const curAvatarUrl = curUserProfile.avatarUrl;
       // 上传图片文件到云存储
       const filePath = res.tempFilePaths[0];
-      const openid = wx.getStorageSync("openid");
-      const cloudPath = 'avatar-' + openid + (new Date()).getTime() + filePath.match(/\.[^.]+?$/)[0];
+      const openid = app.globalData.openid;
+      const cloudPath = 'avatar/avatar-' + openid + (new Date()).getTime() + filePath.match(/\.[^.]+?$/)[0];
       wx.cloud.uploadFile({
         cloudPath,
         filePath,
-        success: res => {
+        success: async res => {
           console.log('上传自定义头像成功：', res)
           avatarUrl = res.fileID;
 
-          // 更新avatar数据库记录
-          // 查询记录的_id
-          db.collection("avatar").where({
-            _openid: openid
-          }).get()
-          // 更新该记录
-          .then(res => {
-            return db.collection("avatar").doc(res.data[0]._id).update({
-              data: {
-                avatarUrl: avatarUrl,
-                isCustom: true
-              }
-            })
-          })
-          // 删除原图片，并结束任务
-          .then(res => {
+          try {
+            let updateRes = await db.collection("profile-new").doc(curUserProfile._id).update({
+                data: {
+                  avatarUrl,
+                  isAvatarCustomed: true
+                }
+              })
             wx.cloud.deleteFile({
               fileList: [curAvatarUrl]
             })
+
             wx.hideLoading();
-            console.log("更新自定义头像成功：", res);
+            console.log("更新自定义头像成功：", updateRes);
             toast("上传图片成功");
 
-            // 更新本地存储的userInfo
-            let tmpUserInfo = wx.getStorageSync("curUserProfile");
-            tmpUserInfo.avatarUrl = avatarUrl;
-            wx.setStorageSync("userInfo", tmpUserInfo);
+            curUserProfile.avatarUrl = avatarUrl;
+            wx.setStorage({ key: "curUserProfile", data: curUserProfile });
 
             // 更新当前页面中的头像图片地址
             that.setData({
               avatarUrl: avatarUrl
             })
-
-          })
-          // 捕获错误
-          .catch(err => {
+            
+          } catch (error) {
             wx.hideLoading();
-            console.log('更新自定义头像失败：', err)
+            console.log('更新自定义头像失败：', error.message);
             toast("上传失败", "none");
-          });
+          }
+
         },
         fail: err => {
           wx.hideLoading();
@@ -194,9 +189,13 @@ const uploadAvatar = (that) => {
  */
 const wechatAvatar = (that) => {
   wx.getUserInfo({
-    success: function(res) {
+    success: async function(res) {
       let wechatAvatarUrl = res.userInfo.avatarUrl;
-      let curAvatarUrl = wx.getStorageSync("userInfo").avatarUrl;
+      if (wechatAvatarUrl === "" || wechatAvatarUrl === undefined) {
+        wechatAvatarUrl = app.globalData.DEFAULT_AVATARURL;
+      }
+      let curUserProfile = await profile.check();
+      let curAvatarUrl = curUserProfile.avatarUrl;
       // 比对头像内容
       if (wechatAvatarUrl === curAvatarUrl) {
         toast("当前正在使用微信头像", "none");
@@ -206,47 +205,38 @@ const wechatAvatar = (that) => {
         wx.showLoading({
           title: '更新头像中',
         })
-        let openid = wx.getStorageSync("openid");
-        db.collection("avatar").where({
-          _openid: openid
-        }).get()
-        // 更新该记录
-        .then(res => {
-          return db.collection("avatar").doc(res.data[0]._id).update({
+
+        try {
+
+          await db.collection("profile-new").doc(curUserProfile._id).update({
             data: {
               avatarUrl: wechatAvatarUrl,
-              isCustom: false
+              isAvatarCustomed: false
             }
-          })
-        })
-        // 删除原文件
-        .then(res => {
-          return wx.cloud.deleteFile({
+          });
+
+          let deleteRes = await wx.cloud.deleteFile({
             fileList: [curAvatarUrl]
           })
-        })
-        // 结束任务
-        .then(res => {
+
           wx.hideLoading();
-          console.log("更新头像成功：", res);
+          console.log("更新头像成功：", deleteRes);
           toast("更新头像成功");
-
-          // 更新本地存储的userInfo
-          let tmpUserInfo = wx.getStorageSync("curUserProfile");
-          tmpUserInfo.avatarUrl = wechatAvatarUrl;
-          wx.setStorageSync("userInfo", tmpUserInfo);
-
+  
+          curUserProfile.avatarUrl = wechatAvatarUrl;
+          wx.setStorage({ key: "curUserProfile", data: curUserProfile});
+  
           // 更新当前页面中的头像图片地址
           that.setData({
             avatarUrl: wechatAvatarUrl
           })
-        })
-        // 捕获错误
-        .catch(err => {
+
+        } catch (error) {
           wx.hideLoading();
-          console.log('更新头像失败：', err)
+          console.log('更新头像失败：', error.message)
           toast("更新头像失败", "none");
-        })
+        }
+
       }
     }
   })

@@ -11,6 +11,8 @@ const formid = require("../../utils/formid");
 const initValue = profModel.initValue;
 let newUserInfo = profModel.userInfo;
 
+import regeneratorRuntime, { async } from "../../utils/regenerator-runtime/runtime";
+
 Page({
 
   /**
@@ -41,7 +43,15 @@ Page({
       content: ""
     }],
     // intro: "",
-    degreeArray: ["本科", "硕士", "博士", "其他"],
+    degreeArray: [{
+      degree: "请选择学历",
+      school: "",
+      major: "",
+      headteacher: "",
+      degreeStartTime: "请选择入学时间",
+      degreeEndTime: "请选择毕业时间",
+    }],
+    degreeTypeArray: ["本科", "硕士", "博士", "博士后", "其他"],
     pagePos: "请向上滑动页面继续填写",
     canSubmit: false
   },
@@ -49,81 +59,82 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
-    let userInfo = wx.getStorageSync("userInfo"), tmpArray, tmpDate;
-    profile.download().then(res => {
-      if (res.code === 1) {
-        this.setData({
-          avatarUrl: userInfo.avatarUrl,
-          gender: userInfo.gender,
-          nickName: userInfo.nickName
-        })
-        newUserInfo.nickName = userInfo.nickName;
-        newUserInfo.gender = userInfo.gender;
-      } else if (res.code === 2) {
-        newUserInfo = res.data;
-        delete newUserInfo._id;
-        delete newUserInfo._openid;
-        this.setData({
-          avatarUrl: userInfo.avatarUrl
-        })
-        for (let item in newUserInfo) {
-          switch(item) {
-            case "birthDate": 
-              tmpDate = newUserInfo[item].split("-");
-              this.setData({
-                [item]: parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月" + parseInt(tmpDate[2]) + "日"
-              });
-              break;
-            case "enterSchoolTime":
-            case "leaveSchoolTime":
-              if (newUserInfo[item] === undefined || newUserInfo[item] === "") {
-                this.setData({
-                  [item]: initValue[item].default
-                });
-              } else {
-                tmpDate = newUserInfo[item].split("-");
-                this.setData({
-                  [item]: parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月"
-                })
-              }
-              break;
-            case "jobArray":
-              tmpArray = JSON.parse(JSON.stringify(newUserInfo[item]));
-              for(let i=0; i<tmpArray.length; i++) {
-                for (let subItem in tmpArray[i]) {
-                  if (tmpArray[i][subItem] === undefined || tmpArray[i][subItem] === "") {
-                    tmpArray[i][subItem] = initValue[subItem].default;
-                    this.setData({
-                      [item]: tmpArray
-                    });
-                  } else if (subItem === "jobStartTime" || subItem === "jobEndTime") {
-                    tmpDate = tmpArray[i][subItem].split("-");
-                    tmpArray[i][subItem] = parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月";
-                    this.setData({
-                      [item]: tmpArray
-                    });
-                  }
+  onLoad: async function (options) {
+    let curUserProfile = await profile.check();
+    let tmpArray, tmpDate;
+
+    if (curUserProfile.isProfileEmpty) {
+      let { avatarUrl, nickName, gender } = curUserProfile;
+      if (gender <= 0) gender = 1;
+      this.setData({ avatarUrl, nickName, gender })
+      newUserInfo = { avatarUrl, nickName, gender, ...newUserInfo };
+    } else {
+      newUserInfo = res.data;
+      delete newUserInfo._id;
+      delete newUserInfo._openid;
+      this.setData({
+        avatarUrl: userInfo.avatarUrl
+      })
+      for (let item in newUserInfo) {
+        switch(item) {
+          case "birthDate": 
+            tmpDate = newUserInfo[item].split("-");
+            this.setData({
+              [item]: parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月" + parseInt(tmpDate[2]) + "日"
+            });
+            break;
+          case "jobArray":
+            tmpArray = JSON.parse(JSON.stringify(newUserInfo[item]));
+            for(let i=0; i<tmpArray.length; i++) {
+              for (let subItem in tmpArray[i]) {
+                if (tmpArray[i][subItem] === undefined || tmpArray[i][subItem] === "") {
+                  tmpArray[i][subItem] = initValue[subItem].default;
+                  this.setData({
+                    [item]: tmpArray
+                  });
+                } else if (subItem === "jobStartTime" || subItem === "jobEndTime") {
+                  tmpDate = tmpArray[i][subItem].split("-");
+                  tmpArray[i][subItem] = parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月";
+                  this.setData({
+                    [item]: tmpArray
+                  });
                 }
               }
-              break;
-            case "contactArray":
-              tmpArray = JSON.parse(JSON.stringify(newUserInfo[item]));
-              this.setData({
-                [item]: tmpArray
-              })
-              break;
-            default:
-              this.setData({
-                [item]: newUserInfo[item]
-              });
-              break;
-          }
+            }
+            break;
+          case "contactArray":
+            tmpArray = JSON.parse(JSON.stringify(newUserInfo[item]));
+            this.setData({
+              [item]: tmpArray
+            })
+            break;
+          case "degreeArray":
+            tmpArray = JSON.parse(JSON.stringify(newUserInfo[item]));
+            for(let i=0; i<tmpArray.length; i++) {
+              for (let subItem in tmpArray[i]) {
+                if (tmpArray[i][subItem] === undefined || tmpArray[i][subItem] === "") {
+                  tmpArray[i][subItem] = initValue[subItem].default;
+                  this.setData({
+                    [item]: tmpArray
+                  });
+                } else if (subItem === "degreeStartTime" || subItem === "degreeEndTime") {
+                  tmpDate = tmpArray[i][subItem].split("-");
+                  tmpArray[i][subItem] = parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月";
+                  this.setData({
+                    [item]: tmpArray
+                  });
+                }
+              }
+            }
+            break;
+          default:
+            this.setData({
+              [item]: newUserInfo[item]
+            });
+            break;
         }
       }
-    }).catch(err => {
-      console.log("获取用户资料出错：", err);
-    })
+    }
   },
 
   uploadAvatar() {
@@ -242,22 +253,19 @@ Page({
         })
         break;
       case "degree":
-        let degree = this.data.degreeArray[value];
-        newUserInfo[inputType] = degree;
+        let degree = this.data["degreeTypeArray"][value];
+        newUserInfo[arrayType][index][inputType] = degree;
+        tmpArray = JSON.parse(JSON.stringify(this.data[arrayType]));
+        tmpArray[index][inputType] = degree;
         this.setData({
-          [inputType]: degree
-        })
-        break;
-      case "enterSchoolTime":
-      case "leaveSchoolTime":
-        newUserInfo[inputType] = value;
-        formated = value.split("-");
-        this.setData({
-          [inputType]: parseInt(formated[0]) + "年" + parseInt(formated[1]) + "月"
+          [arrayType]: tmpArray
         })
         break;
       case "institution":
       case "job":
+      case "school":
+      case "major":
+      case "headteacher":
       case "contactType":
       case "content":
         newUserInfo[arrayType][index][inputType] = value;
@@ -270,6 +278,8 @@ Page({
         break;
       case "jobStartTime":
       case "jobEndTime":
+      case "degreeStartTime":
+      case "degreeEndTime":
         newUserInfo[arrayType][index][inputType] = value;
         formated = value.split("-");
         tmpArray = JSON.parse(JSON.stringify(this.data[arrayType]));
@@ -277,8 +287,7 @@ Page({
         this.setData({
           [arrayType]: tmpArray
         })
-        // console.log("stored: ", newUserInfo[arrayType]);
-        // console.log("pages': ", this.data[arrayType]);
+
         break;
       default:
         newUserInfo[inputType] = value
@@ -298,12 +307,20 @@ Page({
       newContactObj = {
         contactType: "",
         content: ""
+      }, 
+      newDegreeObj = {
+        degree: "请选择学历",
+        school: "",
+        major: "",
+        headteacher: "",
+        degreeStartTime: "请选择入学时间",
+        degreeEndTime: "请选择毕业时间",
       }, newObj;
-
-    if (btnType === 'jobArray') {
-      newObj = newJobObj;
-    } else {
-      newObj = newContactObj;
+    
+    switch(btnType) {
+      case 'jobArray': newObj = newJobObj; break;
+      case 'contactArray': newObj = newContactObj; break;
+      case 'degreeArray': newObj = newDegreeObj; break;
     }
     
     newUserInfo[btnType].push(newObj);

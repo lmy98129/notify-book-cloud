@@ -4,6 +4,8 @@ const localData = require("../../test/local-data");
 const sys = require("../../utils/system");
 const login = require("../../utils/login");
 const formid = require("../../utils/formid");
+import regeneratorRuntime, { async } from "../../utils/regenerator-runtime/runtime";
+
 
 Page({
   data: {
@@ -65,7 +67,7 @@ Page({
 
   },
 
-  onShow: function() {
+  onShow: async function() {
     /**
      * 这个条件涵盖了两个情况：
      * 1）若用户首次使用，则会在执行onShow时就跳转到了login页面，
@@ -80,6 +82,7 @@ Page({
     // 更蠢了，一直反复更新反而容易出问题。。。
     // if (app.globalData.isFirstLogin || app.globalData.isFirstLogin === undefined){
       login.getUserInfo(this);
+      
       // app.globalData.isFirstLogin = false;
     // } else {
     //   let tmpUserInfo = wx.getStorageSync("curUserProfile");

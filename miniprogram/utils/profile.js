@@ -16,7 +16,7 @@ const check = async () => {
 }
 
 const downloadNew = async (that, callback) => {
-  wx.getUserInfo({
+  await wx.getUserInfo({
     success: async result => {
 
       let curUserProfile = app.globalData.DEFAULT_PROFILE;
@@ -26,8 +26,9 @@ const downloadNew = async (that, callback) => {
         // 获取本地存储的用户自身信息
 
         curUserProfile.nickName = result.userInfo.nickName;
+        curUserProfile.gender = result.userInfo.gender;
         if (result.userInfo.avatarUrl === undefined || result.userInfo.avatarUrl === "") {
-          curUserProfile.avatarUrl = "/images/user-unlogin.png";
+          curUserProfile.avatarUrl = app.globalData.DEFAULT_AVATARURL;
         } else {
           curUserProfile.avatarUrl = result.userInfo.avatarUrl;
         }
@@ -89,6 +90,12 @@ const downloadNew = async (that, callback) => {
             }
           }
 
+          if (curUserProfile.isProfileEmpty) {
+            msg = "用户资料为空";
+          } else {
+            msg = "用户资料内容正常";
+          }
+
         }
 
         // 汇总并存储到本地
@@ -96,14 +103,9 @@ const downloadNew = async (that, callback) => {
 
         // 回调函数用于不同功能用途
         if (callback !== undefined) {
-          callback(that, curUserProfile);
+          await callback(that, curUserProfile);
         }
-
-        if (curUserProfile.isProfileEmpty) {
-          msg = "用户资料为空";
-        } else {
-          msg = "用户资料内容正常";
-        }
+        
         console.log("获取用户资料成功：" + msg);
       } catch (e) {
         msg = e.message;
@@ -116,6 +118,9 @@ const downloadNew = async (that, callback) => {
 
 }
 
+/**
+ * @todo 基本可以废弃了
+ */
 const download = () => {
   let msg = {};
   return (db.collection("profile").where({
@@ -160,6 +165,8 @@ const download = () => {
 }
 
 const upload = (userInfo) => {
+
+
   let msg = {};
   return (db.collection("profile").where({
     _openid: wx.getStorageSync("openid")

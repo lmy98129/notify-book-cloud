@@ -132,7 +132,7 @@ const uploadAuth = async (authImgArray, remark, that) => {
 
     for (let i=0; i<authImgArray.length; i++) {
       filePath = authImgArray[i];
-      cloudPath = "authImg-"+ openid + (new Date()).getTime() + filePath.match(/\.[^.]+?$/)[0];
+      cloudPath = "authImg/authImg-"+ openid + (new Date()).getTime() + filePath.match(/\.[^.]+?$/)[0];
       // 用await关键字异步转同步
       let uploadFileRes = await wx.cloud.uploadFile({
         cloudPath,
@@ -143,16 +143,16 @@ const uploadAuth = async (authImgArray, remark, that) => {
 
     let curUserProfile = await profile.check();
     
-    await db.collection("profile-new").doc(curUserProfile._id).update({
+    let uploadRes = await db.collection("profile-new").doc(curUserProfile._id).update({
       data: {
         authImgUrl: tmpAuthImgArray,
-        remark,
-        status: "auditing"
+        authRemark: remark,
+        authStatus: "auditing"
       }
     })
 
     wx.hideLoading();
-    console.log("认证数据上传成功：", res);
+    console.log("认证数据上传成功：", uploadRes);
     toast("数据上传成功");
 
     curUserProfile.authStatus = "auditing";
@@ -164,7 +164,7 @@ const uploadAuth = async (authImgArray, remark, that) => {
 
   } catch (error) {
     wx.hideLoading();
-    console.log("认证数据上传失败：", err);
+    console.log("认证数据上传失败：", error);
     toast("上传失败", "none");
   }
   

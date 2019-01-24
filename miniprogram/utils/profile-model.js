@@ -8,9 +8,6 @@ const initValue = {
   gender: {
     name: "性别"
   },
-  major: {
-    name: "专业"
-  },
   address: {
     name: "现住址"
   },
@@ -48,17 +45,23 @@ const initValue = {
     name: "籍贯",
     default: "请选择籍贯"
   },
+  school: {
+    name: "学院"
+  },
   degree: {
     name: "学历",
     default: "请选择学历"
   },
-  enterSchoolTime: {
-    name: "入校时间",
+  major: {
+    name: "专业"
+  },
+  degreeStartTime: {
+    name: "入学时间",
     default: "请选择入校时间"
   },
-  leaveSchoolTime: {
-    name: "离校时间",
-    default: "请选择离校时间"
+  degreeEndTime: {
+    name: "毕业时间",
+    default: "请选择毕业时间"
   },
   intro: {
     name: "自我介绍"
@@ -72,10 +75,6 @@ const userInfo = {
   birthDate: "请选择日期",
   homeTown: "请选择籍贯",
   address: "",
-  degree: "请选择学历",
-  major: "",
-  enterSchoolTime: "请选择入校时间",
-  leaveSchoolTime: "请选择离校时间",
   wechatId: "",
   phoneNumber: "",
   jobArray: [{
@@ -88,10 +87,17 @@ const userInfo = {
     contactType: "",
     content: ""
   }],
+  degreeArray: [{
+    degree: "请选择学历",
+    school: "",
+    major: "",
+    degreeStartTime: "请选择入学时间",
+    degreeEndTime: "请选择毕业时间",
+  }],
   intro: ""
 }
 
 module.exports = {
-  initValue: initValue,
-  userInfo: userInfo
+  initValue,
+  userInfo,
 }

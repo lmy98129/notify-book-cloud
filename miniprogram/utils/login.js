@@ -15,14 +15,14 @@ import regeneratorRuntime, { async } from "./regenerator-runtime/runtime";
 /**
  * @todo 测试通过后，替换getUserInfo业务
  */
-const getUserInfoNew = (that) => {
+const getUserInfoNew = async (that) => {
   // 若强制刷新标志为false
   if (!app.globalData.forcedRefresh) {
     return;
   }
 
   // 获取用户信息
-  wx.getSetting({
+  await wx.getSetting({
     success: async result => {
       // 判断是否存在用户信息，若无先跳转到授权页面
       if (!result.authSetting['scope.userInfo']) {
@@ -32,21 +32,32 @@ const getUserInfoNew = (that) => {
         return;
       }
 
-      profile.download(that, (that, curUserProfile) => {
+      await profile.download(that, (that, curUserProfile) => {
         // 根据当前已经得到的信息，判断用户审核状态、身份（是否管理员等信息）
         if (!curUserProfile.isAdmin) {
           switch(curUserProfile.authStatus) {
             case "unauthorized":
               that.setData({
-                isRedDot: true,
                 isAuthRedDot: true
               })
               break;
             case "auditing":
             case "authorized": 
+              that.setData({
+                isAuthRedDot: false
+              })
               break;
           }
         }
+
+        if (curUserProfile.isAdmin) {
+          curUserProfile.authStatus = "authorized";
+          wx.setStorage({ key: "curUserProfile", data: curUserProfile });
+          console.log("获取用户权限成功：用户为管理员");
+        } else {
+          console.log("获取用户权限成功：用户为普通用户");
+        }
+
         // 消息列表、推荐列表（待重构）
         // Promise.all([(async () => {
         //   let code = await notify.checkDownload();
@@ -121,6 +132,17 @@ const getUserInfoNew = (that) => {
           bgImgUrl,
           isProfileEmpty
         });
+
+        if (that.data.isAuthRedDot || that.data.isNotifyRedDot) {
+          that.setData({
+            isRedDot: true
+          })
+        } else {
+          that.setData({
+            isRedDot: false
+          })
+        }
+
       });
       
       

@@ -18,7 +18,7 @@ Page({
     specialPhone: '',
     avatarUrl: "/images/user-unlogin.png",
     bgImgUrl: "",
-    nickname: "",
+    nickName: "",
     userInfo: [],
     contactArray: [],
     jobArray: [],
@@ -114,41 +114,20 @@ Page({
         })
       }
     } else {
-      let curUserProfile = wx.getStorageSync("curUserProfile");
-      if (curUserProfile === "" || curUserProfile === undefined) {
-        profile.download()
-          .then(res => {
-            console.log("获取用户资料成功：", res);
-            if (res.code === 2) {
-              profile.decode(res.data, this);
-            } else {
-              this.setData({
-                profileStatus: -1
-              })
-            }
-          })
-          .catch(err => {
-            console.log("获取用户资料出错：", err);
-            this.setData({
-              profileStatus: -2
-            })
-          })
-      } else {
-        let avatarUrl = curUserProfile.avatarUrl,
-          nickname = curUserProfile.nickName,
-          bgImgUrl = curUserProfile.bgImgUrl;
+      // 如果资料内容所有者正是用户本人
+      let curUserProfile = await profile.check();
+      if (curUserProfile.isProfileEmpty) {
         this.setData({
-          avatarUrl,
-          nickname,
-          bgImgUrl
+          profileStatus: -1
         })
-        if (curUserProfile.isProfileEmpty && curUserProfile.authStatus == "authorized" ) {
-          profile.decode(curUserProfile, this);
-        } else {
-          this.setData({
-            profileStatus: -1
-          })
-        }
+      let { avatarUrl, nickName, bgImgUrl } = curUserProfile;
+      this.setData({
+        avatarUrl,
+        nickName,
+        bgImgUrl
+      })
+      } else {
+        profile.decode(curUserProfile, this);
       }
     }
   },
