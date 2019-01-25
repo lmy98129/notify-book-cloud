@@ -60,9 +60,10 @@ const defaultImg = async (that) => {
 
     try {
   
-      await db.collection("profile").doc(curUserProfile._id).update({
+      await db.collection("profile-new").doc(curUserProfile._id).update({
         data: {
-          bgImgUrl: defaultImgUrl
+          bgImgUrl: defaultImgUrl,
+          isBgImgCustomed: false
         }
       })
 
@@ -76,7 +77,9 @@ const defaultImg = async (that) => {
 
       // 更新本地存储的userInfo
       curUserProfile.bgImgUrl = defaultImgUrl;
+      curUserProfile.isBgImgCustomed = false;
       wx.setStorage({ key: "curUserProfile", data: curUserProfile});
+      console.log(wx.getStorageSync("curUserProfile"));
 
       // 更新当前页面中的头像图片地址
       that.setData({
@@ -104,50 +107,59 @@ const uploadImg = (that) => {
         title: "图片上传中",
       })
 
-      try {
-        let curUserProfile = await profile.check();
-        const curBgImgUrl = curUserProfile.bgImgUrl;
-        // 上传图片文件到云存储
-        const filePath = res.tempFilePaths[0];
-        const openid = app.globalData.openid;
-        const cloudPath = "bgImg-" + openid + (new Date()).getTime() + filePath.match(/\.[^.]+?$/)[0];
-        let uploadRes = wx.cloud.uploadFile({
-          cloudPath,
-          filePath,
-        })
-        console.log("上传自定义背景图成功：", uploadRes);
-        bgImgUrl = res.fileID;
-
-        let updateRes = await db.collection("profile-new").doc(curUserProfile._id).update({
-          data: {
-            bgImgUrl: bgImgUrl
+      let curUserProfile = await profile.check();
+      const curBgImgUrl = curUserProfile.bgImgUrl;
+      // 上传图片文件到云存储
+      const filePath = res.tempFilePaths[0];
+      const openid = app.globalData.openid;
+      const cloudPath = "bgImg/bgImg-" + openid + (new Date()).getTime() + filePath.match(/\.[^.]+?$/)[0];
+      wx.cloud.uploadFile({
+        cloudPath,
+        filePath,
+        success: async res => {
+          try {
+            console.log("上传自定义背景图成功：", res);
+            bgImgUrl = res.fileID;
+            
+            let updateRes = await db.collection("profile-new").doc(curUserProfile._id).update({
+              data: { 
+                bgImgUrl,
+                isBgImgCustomed: true
+              }
+            })
+    
+            if (curBgImgUrl !== defaultImgUrl) {
+              wx.cloud.deleteFile({
+                fileList: [curBgImgUrl]
+              })
+            }
+    
+            wx.hideLoading();
+            console.log("更新自定义背景图成功：", updateRes);
+            toast("上传自定义背景成功");
+    
+            // 更新本地存储的userInfo
+            curUserProfile.bgImgUrl = bgImgUrl;
+            curUserProfile.isBgImgCustomed = true;
+            wx.setStorage({ key: "curUserProfile", data: curUserProfile});
+    
+            // 更新当前页面中的头像图片地址
+            that.setData({
+              bgImgUrl: bgImgUrl
+            })
+            
+          } catch (error) {
+            wx.hideLoading();
+            console.log("更新自定义背景图失败：", error.message);
+            toast("上传失败", "none");
           }
-        })
-
-        if (curBgImgUrl !== defaultImgUrl) {
-          wx.cloud.deleteFile({
-            fileList: [curBgImgUrl]
-          })
+        },
+        fail: err => {
+          wx.hideLoading();
+          console.log('上传自定义背景图失败：', err)
+          toast("上传失败", "none");
         }
-
-        wx.hideLoading();
-        console.log("更新自定义背景图成功：", updateRes);
-        toast("上传自定义背景成功");
-
-        // 更新本地存储的userInfo
-        curUserProfile.bgImgUrl = defaultImgUrl;
-        wx.setStorage({ key: "curUserProfile", data: curUserProfile});
-
-        // 更新当前页面中的头像图片地址
-        that.setData({
-          bgImgUrl: bgImgUrl
-        })
-        
-      } catch (error) {
-        wx.hideLoading();
-        console.log("更新自定义头像失败：", error.message);
-        toast("上传失败", "none");
-      }
+      })
         
     }
   })

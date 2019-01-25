@@ -81,7 +81,7 @@ Page({
     // 感觉有点蠢，实在没办法实时更新啊，还是只保持第一种情况就算了。
     // 更蠢了，一直反复更新反而容易出问题。。。
     // if (app.globalData.isFirstLogin || app.globalData.isFirstLogin === undefined){
-      login.getUserInfo(this);
+      await login.getUserInfo(this);
       
       // app.globalData.isFirstLogin = false;
     // } else {

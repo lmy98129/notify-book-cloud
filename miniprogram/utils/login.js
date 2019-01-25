@@ -148,6 +148,7 @@ const getUserInfoNew = async (that) => {
       
     },
     fail: err => {
+      console.log("获取用户设置出错" + err.message);
       toast("获取用户设置出错，请重启小程序", 'none');
     }
   })

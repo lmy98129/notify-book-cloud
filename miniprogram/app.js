@@ -1,6 +1,17 @@
 //app.js
 const DEFAULT_BGIMGURL = "cloud://test-5c133c.7465-test-5c133c/tvs-bg.jpeg";
 const DEFAULT_AVATARURL = "/images/user-unlogin.png";
+const DEFAULT_PROFILE = {
+  bgImgUrl: `${DEFAULT_BGIMGURL}`,
+  authImgUrl: [],
+  authRemark: "",
+  authStatus: "unauthorized",
+  authIsCode: false,
+  isAdmin: false,
+  isAvatarCustomed: false,
+  isNickNameCustomed: false,
+  isBgImgCustomed: false
+};
 
 App({
   onLaunch: function () {
@@ -16,17 +27,7 @@ App({
     this.globalData = {
       DEFAULT_BGIMGURL,
       DEFAULT_AVATARURL,
-      DEFAULT_PROFILE: {
-        bgImgUrl: `${DEFAULT_BGIMGURL}`,
-        authImgUrl: [],
-        authRemark: "",
-        authStatus: "unauthorized",
-        authIsCode: false,
-        isAdmin: false,
-        isAvatarCustomed: false,
-        isNickNameCustomed: false,
-        isBgImgCustomed: false
-      },
+      DEFAULT_PROFILE,
       forcedRefresh: true,
     }
   }

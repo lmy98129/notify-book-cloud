@@ -252,13 +252,13 @@ Page({
       wx.showActionSheet({
         itemList: ["上传自定义背景图片", "使用默认背景图片"],
         itemColor: "#333",
-        success: function(res) {
+        success: async function(res) {
           switch(res.tapIndex) {
             case 0:
-              bgImg.upload(that);
+              await bgImg.upload(that);
               break;
             case 1:
-              bgImg.default(that);
+              await bgImg.default(that);
               break;
           }
         }

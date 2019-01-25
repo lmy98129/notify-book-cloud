@@ -297,31 +297,8 @@ Page({
   },
 
   addBtn(e) {
-    let btnType = e.target.dataset.type, 
-      newJobObj = {
-        institution: "",
-        job: "",
-        jobStartTime: "请选择入职时间",
-        jobEndTime: "请选择离职时间"
-      },
-      newContactObj = {
-        contactType: "",
-        content: ""
-      }, 
-      newDegreeObj = {
-        degree: "请选择学历",
-        school: "",
-        major: "",
-        headteacher: "",
-        degreeStartTime: "请选择入学时间",
-        degreeEndTime: "请选择毕业时间",
-      }, newObj;
-    
-    switch(btnType) {
-      case 'jobArray': newObj = newJobObj; break;
-      case 'contactArray': newObj = newContactObj; break;
-      case 'degreeArray': newObj = newDegreeObj; break;
-    }
+    let btnType = e.target.dataset.type, newObj;
+    newObj = profModel.userInfo[btnType][0];
     
     newUserInfo[btnType].push(newObj);
     let tmpArray = JSON.parse(JSON.stringify(this.data[btnType]));

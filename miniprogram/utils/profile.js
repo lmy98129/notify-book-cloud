@@ -9,7 +9,7 @@ import regeneratorRuntime, { async } from "./regenerator-runtime/runtime";
 const check = async () => {
   let curUserProfile = wx.getStorageSync("curUserProfile");
   if (curUserProfile === undefined || curUserProfile === "") {
-    await profile.download();
+    await downloadNew();
     curUserProfile = wx.getStorageSync("curUserProfile");
   }
   return curUserProfile;
@@ -19,7 +19,11 @@ const downloadNew = async (that, callback) => {
   await wx.getUserInfo({
     success: async result => {
 
-      let curUserProfile = app.globalData.DEFAULT_PROFILE;
+      let curUserProfile = wx.getStorageSync("curUserProfile");
+      if (curUserProfile === undefined || curUserProfile === "") {
+        curUserProfile = app.globalData.DEFAULT_PROFILE;
+      }
+
       let msg = "";
       
       try {
@@ -46,8 +50,6 @@ const downloadNew = async (that, callback) => {
           _openid: app.globalData.openid
         }).get();
 
-        console.log(profileRes);
-
         // 首次登录
         if (profileRes.data === undefined || profileRes.data.length === 0) {
           curUserProfile.isProfileEmpty = true;
@@ -63,11 +65,13 @@ const downloadNew = async (that, callback) => {
           let cloudProfile = profileRes.data[0];
 
           // 用户自定义变量的遍历数组
-          let isAttrArray = ["isAvatarCustomed", "isNickNameCustomed", "isBgImgCustomed"];
-          let attrArray = ["avatarUrl", "nickName", "bgImgUrl"];
+          let isAttrArray = ["isAvatarCustomed", "isNickNameCustomed"];
+          let attrArray = ["avatarUrl", "nickName"];
+          // 此处不应加入bgimg的标志属性以及对应属性，因为事实上它的更新逻辑和普通的属性是一样的
+          // 这两个之所以需要特殊维护是因为：在其他用户的界面中展示时，应当展示存储在数据库中且是最新的用户名和用户头像
 
           // 遍历用户自定义变量的标志属性
-          isAttrArray.forEach((attr, index) => {
+          isAttrArray.forEach(async (attr, index) => {
             // 判空操作
             if (cloudProfile[attr] === undefined) {
               return;
@@ -75,14 +79,15 @@ const downloadNew = async (that, callback) => {
             // 若该标志属性且为true，则按照云端资料内容
             if (cloudProfile[attr]) {
               curUserProfile[attrArray[index]] = cloudProfile[attrArray[index]];
-            // 若该标志属性为false，则按照本地获取的内容，以保证数据出现变动时及时更新数据库  
+            // 若该标志属性为false，且云端资料与本地的不同，则按照本地获取的内容，以保证数据出现变动时及时更新数据库  
             } else if (curUserProfile[attrArray[index]] !== cloudProfile[attrArray[index]]) {
-              db.collection("profile-new").doc(cloudProfile._id).update({data: {
+              let updateRes = await db.collection("profile-new").doc(cloudProfile._id).update({data: {
                 [attrArray[index]]: curUserProfile[attrArray[index]]
               }});
+              console.log("更新用户资料成功："+ attr +" "+ updateRes);
             }
           });
-          
+
           // 其余的属性均按照云端的来拷贝
           for (let attr in cloudProfile) {
             if (!attrArray.includes(attr)) {
