@@ -6,13 +6,23 @@ const toast = require("./message").toast;
 
 import regeneratorRuntime, { async } from "./regenerator-runtime/runtime";
 
-const check = async () => {
+const checkLocal = async () => {
   let curUserProfile = wx.getStorageSync("curUserProfile");
   if (curUserProfile === undefined || curUserProfile === "") {
     await downloadNew();
     curUserProfile = wx.getStorageSync("curUserProfile");
   }
   return curUserProfile;
+}
+
+const checkCloud = async () => {
+  let getRes = await db.collection("profile-new").where({
+    _openid: app.globalData.openid
+  }).get();
+  if (getRes.data.length === 0) {
+    await downloadNew();
+  }
+  return await checkLocal();
 }
 
 const downloadNew = async (that, callback) => {
@@ -115,7 +125,6 @@ const downloadNew = async (that, callback) => {
       } catch (e) {
         msg = e.message;
         console.log("获取用户资料出错：" + msg);
-        console.log(e);
         toast("获取用户资料出错", "none");
       }
     }
@@ -169,75 +178,54 @@ const download = () => {
     })
 }
 
-const upload = (userInfo) => {
+const upload = async (userInfo) => {
+  try {
+    wx.showLoading({
+      title: "资料上传中"
+    });
+    let curUserProfile = await checkCloud();
+  
+    userInfo.isProfileEmpty = false;
 
+    let updateRes = await db.collection("profile-new").doc(curUserProfile._id).update({
+      data: userInfo
+    });
 
-  let msg = {};
-  return (db.collection("profile").where({
-    _openid: wx.getStorageSync("openid")
-  }).get()
-    .then(res => {
-      if (res.data.length === 0) {
-        return db.collection("profile").add({
-          data: userInfo
-        })
-          .then(res => {
-            msg = {
-              code: 1,
-              msg: "profile record added"
-            };
-            return Promise.resolve(msg);
-          })
-      } else if (res.data[0] !== undefined) {
-        return db.collection("profile")
-          .doc(res.data[0]._id).update({
-            data: userInfo
-          }).then(res => {
-            msg = {
-              code: 2,
-              msg: "profile record updated"
-            };
-            return Promise.resolve(msg);
-          })
-      }
-    }))
-    .catch(err => {
-      msg = {
-        code: -1,
-        msg: "profile upload fail",
-        err: err
-      }
-      return Promise.reject(msg);
-    })
+    for (let subItem in userInfo) {
+      curUserProfile[subItem] = userInfo[subItem];
+    }
+
+    wx.setStorage({ key: "curUserProfile", data: curUserProfile });
+
+    wx.hideLoading();
+    toast("资料上传成功", "success");
+    console.log("更新用户资料成功：" + updateRes.errMsg);
+  } catch (error) {
+    wx.hideLoading();
+    console.log("更新用户资料出错：" + error.message);
+    toast("更新资料出错", "none");
+  }
 }
 
-const introUpload = (intro) => {
-  let msg = {};
-  return (db.collection("profile").where({
-    _openid: wx.getStorageSync("openid")
-  }).get()
-    .then(res => {
-      return db.collection("profile")
-        .doc(res.data[0]._id).update({
-          data: {
-            intro: intro
-          }
-        }).then(res => {
-          msg = {
-            code: 0,
-            msg: "profile intro updated"
-          }
-          return Promise.resolve(msg);
-        })
-    })
-    .catch(err => {
-      msg = {
-        code: 0,
-        msg: "profile intro updated failed",
-        err: err
-      }
-      return Promise.reject(msg);
-    }))
+const introUpload = async (intro) => {
+  try {
+    wx.showLoading({
+      title: "资料上传中"
+    });
+    let curUserProfile = await checkCloud();
+    let updateRes = await db.collection("profile-new").doc(curUserProfile._id).update({
+      data: { intro }
+    });
+    curUserProfile.intro = intro;
+    wx.setStorage({ key: "curUserProfile", data: curUserProfile });
+
+    wx.hideLoading();
+    console.log("更新用户资料成功：" + updateRes.errMsg);
+  } catch (error) {
+    wx.hideLoading();
+    console.log("更新用户资料出错：" + error.message);
+    toast("更新资料出错", "none");
+  }
 }
 
 const decode = (tmpUserInfo, that) => {
@@ -261,15 +249,6 @@ const decode = (tmpUserInfo, that) => {
         tmpDate = tmpUserInfo[item].split("-");
         tmpUserInfo[item] = parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月" + parseInt(tmpDate[2]) + "日";
         break;
-      case "enterSchoolTime":
-      case "leaveSchoolTime":
-        if (tmpUserInfo[item] === undefined || tmpUserInfo[item] === "") {
-          tmpUserInfo[item] = "在校";
-        } else {
-          tmpDate = tmpUserInfo[item].split("-");
-          tmpUserInfo[item] = parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月";
-        }
-        break;
       case "wechatId":
       case "phoneNumber":
         if (tmpUserInfo[item] === undefined || tmpUserInfo[item] === "") {
@@ -287,11 +266,19 @@ const decode = (tmpUserInfo, that) => {
             jobEndTime: {}
           };
           for (let subItem in tmpArray[i]) {
-            if (tmpArray[i][subItem] === undefined || tmpArray[i][subItem] === "") {
-              tmpArray[i][subItem] = "在职";
-            } else if (subItem === "jobStartTime" || subItem === "jobEndTime") {
-              tmpDate = tmpArray[i][subItem].split("-");
-              tmpArray[i][subItem] = parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月";
+            switch(subItem) {
+              case "jobEndTime":
+                if (tmpArray[i][subItem] === undefined || tmpArray[i][subItem] === "") {
+                  tmpArray[i][subItem] = "在职";
+                } else {
+                  tmpDate = tmpArray[i][subItem].split("-");
+                  tmpArray[i][subItem] = parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月";
+                }
+                break;
+              case "jobStartTime":
+                tmpDate = tmpArray[i][subItem].split("-");
+                tmpArray[i][subItem] = parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月";
+                break;
             }
             tmpObj[subItem].title = profModel.initValue[subItem].name;
             tmpObj[subItem].content = tmpArray[i][subItem];
@@ -320,6 +307,43 @@ const decode = (tmpUserInfo, that) => {
         that.setData({
           [item]: newTmpArray
         })
+        delete tmpUserInfo[item];
+        break;
+      case "degreeArray":
+        newTmpArray = [];
+        tmpArray = JSON.parse(JSON.stringify(tmpUserInfo[item]));
+        for (let i=0; i<tmpArray.length; i++) {
+          tmpObj = {
+            degree: {},
+            school: {},
+            major: {},
+            headteacher: {},
+            degreeStartTime: {},
+            degreeEndTime: {},
+          }
+          for (let subItem in tmpArray[i]) {
+            switch(subItem) {
+              case "degreeEndTime":
+                if (tmpArray[i][subItem] === undefined || tmpArray[i][subItem] === "") {
+                  tmpArray[i][subItem] = "在读";
+                } else {
+                  tmpDate = tmpArray[i][subItem].split("-");
+                  tmpArray[i][subItem] = parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月";
+                }
+                break;
+              case "degreeStartTime":
+                tmpDate = tmpArray[i][subItem].split("-");
+                tmpArray[i][subItem] = parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月";
+                break;
+            }
+            tmpObj[subItem].title = profModel.initValue[subItem].name;
+            tmpObj[subItem].content = tmpArray[i][subItem];
+          }
+          newTmpArray.push(tmpObj);
+        }
+        that.setData({
+          [item]: newTmpArray
+        });
         delete tmpUserInfo[item];
         break;
       case "intro":
@@ -355,5 +379,5 @@ module.exports = {
   download: downloadNew,
   introUpload,
   decode,
-  check,
+  check: checkLocal,
 }

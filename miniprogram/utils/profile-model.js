@@ -46,7 +46,7 @@ const initValue = {
     default: "请选择籍贯"
   },
   school: {
-    name: "学院"
+    name: "学院",
   },
   degree: {
     name: "学历",
@@ -57,7 +57,7 @@ const initValue = {
   },
   degreeStartTime: {
     name: "入学时间",
-    default: "请选择入校时间"
+    default: "请选择入学时间"
   },
   degreeEndTime: {
     name: "毕业时间",
@@ -65,6 +65,9 @@ const initValue = {
   },
   intro: {
     name: "自我介绍"
+  },
+  headteacher: {
+    name: "班主任"
   }
 }
 
@@ -91,6 +94,7 @@ const userInfo = {
     degree: "请选择学历",
     school: "",
     major: "",
+    headteacher: "",
     degreeStartTime: "请选择入学时间",
     degreeEndTime: "请选择毕业时间",
   }],

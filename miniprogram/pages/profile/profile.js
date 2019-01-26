@@ -22,6 +22,7 @@ Page({
     userInfo: [],
     contactArray: [],
     jobArray: [],
+    degreeArray: [],
     profileStatus: 0,
     fixTop: false,
     fixVeryTop: false,
@@ -76,13 +77,13 @@ Page({
       let curUserProfile = wx.getStorageSync(mode)[index];
       try {
         let avatarUrl = curUserProfile.avatarUrl,
-        nickname = curUserProfile.nickName,
+        nickName = curUserProfile.nickName,
         bgImgUrl = curUserProfile.bgImgUrl;
         if (avatarUrl !== undefined) {
           this.setData({avatarUrl});
         }
         this.setData({
-          nickname,
+          nickName,
           bgImgUrl
         })
         if (bgImgUrl === "" || bgImgUrl === undefined) {
@@ -116,16 +117,16 @@ Page({
     } else {
       // 如果资料内容所有者正是用户本人
       let curUserProfile = await profile.check();
-      if (curUserProfile.isProfileEmpty) {
-        this.setData({
-          profileStatus: -1
-        })
       let { avatarUrl, nickName, bgImgUrl } = curUserProfile;
       this.setData({
         avatarUrl,
         nickName,
         bgImgUrl
       })
+      if (curUserProfile.isProfileEmpty) {
+        this.setData({
+          profileStatus: -1
+        })
       } else {
         profile.decode(curUserProfile, this);
       }

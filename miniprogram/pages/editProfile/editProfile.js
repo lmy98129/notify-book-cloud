@@ -9,7 +9,7 @@ const getFormid = require("../../utils/formid").getFormid;
 const formid = require("../../utils/formid");
 
 const initValue = profModel.initValue;
-let newUserInfo = profModel.userInfo;
+let newUserInfo = JSON.parse(JSON.stringify(profModel.userInfo));
 
 import regeneratorRuntime, { async } from "../../utils/regenerator-runtime/runtime";
 
@@ -67,13 +67,13 @@ Page({
       let { avatarUrl, nickName, gender } = curUserProfile;
       if (gender <= 0) gender = 1;
       this.setData({ avatarUrl, nickName, gender })
-      newUserInfo = { avatarUrl, nickName, gender, ...newUserInfo };
+      newUserInfo = { ...newUserInfo, avatarUrl, nickName, gender };
     } else {
-      newUserInfo = res.data;
+      newUserInfo = curUserProfile;
       delete newUserInfo._id;
       delete newUserInfo._openid;
       this.setData({
-        avatarUrl: userInfo.avatarUrl
+        avatarUrl: newUserInfo.avatarUrl
       })
       for (let item in newUserInfo) {
         switch(item) {
@@ -298,7 +298,7 @@ Page({
 
   addBtn(e) {
     let btnType = e.target.dataset.type, newObj;
-    newObj = profModel.userInfo[btnType][0];
+    newObj = JSON.parse(JSON.stringify(profModel.userInfo[btnType][0]));
     
     newUserInfo[btnType].push(newObj);
     let tmpArray = JSON.parse(JSON.stringify(this.data[btnType]));
@@ -331,6 +331,8 @@ Page({
     tmpValue = initValue[inputType].default;
     
     switch(inputType) {
+      case "degreeStartTime":
+      case "degreeEndTime":
       case "jobStartTime":
       case "jobEndTime":
         newUserInfo[arrayType][index][inputType] = tmpValue;
@@ -356,32 +358,27 @@ Page({
   submit() {
     formid.upload()
     if (!this.data.canSubmit) return;
-    let tmpJobArray, tmpContentArray;
+    let tmpJobArray, tmpContentArray, tmpDegreeArray;
     for(let item in newUserInfo) {
       switch(item) {
+        // 处理普通input类型的必填项
         case "nickName":
         case "realName":
-        case "major":
         case "address":
           if (newUserInfo[item] === undefined || newUserInfo[item] === "") {
             confirmOnly(initValue[item].name + "为空，此项为必填项");
             return;
           }
           break;
+        // 处理picker类型的必填项
         case "birthDate":
         case "homeTown":
-        case "degree":
-        case "enterSchoolTime":
           if(newUserInfo[item] === initValue[item].default) {
             confirmOnly(initValue[item].name + "为空，此项为必填项");
             return;
           }
           break;
-        case "leaveSchoolTime": 
-          if (newUserInfo[item] === initValue[item].default) {
-            newUserInfo[item] = "";
-          }
-          break;
+        // 处理数组内部的必填项目
         case "contactArray":
           tmpContentArray = newUserInfo[item];
           for (let i=0; i<tmpContentArray.length; i++) {
@@ -420,6 +417,34 @@ Page({
             }
           }
           break;
+        case "degreeArray":
+          tmpDegreeArray = newUserInfo[item];
+          for (let i=0; i<tmpDegreeArray.length; i++) {
+            for (let subItem in tmpDegreeArray[i]) {
+              switch(subItem) {
+                case "school":
+                case "major":
+                  if (tmpDegreeArray[i][subItem] === undefined || tmpDegreeArray[i][subItem] === "") {
+                    confirmOnly("“学历信息" + (i + 1) + "”的" + initValue[subItem].name + "为空，此项为必填项");
+                    return;
+                  }
+                  break;
+                case "degree":
+                case "degreeStartTime":
+                  if (tmpDegreeArray[i][subItem] === initValue[subItem].default) {
+                    confirmOnly("“学历信息" + (i + 1) + "”的" + initValue[subItem].name + "为空，此项为必填项");
+                    return;
+                  }
+                  break;
+                case "degreeEndTime":
+                  if (tmpDegreeArray[i][subItem] === initValue[subItem].default) {
+                    newUserInfo[item][i][subItem] = "";
+                  }
+                  break;
+              }
+            }
+          }
+          break;
         case "phoneNumber": 
           if (newUserInfo[item] !== "" && isNaN(newUserInfo[item])) {
             confirmOnly(initValue[item].name + "应为数字");
@@ -429,17 +454,6 @@ Page({
       }
     }
     console.log("上传用户资料：", newUserInfo);
-    profile.upload(newUserInfo)
-    .then(res => {
-      console.log("上传用户资料成功：", res);
-      toast("资料上传成功");
-      let tmpUserInfo = wx.getStorageSync("curUserProfile");
-      tmpUserInfo.nickname = newUserInfo.nickName;
-      wx.setStorageSync("userInfo", tmpUserInfo);
-    })
-    .catch(err => {
-      console.log("上传用户资料失败：", err);
-      toast("资料上传失败", "none");
-    })
+    profile.upload(newUserInfo);
   }
 })
