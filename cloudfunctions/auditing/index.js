@@ -15,7 +15,7 @@ exports.main = async (event, context) => {
     try {
       let openidList = event.openidList;
       let res = await Promise.all(openidList.map(item => {
-        return db.collection("auth").where({
+        return db.collection("profile-new").where({
           _openid: item
         }).get()
       }))
@@ -24,7 +24,7 @@ exports.main = async (event, context) => {
       res.map(item => authList.push(item.data[0]));
   
       authList.map(item => {
-        if (item.status === "authorized") {
+        if (item.authStatus === "authorized") {
           authList.pop(item);
         } else {
           newOpenidList.push(item._openid);
@@ -33,9 +33,9 @@ exports.main = async (event, context) => {
       })
   
       await Promise.all(newIdList.map(item => {
-        return db.collection("auth").doc(item).update({
+        return db.collection("profile-new").doc(item).update({
           data: {
-            status: "authorized"
+            authStatus: "authorized"
           }
         })
       }));
@@ -95,7 +95,7 @@ exports.main = async (event, context) => {
     try {
       let openidList = event.openidList, idList = [], imgUrlList = [];
       let res = await Promise.all(openidList.map(item => {
-        return db.collection("auth").where({
+        return db.collection("profile-new").where({
           _openid: item
         }).get()
       }))
@@ -106,12 +106,12 @@ exports.main = async (event, context) => {
       });
   
       await Promise.all(idList.map(item => {
-        return db.collection("auth").doc(item).update({
+        return db.collection("profile-new").doc(item).update({
           data: {
-            status: "unauthorized",
+            authStatus: "unauthorized",
             authImgUrl: [],
-            isCode: false,
-            remark: ""
+            authIsCode: false,
+            authRemark: ""
           }
         })
       }));

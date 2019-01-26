@@ -27,7 +27,7 @@ Page({
    */
   onShow: function () {
     this.setData({
-      isAdmin: wx.getStorageSync("isAdmin")
+      isAdmin: wx.getStorageSync("curUserProfile").isAdmin
     });
   },
 

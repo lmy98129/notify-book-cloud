@@ -19,10 +19,10 @@
               <view class="profile">
                 <view class="nickname">{{item.nickName}}</view>
                 <view class="remark">状态: 
-                  <block wx:if="{{item.status === 'auditing'}}">
+                  <block wx:if="{{item.authStatus === 'auditing'}}">
                     待审核
                   </block>
-                  <block wx:if="{{item.status === 'authorized'}}">
+                  <block wx:if="{{item.authStatus === 'authorized'}}">
                     已通过
                   </block>
                 </view>

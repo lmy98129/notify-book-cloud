@@ -5,10 +5,10 @@
     <view class="user">
       <image src="{{content.avatarUrl === '' ? '/images/user-unlogin.png' : content.avatarUrl}}"></image>
       <view class="nickname">{{content.nickName}} 状态: 
-        <block wx:if="{{content.status === 'auditing'}}">
+        <block wx:if="{{content.authStatus === 'auditing'}}">
           待审核
         </block>
-        <block wx:if="{{content.status === 'authorized'}}">
+        <block wx:if="{{content.authStatus === 'authorized'}}">
           已通过
         </block>
       </view>
@@ -25,7 +25,7 @@
     备注
   </view>
   <view class="item-wrapper remark">
-    <view>{{content.remark}}</view>
+    <view>{{content.authRemark}}</view>
   </view>
 </view>
 <view class="bottom-wrap">

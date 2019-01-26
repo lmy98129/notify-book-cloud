@@ -51,7 +51,14 @@ const getUserInfoNew = async (that) => {
         }
 
         if (curUserProfile.isAdmin) {
-          curUserProfile.authStatus = "authorized";
+          if (curUserProfile.authStatus !== "authorized") {
+            curUserProfile.authStatus = "authorized";
+            db.collection("profile-new").doc(curUserProfile._id).update({
+              data: {
+                authStatus: "authorized"
+              }
+            });
+          }
           wx.setStorage({ key: "curUserProfile", data: curUserProfile });
           console.log("获取用户权限成功：用户为管理员");
         } else {
