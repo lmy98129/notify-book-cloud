@@ -145,6 +145,39 @@ Page({
           weight: 1
         }
       ];
+      // requestArray = [
+      //   {
+      //     text: value,
+      //     weight: [
+      //       {
+      //         value: 4,
+      //         keyArray: [
+      //           "enterSchoolTime",
+      //           "leaveSchoolTime",
+      //           "homeTown",
+      //           "institution",
+      //           "realName",
+      //           "major",
+      //           "phoneNumber",
+      //           "wechatId",
+      //           "intro",
+      //           "job",
+      //           "content",
+      //           "degree"
+      //         ]
+      //       },
+      //       {
+      //         value: 1,
+      //         keyArray: [
+      //           "birthDate",
+      //           "jobStartTime",
+      //           "nickName",
+      //           "address"
+      //         ]
+      //       }
+      //     ]
+      //   },
+      // ]
       let res = await wx.cloud.callFunction({
         name: "search",
         data: {
