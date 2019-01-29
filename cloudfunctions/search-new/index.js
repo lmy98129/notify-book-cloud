@@ -6,25 +6,45 @@ cloud.init()
 const db = cloud.database();
 const _ = db.command;
 
+const field = { 
+  _id: true,
+  _openid: true,
+  address: true,
+  avatarUrl: true,
+  bgImgUrl: true,
+  birthDate: true,
+  contactArray: true,
+  degreeArray: true,
+  gender: true,
+  homeTown: true,
+  intro: true,
+  jobArray: true,
+  nickName: true,
+  phoneNumber: true,
+  realName: true,
+  wechatId: true,
+};
+
 // 增加记录的权重
-const increase = (idArray, rank, keyFound, weight, key) => {
-  for (item of idArray) {
-    if (rank[item._id] === undefined) {
-      rank[item._id] = 0;
-    } 
-    rank[item._id] += weight;
-  
-    if (keyFound[item._id] === undefined) {
-      keyFound[item._id] = [];
+const increase = (data, final, weight, key) => {
+  for (item of data) {
+    let i = final.findIndex((x) => x._id === item._id);
+    if (i < 0) {
+      item.rank = weight;
+      item.keyFound = [];
+      item.keyFound.push(key);
+      final.push(item);
+    } else {
+      final[i].weight += weight;
+      final[i].keyFound.push(key);
     }
-    keyFound[item._id].push(key);
   }
 }
 
 const search = async (collection, text, weightArray) => {
   // rank用于计算当前记录的总权重
   // keyFound用于存储当前记录中涉及的键
-  let rank = [], keyFound = [];
+  let parallel = [], final = [];
   // 先把weightArray中的key提取出来，weightArray[key]为weight值
   for (key in weightArray) {
     let query, arrayType;
@@ -76,46 +96,62 @@ const search = async (collection, text, weightArray) => {
       }
     }
     // 进行实际查询
-    let searchRes = await db.collection(collection)
-      .field({ _id: true }).where(query).get();
+    let skip = 0, searchRes = [];
+    let totalRes = await db.collection(collection).where(query).count();
+    total = totalRes.total;
+    console.log("total: ", total);
+    // 若总数已经超过100
+    if (total >= 100) {
+      while (skip <= total) {
+        let cloudRes = await db.collection(collection).
+          skip(skip).limit(100).field(field).where(query).get();
+        if (cloudRes.data !== undefined) {
+          searchRes = searchRes.concat(cloudRes.data);
+          skip += 100;
+        }
+      }
+      console.log("final length: ", searchRes.length);
+    // 若总数未超过100
+    } else {
+      let cloudRes = await db.collection(collection)
+        .limit(100).field(field).where(query).get();
+      if (cloudRes.data !== undefined) {
+        searchRes = searchRes.concat(cloudRes.data);
+      }
+    }
     // 如果没有出现空且长度大于0，增加权重
-    if (key == "homeTown") console.log(query, searchRes);
-    if (searchRes.data !== undefined && searchRes.data.length >= 0) {
-      increase(searchRes.data, rank, keyFound, weightArray[key], key);
+    if (searchRes.length > 0) {
+      increase(searchRes, final, weightArray[key], key);
     }
   }
   
-  return { rank, keyFound };
-
+  return final;
 }
 
 // 合并不同查询内容的权重
 const combine = (res1, res2) => {
-  let rank1 = res1.rank, rank2 = res2.rank, 
-  keyFound1 = res1.keyFound, keyFound2 = res2.keyFound;
-
-  for (item in rank2) {
-    if (rank1[item]) {
-      rank1[item] += rank2[item]
+  for (index2 in res2) {
+    let index1 = res1.findIndex((x) => x._id === res2[index2]._id);
+    // 若res2中有res1中已经存在的，则更新
+    if (index1 >= 0) {
+      res1[index1].keyFound = res1[index1].keyFound.concat(res2[index2].keyFound);
+      res1[index1].rank += res2[index2].rank;
+    // 若res2中有res1中不存在的，则增加
     } else {
-      rank1[item] = rank2[item]
+      res1.push(res2[index2]);
     }
+    // res1、res2中出现有/无的状态组合有4种，上面有三种
+    // 其余的逻辑是：res1有而res2没有的，保持不变；res1和res2中均没有的，不用考虑
   }
 
-  for (item in keyFound2 ) {
-    if (keyFound1[item]) {
-      keyFound1[item] = keyFound1[item].concat(keyFound2[item])
-    } else {
-      keyFound1[item] = keyFound2[item]
-    }
-  }
-
-  return {rank: rank1, keyFound: keyFound1};
+  return res1;
 }
 
 const searchMain = async (collection, requestArray) => {
   // 查找
   let searchRes = [], final = [], weightArray = [];
+
+  console.time("search");
   for (request of requestArray) {
     let { text, weight } = request;
     text = text.replace(/[\_\,\!\|\~\`\(\)\#\$\%\^\&\*\{\}\:\;\"\L\<\>\?]/g, '');
@@ -133,48 +169,22 @@ const searchMain = async (collection, requestArray) => {
 
     searchRes.push(await search(collection ,text, weightArray));
   }
+  console.timeEnd("search");
 
+  console.time("combine");
   // 合并不同内容查找的结果
   let combineRes = searchRes[0]
   for (let i=1; i<searchRes.length; i++) {
     combineRes = combine(searchRes[i], combineRes);
   }
-
-  // 最后从数据库提取查询到的完整信息并附上权重
-  for (id in combineRes.rank) {
-    let cloudRes = await db.collection(collection)
-    .field({ 
-      _id: true,
-      _openid: true,
-      address: true,
-      avatarUrl: true,
-      bgImgUrl: true,
-      birthDate: true,
-      contactArray: true,
-      degreeArray: true,
-      gender: true,
-      homeTown: true,
-      intro: true,
-      jobArray: true,
-      nickName: true,
-      phoneNumber: true,
-      realName: true,
-      wechatId: true,
-    }).where({ _id: id }).get();
-    if (cloudRes.data !== undefined) {
-      let tmpItem = cloudRes.data[0];
-      tmpItem.keyFound = combineRes.keyFound[id];
-      tmpItem.rank = combineRes.rank[id];
-      final.push(tmpItem);
-    }
-  }
+  console.timeEnd("combine");
 
   // 按照权重排个序
-  final.sort((x, y) => {
+  combineRes.sort((x, y) => {
     return y.rank - x.rank;
   });
 
-  return final;
+  return combineRes;
 }
 
 
