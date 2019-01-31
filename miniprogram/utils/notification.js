@@ -49,13 +49,15 @@ module.exports = {
 
   checkDownload: async () => {
     try {
+      let msg = "暂无消息";
       let res = await wx.cloud.callFunction({
         name: "notification",
         data: {
           $url: "download"
         }
       });
-      switch(res.result.code) {
+      let code = res.result.code;
+      switch(code) {
         case 0:
           wx.setStorageSync("hasReadArray", []);
           wx.setStorageSync("unReadArray", []);
@@ -65,11 +67,16 @@ module.exports = {
             unReadArray = res.result.unReadArray;
           wx.setStorageSync("hasReadArray", hasReadArray);
           wx.setStorageSync("unReadArray", unReadArray);
+          if (unReadArray.length > 0) {
+            msg = "存在未读消息";
+            code = 2;
+          }
+          break;
       }
-      console.log("消息更新成功：", res.result.code);
-      return res.result.code;
+      console.log("消息更新成功：", msg);
+      return code;
     } catch (error) {
-      console.log(error)
+      console.log(error.message)
     }
   },
 

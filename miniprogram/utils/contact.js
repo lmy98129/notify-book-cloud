@@ -26,30 +26,17 @@ const download = async () => {
       let result = [], openidArray = res.data[0].friendList, id = res.data[0]._id,
         friendList = JSON.stringify(openidArray);
       for (let i=0; i<openidArray.length; i++ ) {
-        res = await db.collection("profile").where({
-          _openid: openidArray[i]
+        res = await db.collection("profile-new").where({
+          _openid: openidArray[i],
+          isUserProfileEmpty: false,
+          authStatus: "authorized",
         }).get();
-        result.push(res.data[0]);
-      }
-
-      let avatar = [];
-      for (let i=0; i<openidArray.length; i++) {
-        res = await db.collection("avatar").where({
-          _openid: openidArray[i]
-        }).get();
-        avatar.push(res.data[0])
-      }
-
-      for (const item in result) {
-        for (const subItem in avatar) {
-          if (avatar[subItem] === undefined) {
-            continue;
-          }
-          if (result[item]._openid === avatar[subItem]._openid) {
-            result[item].avatarUrl = avatar[subItem].avatarUrl;
-          }
+        if (res.data !== undefined && res.data.length > 0) {
+          result.push(res.data[0]);
         }
       }
+
+      console.log(res);
 
       return {
         code: 1,

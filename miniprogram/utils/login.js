@@ -126,7 +126,19 @@ const getUserInfoNew = async (that) => {
           }
         };
 
+
         Promise.all([possibleKnow(), sameYearRecList(), sameMajorRecList()]);
+
+        let code = await notify.checkDownload();
+        if (code == 2) {
+         that.setData({
+           isNotifyRedDot: true,
+         });
+        } else {
+          that.setData({
+            isNotifyRedDot: false,
+          })
+        }
 
         let { avatarUrl, nickName, 
           bgImgUrl, isProfileEmpty } = curUserProfile;

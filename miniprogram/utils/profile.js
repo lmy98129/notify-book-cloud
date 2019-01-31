@@ -9,7 +9,7 @@ import regeneratorRuntime, { async } from "./regenerator-runtime/runtime";
 const checkLocal = async () => {
   let curUserProfile = wx.getStorageSync("curUserProfile");
   if (curUserProfile === undefined || curUserProfile === "") {
-    await downloadNew();
+    await download();
     curUserProfile = wx.getStorageSync("curUserProfile");
   }
   return curUserProfile;
@@ -20,14 +20,24 @@ const checkCloud = async () => {
     _openid: app.globalData.openid
   }).get();
   if (getRes.data.length === 0) {
-    await downloadNew();
+    await download();
   }
   return await checkLocal();
 }
 
-const downloadNew = async (that, callback) => {
+const download = async (that, callback) => {
   await wx.getUserInfo({
     success: async result => {
+
+      if (app.globalData.isIndexPageFirstLoad === undefined) {
+        app.globalData.isIndexPageFirstLoad = true;
+      }
+
+      if (app.globalData.isIndexPageFirstLoad) {
+        wx.showLoading({
+          title: "加载中"
+        });
+      }
 
       let curUserProfile = wx.getStorageSync("curUserProfile");
       if (curUserProfile === undefined || curUserProfile === "") {
@@ -121,6 +131,11 @@ const downloadNew = async (that, callback) => {
           await callback(that, curUserProfile);
         }
         
+        if (app.globalData.isIndexPageFirstLoad) {
+          wx.hideLoading();
+          app.globalData.isIndexPageFirstLoad = false;
+        }
+
         console.log("获取用户资料成功：" + msg);
       } catch (e) {
         msg = e.message;
@@ -130,52 +145,6 @@ const downloadNew = async (that, callback) => {
     }
   })
 
-}
-
-/**
- * @todo 基本可以废弃了
- */
-const download = () => {
-  let msg = {};
-  return (db.collection("profile").where({
-    _openid: app.globalData.openid
-    // wx.getStorageSync("openid")
-  })).get()
-    .then(res => {
-      if (res.data.length === 0) {
-        db.collection("profile").add({
-          data: {
-            nickName: wx.getStorageSync("userInfo").nickName
-          }
-        })
-        msg = {
-          code: 0,
-          msg: "profile record added & nickName uploaded"
-        }
-        return Promise.resolve(msg);
-      } else if (res.data[0].realName !== undefined) {
-        msg = {
-          code: 2,
-          msg: "profile exist",
-          data: res.data[0]
-        }
-        return Promise.resolve(msg);
-      } else {
-        msg = {
-          code: 1,
-          msg: "profile stay empty with only nickName"
-        }
-        return Promise.resolve(msg);
-      }
-    })
-    .catch(err => {
-      msg = {
-        code: -1,
-        msg: "profile download fail",
-        err: err
-      }
-      return Promise.reject(msg);
-    })
 }
 
 const upload = async (userInfo) => {
@@ -376,7 +345,7 @@ const decode = (tmpUserInfo, that) => {
 
 module.exports = {
   upload,
-  download: downloadNew,
+  download,
   introUpload,
   decode,
   check: checkLocal,
