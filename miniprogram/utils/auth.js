@@ -4,63 +4,6 @@ const app = getApp();
 const profile = require("./profile");
 import regeneratorRuntime, { async } from "./regenerator-runtime/runtime";
 
-/**
- * @todo 只在login.getUserInfo中出现过，改造结束后即可废弃
- */
-const checkAuth = () => {
-  let msg = {};
-
-  return (db.collection("auth").where({
-    _openid: app.globalData.openid
-  }).get()
-  .then(res => {
-    if (res.data.length === 0) {
-      // 首次登录，自动添加认证记录
-      return db.collection("auth").add({
-        data: {
-          authImgUrl: "",
-          remark: "",
-          status: "unauthorized",
-          isCode: false
-        }
-      }).then(res => {
-        msg = {
-          code: 1,
-          msg: "new unauthorized record added",
-          status: "unauthorized"
-        }
-        return Promise.resolve(msg);
-      })
-    } else {
-      switch (res.data[0].status) {
-        case "unauthorized":
-          // 未提交审核
-          msg = {
-            code: 1,
-            msg: "still unauthorized",
-          }
-          break;
-        case "auditing":
-          // 审核中
-          msg = {
-            code: 2,
-            msg: "still auditing"
-          }
-          break;
-        case "authorized": 
-          // 审核通过
-          msg = {
-            code: 3,
-            msg: "authorized"
-          }
-          break;
-      }
-      msg.status = res.data[0].status;
-      return Promise.resolve(msg);
-    }
-  }))
-}
-
 const codeCheck = async (remark) => {
   try {
     let authCodeRes = await db.collection("auth-code").where({
@@ -171,7 +114,6 @@ const uploadAuth = async (authImgArray, remark, that) => {
 }
 
 module.exports = {
-  check: checkAuth,
   upload: uploadAuth,
   code: codeCheck
 }

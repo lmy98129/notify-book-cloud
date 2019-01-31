@@ -3,22 +3,6 @@ const _ = db.command;
 const toast = require("./message").toast;
 import regeneratorRuntime, { async } from "./regenerator-runtime/runtime";
 
-/**
- * 可以废弃了
- * @param {*} arr 
- * @param {*} collection 
- */
-const tmpDownload = async (arr, collection) => {
-  let res = await Promise.all(arr.map(item => {
-    return db.collection(collection).where({
-      _openid: item._openid
-    }).get()
-  }))
-  let final = [];
-  res.map(item => final.push(item = item.data[0]));
-  return final;
-}
-
 const downloadList = async () => {
   wx.showLoading({
     title: "加载审核列表"

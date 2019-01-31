@@ -36,8 +36,6 @@ const download = async () => {
         }
       }
 
-      console.log(res);
-
       return {
         code: 1,
         msg: "download contact record",
