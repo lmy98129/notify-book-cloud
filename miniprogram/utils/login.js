@@ -32,7 +32,7 @@ const getUserInfoNew = async (that) => {
         return;
       }
 
-      await profile.download(that, (that, curUserProfile) => {
+      await profile.download(that, async (that, curUserProfile) => {
         // 根据当前已经得到的信息，判断用户审核状态、身份（是否管理员等信息）
         if (!curUserProfile.isAdmin) {
           switch(curUserProfile.authStatus) {
@@ -65,7 +65,7 @@ const getUserInfoNew = async (that) => {
           console.log("获取用户权限成功：用户为普通用户");
         }
 
-        const possibleKnow = new Promise(async (resolve) => {
+        const possibleKnow = async () => {
           try {
             let possibleKnowList = await rec.possibleKnow();
             wx.setStorage({key: "possibleKnowList", data: possibleKnowList});
@@ -82,9 +82,9 @@ const getUserInfoNew = async (that) => {
           } catch (error) {
             console.log(error.message);
           }
-        });
+        };
 
-        const sameYearRecList = new Promise(async (resolve) => {
+        const sameYearRecList = async () => {
           try {
             let sameYearRecList = await rec.same("degreeStartTime");
             wx.setStorageSync("sameYearRecList", sameYearRecList); 
@@ -103,9 +103,9 @@ const getUserInfoNew = async (that) => {
           } catch (error) {
             console.log(error.message);
           }
-        });
+        };
 
-        const sameMajorRecList = new Promise(async (resolve) => {
+        const sameMajorRecList = async () => {
           try {
             let sameMajorRecList = await rec.same("major");
             wx.setStorageSync("sameMajorRecList", sameMajorRecList); 
@@ -124,11 +124,9 @@ const getUserInfoNew = async (that) => {
           } catch (error) {
             console.log(error.message);
           }
-        });
+        };
 
-        let parallel = [possibleKnow, sameYearRecList, sameMajorRecList];
-
-        Promise.all(parallel);
+        Promise.all([possibleKnow(), sameYearRecList(), sameMajorRecList()]);
 
         let { avatarUrl, nickName, 
           bgImgUrl, isProfileEmpty } = curUserProfile;
