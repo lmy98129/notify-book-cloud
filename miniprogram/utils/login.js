@@ -12,6 +12,25 @@ const app = getApp();
 
 import regeneratorRuntime, { async } from "./regenerator-runtime/runtime";
 
+const possibleKnow = async (that) => {
+  try {
+    let possibleKnowList = await rec.possibleKnow();
+    wx.setStorage({key: "possibleKnowList", data: possibleKnowList});
+    let realLength = possibleKnowList.length;
+    if (realLength <= 9) {
+      for (var i=realLength; i<9; i++) {
+        possibleKnowList[i] = {avatarUrl: "/images/user-unlogin.png"};
+      }
+    }
+    that.setData({
+      possibleKnowList,
+      possibleKnowListLength: realLength
+    })
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 const getUserInfo = async (that) => {
   // 若强制刷新标志为false
   if (!app.globalData.forcedRefresh) {
@@ -62,25 +81,6 @@ const getUserInfo = async (that) => {
           console.log("获取用户权限成功：用户为普通用户");
         }
 
-        const possibleKnow = async () => {
-          try {
-            let possibleKnowList = await rec.possibleKnow();
-            wx.setStorage({key: "possibleKnowList", data: possibleKnowList});
-            let realLength = possibleKnowList.length;
-            if (realLength <= 9) {
-              for (var i=realLength; i<9; i++) {
-                possibleKnowList[i] = {avatarUrl: "/images/user-unlogin.png"};
-              }
-            }
-            that.setData({
-              possibleKnowList,
-              possibleKnowListLength: realLength
-            })
-          } catch (error) {
-            console.log(error.message);
-          }
-        };
-
         const sameYearRecList = async () => {
           try {
             let sameYearRecList = await rec.same("degreeStartTime");
@@ -90,11 +90,12 @@ const getUserInfo = async (that) => {
             })
             let realLength = sameYearRecList.length;
             if (realLength < 3) {
+              let sameYearFixList = [];
               for (let i=0; i<3-realLength; i++) {
-                sameYearRecList.push("1");
+                sameYearFixList.push("1");
               }
               that.setData({
-                sameYearFixList: sameYearRecList
+                sameYearFixList
               })
             }
           } catch (error) {
@@ -111,11 +112,12 @@ const getUserInfo = async (that) => {
             })
             let realLength = sameMajorRecList.length;
             if (realLength < 3) {
+              let sameMajorFixList = [];
               for (let i=0; i<3-realLength; i++) {
-                sameMajorRecList.push("1");
+                sameMajorFixList.push("1");
               }
               that.setData({
-                sameMajorFixList: sameMajorRecList
+                sameMajorFixList
               })
             }
           } catch (error) {
@@ -124,7 +126,7 @@ const getUserInfo = async (that) => {
         };
 
 
-        Promise.all([possibleKnow(), sameYearRecList(), sameMajorRecList()]);
+        Promise.all([possibleKnow(that), sameYearRecList(), sameMajorRecList()]);
 
         let code = await notify.checkDownload();
         if (code == 2) {
@@ -172,4 +174,5 @@ const getUserInfo = async (that) => {
 
 module.exports = {
   getUserInfo,
+  possibleKnow,
 }

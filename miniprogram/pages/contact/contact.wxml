@@ -27,7 +27,7 @@
                     <view class="profile">
                       <view class="realname">{{item.realName}}</view>
                       <view class="remark">
-                        <text>{{(item.gender === 1 || item.gender === '1') ? '男' : '女'}} {{item.enterSchoolTime[0]}}{{item.enterSchoolTime[1]}}{{item.enterSchoolTime[2]}}{{item.enterSchoolTime[3]}}级 {{item.degree}} {{item.major}}</text>
+                        <text>{{(item.gender === 1 || item.gender === '1') ? '男' : '女'}} {{item.degreeArray[item.degreeArray.length - 1].degreeStartTime[0]}}{{item.degreeArray[item.degreeArray.length - 1].degreeStartTime[1]}}{{item.degreeArray[item.degreeArray.length - 1].degreeStartTime[2]}}{{item.degreeArray[item.degreeArray.length - 1].degreeStartTime[3]}}级 {{item.degreeArray[item.degreeArray.length - 1].degree}} {{item.degreeArray[item.degreeArray.length - 1].major}}</text>
                       </view>
                     </view>
                   </view>

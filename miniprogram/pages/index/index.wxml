@@ -48,9 +48,9 @@
               </block>
             </view>
           </scroll-view>
-          <view class="change-btn">
-            换一批
-          </view>
+          <button class="change-btn" bindtap="changePossibleKnow" loading="{{isChangePossibleKnowLoading}}">
+            {{changeBtnWord}}
+          </button>
         </view>
 
         <view class="recommend">

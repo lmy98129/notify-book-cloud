@@ -28,7 +28,7 @@ const download = async () => {
       for (let i=0; i<openidArray.length; i++ ) {
         res = await db.collection("profile-new").where({
           _openid: openidArray[i],
-          isUserProfileEmpty: false,
+          isProfileEmpty: false,
           authStatus: "authorized",
         }).get();
         if (res.data !== undefined && res.data.length > 0) {
@@ -38,7 +38,7 @@ const download = async () => {
 
       return {
         code: 1,
-        msg: "download contact record",
+        msg: "通讯录资料正常",
         data: result,
         friendList,
         id,
@@ -49,7 +49,7 @@ const download = async () => {
     console.log("通讯录下载出错", error)
     return {
       code: -1,
-      msg: "download contact failed",
+      msg: error.message,
       error
     }
   }

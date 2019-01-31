@@ -31,7 +31,9 @@ Page({
     isRedDot: false,
     isAuthRedDot: false,
     isNotifyRedDot: false,
-    isProfileEmpty: 0
+    isProfileEmpty: 0,
+    isChangePossibleKnowLoading: false,
+    changeBtnWord: "换一批"
   },
 
   onLoad: function() {
@@ -68,65 +70,7 @@ Page({
   },
 
   onShow: async function() {
-    /**
-     * 这个条件涵盖了两个情况：
-     * 1）若用户首次使用，则会在执行onShow时就跳转到了login页面，
-     * 在login页面授权成功后，跳转回index页面，执行onShow，app.globalData.isFirstLogin === true，
-     * 这时执行了login.getUserInfo()
-     * 2）若用户是首次使用之后任意时刻第一次打开，则会执行到onShow，此时app.globalData.isFirstLogin === undefined，
-     * 这时也执行了login.getUserInfo()
-     * 3）以上两种情况都执行了login.getUserInfo()，并在此时设置app.globalData.isFirstLogin = false,
-     * 保证之后打开页面时只读取本地存储而不去执行函数，相比定时器设计更灵活地减少了函数调用次数
-     */
-    // 感觉有点蠢，实在没办法实时更新啊，还是只保持第一种情况就算了。
-    // 更蠢了，一直反复更新反而容易出问题。。。
-    // if (app.globalData.isFirstLogin || app.globalData.isFirstLogin === undefined){
-      await login.getUserInfo(this);
-      
-      // app.globalData.isFirstLogin = false;
-    // } else {
-    //   let tmpUserInfo = wx.getStorageSync("curUserProfile");
-    //   let avatarUrl = tmpUserInfo.avatarUrl,
-    //     nickname = tmpUserInfo.nickName,
-    //     bgImgUrl = tmpUserInfo.bgImgUrl;
-    //   this.setData({
-    //     avatarUrl: avatarUrl,
-    //     nickname: nickname,
-    //     bgImgUrl: bgImgUrl,
-    //   })
-    // }
-    // let isRedDotFlag = false;
-    // if (wx.getStorageSync("authStatus")!==undefined 
-    // && wx.getStorageSync("authStatus") === "unauthorized" ) {
-    //   this.setData({
-    //     isRedDot: true,
-    //     isAuthRedDot: true,
-    //   })
-    //   isRedDotFlag = true;
-    // } else {
-    //   this.setData({
-    //     isAuthRedDot: false
-    //   })
-    // }
-    // if (wx.getStorageSync("unReadArray")!==undefined 
-    // && wx.getStorageSync("unReadArray").length > 0) {
-    //   this.setData({
-    //     isRedDot: true,
-    //     isNotifyRedDot: true
-    //   })
-    //   isRedDotFlag = true
-    // } else {
-    //   this.setData({
-    //     isNotifyRedDot: false
-    //   })
-    // }
-    // if (!isRedDotFlag) {
-    //   this.setData({
-    //     isRedDot: false,
-    //     isAuthRedDot: false,
-    //     isNotifyRedDot: false
-    //   })
-    // }
+    await login.getUserInfo(this);
   },
 
 
@@ -170,6 +114,18 @@ Page({
         url: "../search/search"
       })
     }
+  },
+
+  changePossibleKnow: async function() {
+    this.setData({
+      isChangePossibleKnowLoading: true,
+      changeBtnWord: ""
+    })
+    await login.possibleKnow(this);
+    this.setData({
+      isChangePossibleKnowLoading: false,
+      changeBtnWord: "换一批"
+    })
   }
 
 })
