@@ -6,94 +6,102 @@ const profile = require("./profile");
 module.exports = {
   possibleKnow: async () => {
     try {
-      let res = await profile.download();
-      let recList = [];
-      if (res.code !== 2) {
-        return recList;
-      } else {
-        let userInfo = res.data;
-        let requestArray = [
-          {
-            text: userInfo.enterSchoolTime.slice(0,4),
-            keyArray: [
-              "enterSchoolTime",
-            ],
-            weight: 4,
-          },
-          {
-            text: userInfo.homeTown.slice(0,3),
-            keyArray: [
-              "homeTown",
-            ],
-            weight: 4
-          },
-          {
-            text: userInfo.institution,
-            keyArray: [
-              "institution",
-            ],
-            weight: 3
-          },
-          {
-            text: userInfo.major,
-            keyArray: [
-              "major",
-            ],
-            weight: 4
-          },
-
-          {
-            text: userInfo.degree,
-            keyArray: [
-              "degree"
-            ],
-            weight: 2,
-          },
-          {
-            text: userInfo.birthDate.slice(0,4),
-            keyArray: [
-              "birthDate",
-            ],
-            weight: 3,
-          },
-        ];
-        for (let item of userInfo.jobArray) {
-          requestArray.push({
-            text: item.job,
-            keyArray: [
-              "job",
-            ],
-            weight: 3
-          }),
-          requestArray.push({
-            text: item.jobStartTime.slice(0,4),
-            keyArray: [
-              "jobStartTime",
-            ],
-            weight: 2
-          })
-        }
-        res = await wx.cloud.callFunction({
-          name: "search",
-          data: {
-            text: "recommend",
-            start: 0,
-            pageLength: 9,
-            requestArray,
-            collection: "profile"
-          }
-        });
-        if (res.result.code === 1) {
-          recList = res.result.searchRes;
-          let openid = app.globalData.openid;
-          for (let i=0; i<recList.length; i++) {
-            if (recList[i]._openid === openid) {
-              recList.splice(i,1);
+      let curUserProfile = await profile.check();
+      let requestArray = [], recList = [],
+        arrayNames = ["jobArray", "contactArray", "degreeArray"];
+      for (let item in curUserProfile) {
+        let text, value;
+        switch(item) {
+          case "address":
+            text = curUserProfile[item];
+            value = 4;
+            break;
+          case "homeTown":
+            text = curUserProfile[item].slice(0, 3);
+            value = 4;
+            break;
+          case "birthDate":
+            text = curUserProfile[item].slice(0, 4);
+            value = 3;
+            break;
+          case "jobArray":
+            for (let job of curUserProfile.jobArray) {
+              for (let subItem in job) {
+                let text, value;
+                switch(subItem) {
+                  case "job":
+                  case "institution":
+                    text = job[subItem];
+                    value = 3;
+                    break;
+                  case "jobStartTime":
+                    text = job[subItem].slice(0, 4);
+                    value = 3;
+                    break;
+                }
+                if (text !== undefined && value !== undefined) {
+                  requestArray.push({ text,
+                    weight: [{ value, keyArray: [subItem] }]
+                  });
+                }
+              }
             }
-          }
-        } 
-        return recList;
+            break;
+          case "degreeArray":
+            for (let degree of curUserProfile.degreeArray) {
+              for (let subItem in degree) {
+                let text, value;
+                switch(subItem) {
+                  case "degree":
+                  case "major":
+                  case "school":
+                    text = degree[subItem];
+                    value = 4;
+                    break;
+                  case "headteacher":
+                    text = degree[subItem];
+                    value = 3;
+                    break;
+                  case "degreeStartTime":
+                    text = degree[subItem].slice(0, 4);
+                    value = 3;
+                    break;
+                }
+                if (text !== undefined && value !== undefined) {
+                  requestArray.push({ text,
+                    weight: [{ value, keyArray: [subItem] }]
+                  });
+                }
+              }
+            }
+            break;
+        }
+        if (arrayNames.indexOf(item) < 0 && text !== undefined && value !== undefined) {
+          requestArray.push({ text,
+            weight: [{ value, keyArray: [item] }]
+          });
+        }
       }
+
+      let res = await wx.cloud.callFunction({
+        name: "search",
+        data: {
+          start: 0,
+          pageLength: 9,
+          requestArray,
+          collection: "profile-new"
+        }
+      });
+      if (res.result.code === 1) {
+        recList = res.result.searchRes;
+        let openid = app.globalData.openid;
+        for (let i=0; i<recList.length; i++) {
+          if (recList[i]._openid === openid) {
+            recList.splice(i,1);
+          }
+        }
+      } 
+      return recList;
       
     } catch (error) {
       console.log(error);
@@ -102,42 +110,41 @@ module.exports = {
   },
   same: async (sameKey) => {
     try {
-      let res = await profile.download();
-      let recList = [];
-      if (res.code !== 2) {
-        return recList;
-      } else {
-        let userInfo = res.data;
-        let requestArray = [
-          {
-            text: userInfo[sameKey].slice(0,4),
-            keyArray: [
-              sameKey,
-            ],
-            weight: 4,
-          },
-        ]
-        res = await wx.cloud.callFunction({
-          name: "search",
-          data: {
-            text: "recommend",
-            start: 0,
-            pageLength: 10,
-            requestArray,
-            collection: "profile"
-          }
+      let curUserProfile = await profile.check();
+      let recList = [], requestArray = [];
+      for (let degree of curUserProfile.degreeArray) {
+        let text, value;
+        if (sameKey == "degreeStartTime") {
+          text = degree[sameKey].slice(0, 4);
+          value = 4;
+        } else {
+          text = degree[sameKey];
+          value = 4;
+        }
+        requestArray.push({ text,
+          weight: [{ value, keyArray: [sameKey] }]
         });
-        if (res.result.code === 1) {
-          recList = res.result.searchRes;
-          let openid = app.globalData.openid;
-          for (let i=0; i<recList.length; i++) {
-            if (recList[i]._openid === openid) {
-              recList.splice(i,1);
-            }
-          }
-        } 
-        return recList;
       }
+
+      let res = await wx.cloud.callFunction({
+        name: "search",
+        data: {
+          start: 0,
+          pageLength: 10,
+          requestArray,
+          collection: "profile-new"
+        }
+      });
+      if (res.result.code === 1) {
+        recList = res.result.searchRes;
+        let openid = app.globalData.openid;
+        for (let i=0; i<recList.length; i++) {
+          if (recList[i]._openid === openid) {
+            recList.splice(i,1);
+          }
+        }
+      } 
+      return recList;
     } catch (error) {
       console.log(error);
       return recList;

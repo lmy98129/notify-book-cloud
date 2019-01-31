@@ -6,196 +6,209 @@ cloud.init()
 const db = cloud.database();
 const _ = db.command;
 
-const increase = (rank, keyFound, item, weight, key) => {
-  if (rank[item._id] === undefined) {
-    rank[item._id] = 0
-  } 
-  rank[item._id] += weight
+const field = { 
+  _id: true,
+  _openid: true,
+  address: true,
+  avatarUrl: true,
+  bgImgUrl: true,
+  birthDate: true,
+  contactArray: true,
+  degreeArray: true,
+  gender: true,
+  homeTown: true,
+  intro: true,
+  jobArray: true,
+  nickName: true,
+  phoneNumber: true,
+  realName: true,
+  wechatId: true,
+};
 
-  if (keyFound[item._id] === undefined) {
-    keyFound[item._id] = [];
+// 增加记录的权重
+const increase = (data, final, weight, key) => {
+  for (item of data) {
+    let i = final.findIndex((x) => x._id === item._id);
+    if (i < 0) {
+      item.rank = weight;
+      item.keyFound = [];
+      item.keyFound.push(key);
+      final.push(item);
+    } else {
+      final[i].weight += weight;
+      final[i].keyFound.push(key);
+    }
   }
-  keyFound[item._id].push(key)
 }
 
-const search = (data, text, keyArray, weight) => {
-  let rank = [], keyFound = [];
-  keyArray.map(key => {
+const search = async (collection, text, weightArray) => {
+  // rank用于计算当前记录的总权重
+  // keyFound用于存储当前记录中涉及的键
+  let final = [];
+  // 先把weightArray中的key提取出来，weightArray[key]为weight值
+  for (key in weightArray) {
+    let query, arrayType;
     switch(key) {
       case "institution":
       case "job":
       case "jobStartTime":
       case "jobEndTime":
-        data.map(item => {
-          if (item.jobArray === undefined) {
-            return;
-          }
-          item.jobArray.map(subItem => {
-            if (subItem[key].indexOf(text) >-1) {
-              increase(rank, keyFound, item, weight, key);
-            }
-          })
-        })
+        arrayType = "jobArray";
         break;
       case "contactType":
       case "content":
-        data.map(item => {
-          if (item.contactArray === undefined) {
-            return;
-          }
-          item.contactArray.map(subItem => {
-            if (subItem[key].indexOf(text) >-1) {
-              increase(rank, keyFound, item, weight, key);
-            }
-          })
-        })
+        arrayType = "contactArray";
+        break;
+      case "degree":
+      case "degreeEndTime":
+      case "degreeStartTime":
+      case "headTeacher":
+      case "major":
+      case "school":
+        arrayType = "degreeArray";
         break;
       default:
-        data.map(item => {
-          let contentStr = "";
-          if (item[key] === undefined) {
-            return;
-          }
-          if (key === "phoneNumber") {
-            contentStr = item[key].toString();
-          } else {
-            contentStr = item[key];
-          }
-          if (contentStr.indexOf(text) >-1 ) {
-            increase(rank, keyFound, item, weight, key);
-          }
-        })
         break;
     }
-  })
-  return {rank, keyFound};
+    // 拼装查询条件query
+    if (arrayType !== undefined && arrayType !== "") {
+      query = {
+        [arrayType]: {
+          $elemMatch: {
+            [key]: db.RegExp({
+              regexp: text,
+              options: "im",
+            })
+          }
+        },
+        authStatus: "authorized", 
+        isProfileEmpty: false
+      }
+    } else {
+      query = {
+        [key]: db.RegExp({
+          regexp: text,
+          options: "im",
+        }),
+        authStatus: "authorized", 
+        isProfileEmpty: false
+      }
+    }
+    // 进行实际查询
+    let skip = 0, searchRes = [];
+    let totalRes = await db.collection(collection).where(query).count();
+    total = totalRes.total;
+    console.log("total: ", total);
+    // 若总数已经超过100
+    if (total >= 100) {
+      while (skip <= total) {
+        let cloudRes = await db.collection(collection).
+          skip(skip).limit(100).field(field).where(query).get();
+        if (cloudRes.data !== undefined) {
+          searchRes = searchRes.concat(cloudRes.data);
+          skip += 100;
+        }
+      }
+      console.log("final length: ", searchRes.length);
+    // 若总数未超过100
+    } else if (total > 0){
+      let cloudRes = await db.collection(collection)
+        .limit(100).field(field).where(query).get();
+      if (cloudRes.data !== undefined) {
+        searchRes = searchRes.concat(cloudRes.data);
+      }
+    }
+    // 如果没有出现空且长度大于0，增加权重
+    if (searchRes.length > 0) {
+      increase(searchRes, final, weightArray[key], key);
+    }
+  }
+  
+  return final;
 }
 
+// 合并不同查询内容的权重
 const combine = (res1, res2) => {
-  let rank1 = res1.rank, rank2 = res2.rank, 
-  keyFound1 = res1.keyFound, keyFound2 = res2.keyFound;
-
-  for (item in rank2) {
-    if (rank1[item]) {
-      rank1[item] += rank2[item]
+  for (index2 in res2) {
+    let index1 = res1.findIndex((x) => x._id === res2[index2]._id);
+    // 若res2中有res1中已经存在的，则更新
+    if (index1 >= 0) {
+      res1[index1].keyFound = res1[index1].keyFound.concat(res2[index2].keyFound);
+      res1[index1].rank += res2[index2].rank;
+    // 若res2中有res1中不存在的，则增加
     } else {
-      rank1[item] = rank2[item]
+      res1.push(res2[index2]);
     }
+    // res1、res2中出现有/无的状态组合有4种，上面有三种
+    // 其余的逻辑是：res1有而res2没有的，保持不变；res1和res2中均没有的，不用考虑
   }
 
-  for (item in keyFound2 ) {
-    if (keyFound1[item]) {
-      keyFound1[item] = keyFound1[item].concat(keyFound2[item])
-    } else {
-      keyFound1[item] = keyFound2[item]
-    }
-  }
-
-  return {rank: rank1, keyFound: keyFound1};
+  return res1;
 }
 
+const searchMain = async (collection, requestArray) => {
+  // 查找
+  let searchRes = [];
 
-const searchProfile = (data, requestArray) => {
-  let searchRes = [], final = [];
-  for (i in requestArray) {
-    searchRes.push(search(
-      data, requestArray[i].text, 
-      requestArray[i].keyArray, 
-      requestArray[i].weight
-    ));
+  console.time("search");
+  for (request of requestArray) {
+    let weightArray = [];
+    let { text, weight } = request;
+    text = text.replace(/[\_\,\!\|\~\`\(\)\#\$\%\^\&\*\{\}\:\;\"\L\<\>\?]/g, '');
+    // 发送了空的内容，就不调用数据库了
+    if (text === "" || text === "-") {
+      continue;
+    }
+    // 把所有的weight都转化成key-value形式
+    for (item of weight) {
+      let { value, keyArray } = item;
+      for (key of keyArray) {
+        weightArray[key] = value;
+      }
+    }
+
+    searchRes.push(await search(collection ,text, weightArray));
   }
+  console.timeEnd("search");
 
+  console.time("combine");
+  // 合并不同内容查找的结果
   let combineRes = searchRes[0]
   for (let i=1; i<searchRes.length; i++) {
     combineRes = combine(searchRes[i], combineRes);
   }
+  console.timeEnd("combine");
 
-  for (i in data) {
-    for (item in combineRes.keyFound) {
-      if (data[i]._id === item) {
-        let tmpItem = data[i];
-        tmpItem.keyFound = combineRes.keyFound[item];
-        tmpItem.rank = combineRes.rank[item];
-        final.push(tmpItem);
-      }
-    }
-  }
-
-  final.sort((x, y) => {
+  // 按照权重排个序
+  combineRes.sort((x, y) => {
     return y.rank - x.rank;
   });
 
-  return final;
-}
-
-const sleep = (numberMillis) => { 
-  var now = new Date(); 
-  var exitTime = now.getTime() + numberMillis; 
-  while (true) { 
-    now = new Date(); 
-    if (now.getTime() > exitTime) 
-    return; 
-  } 
+  return combineRes;
 }
 
 
 // 云函数入口函数
 exports.main = async (event, context) => {
+  const wxContext = cloud.getWXContext();
+
   try {
-    let allProfile = [], skip = 0, 
-      text = event.text, start = event.start, limit = event.limit, 
-      requestArray = event.requestArray, pageLength = event.pageLength,
-      collection = event.collection;
-    let res = await db.collection(collection).count();
-    let total = res.total;
-    while(skip <= total) {
-      res = await db.collection(collection).skip(skip).limit(100).get();
-      allProfile = allProfile.concat(res.data);
-      skip += 100;
-    }
+    let { start, limit, requestArray, pageLength, collection } = event;
 
-    text = text.replace(/[\_\,\!\|\~\`\(\)\#\$\%\^\&\*\{\}\:\;\"\L\<\>\?]/g, '');
-
-    if (text === "" || text === "-") {
-      return {
-        code: 1,
-        searchRes: []
-      }
-    }
-
-    let searchRes = 
-    searchProfile(allProfile, requestArray);
+    let searchRes = await searchMain(collection, requestArray);
 
     total = searchRes.length;
 
-    if (total > pageLength && start != undefined) {
+    // 这个是用来分页用的
+    if (pageLength !== undefined && start != undefined && total > pageLength ) {
       searchRes = searchRes.slice(start, start + pageLength);
       start += pageLength;
     }
 
+    // limit是用来选取前n个的
     if (limit != undefined) {
       searchRes = searchRes.slice(0, limit);
     }
-
-    
-    let avatar = [];
-    for (let i=0; i<searchRes.length; i++) {
-      res = await db.collection("avatar").where({
-        _openid: searchRes[i]._openid
-      }).get();
-      avatar.push(res.data[0]);
-    }
-
-    for (item in searchRes) {
-      for (subItem in avatar) {
-        if (avatar[subItem] === undefined) {
-          continue;
-        } else if (avatar[subItem]._openid === searchRes[item]._openid) {
-          searchRes[item].avatarUrl = avatar[subItem].avatarUrl
-        }
-      }
-    }
-
 
     return {
       code: 1,
@@ -203,12 +216,13 @@ exports.main = async (event, context) => {
       start,
       total
     }
-
+    
   } catch (error) {
     console.log(error);
     return {
       code: -1,
-      err: error
+      err: error.message
     }
   }
+
 }

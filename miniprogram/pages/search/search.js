@@ -118,74 +118,44 @@ Page({
       let requestArray = [
         {
           text: value,
-          keyArray: [
-            "enterSchoolTime",
-            "leaveSchoolTime",
-            "homeTown",
-            "institution",
-            "realName",
-            "major",
-            "phoneNumber",
-            "wechatId",
-            "intro",
-            "job",
-            "content",
-            "degree"
-          ],
-          weight: 4
-        },
-        {
-          text: value,
-          keyArray: [
-            "birthDate",
-            "jobStartTime",
-            "nickName",
-            "address"
-          ],
-          weight: 1
+          weight: [
+            {
+              value: 4,
+              keyArray: [
+                "degreeStartTime",
+                "degreeEndTime",
+                "homeTown",
+                "institution",
+                "realName",
+                "major",
+                "phoneNumber",
+                "wechatId",
+                "intro",
+                "job",
+                "content",
+                "degree",
+                "school",
+                "headteacher",
+              ]
+            },
+            {
+              value: 1,
+              keyArray: [
+                "birthDate",
+                "jobStartTime",
+                "nickName",
+                "address",
+                "content",
+              ]
+            }
+          ]
         }
-      ];
-      // requestArray = [
-      //   {
-      //     text: value,
-      //     weight: [
-      //       {
-      //         value: 4,
-      //         keyArray: [
-      //           "enterSchoolTime",
-      //           "leaveSchoolTime",
-      //           "homeTown",
-      //           "institution",
-      //           "realName",
-      //           "major",
-      //           "phoneNumber",
-      //           "wechatId",
-      //           "intro",
-      //           "job",
-      //           "content",
-      //           "degree"
-      //         ]
-      //       },
-      //       {
-      //         value: 1,
-      //         keyArray: [
-      //           "birthDate",
-      //           "jobStartTime",
-      //           "nickName",
-      //           "address"
-      //         ]
-      //       }
-      //     ]
-      //   },
-      // ]
+      ]
       let res = await wx.cloud.callFunction({
         name: "search",
         data: {
-          text: value,
-          start: 0,
-          pageLength: 50,
           requestArray,
-          collection: "profile"
+          collection: "profile-new"
         }
       });
       wx.hideLoading();

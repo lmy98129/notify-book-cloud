@@ -83,11 +83,11 @@
                           <block wx:if="{{item === 'degree'}}">
                             学历
                           </block>
-                          <block wx:if="{{item === 'enterSchoolTime'}}">
-                            入校时间
+                          <block wx:if="{{item === 'degreeStartTime'}}">
+                            入学时间
                           </block>
-                          <block wx:if="{{item === 'leaveSchoolTime'}}">
-                            离校时间
+                          <block wx:if="{{item === 'degreeEndTime'}}">
+                            毕业时间
                           </block>
                           <block wx:if="{{item === 'intro'}}">
                             自我介绍

@@ -65,70 +65,70 @@ const getUserInfoNew = async (that) => {
           console.log("获取用户权限成功：用户为普通用户");
         }
 
-        // 消息列表、推荐列表（待重构）
-        // Promise.all([(async () => {
-        //   let code = await notify.checkDownload();
-        //   if (code == 1 && wx.getStorageSync("unReadArray").length > 0) {
-        //    that.setData({
-        //      isNotifyRedDot: true,
-        //      isRedDot: true
-        //    });
-        //  } else {
-        //    that.setData({
-        //      isNotifyRedDot: false,
-        //    })
-        //  }
-        // })(),
-        // (async () => {
-        //   let res = await rec.possibleKnow();
-        //   wx.setStorageSync("possibleKnowList", res);
-        //   let realLength = res.length;
-        //   if (res.length <= 9) {
-        //       for (var i=res.length; i<9; i++) {
-        //         res[i] = {avatarUrl: "/images/user-unlogin.png"}
-        //       }
-        //   }
-        //   that.setData({
-        //     possibleKnowList: res,
-        //     possibleKnowListLength: realLength
-        //   })
-        // })(),
-        // (async () => {
-        //   let res = await rec.same("enterSchoolTime");
-        //   wx.setStorageSync("sameYearRecList", res);                
-        //   that.setData({
-        //     sameYearRecList: res
-        //   })
-        //   if (res.length < 3) {
-        //     let tmpArray = [];
-        //     for (let i=0; i<3-res.length; i++) {
-        //       tmpArray.push("1");
-        //     }
-        //     that.setData({
-        //       sameYearFixList: tmpArray
-        //     })
-        //   }
-        // })(),
-        // (async () => {
-        //   let res = await rec.same("major");
-        //   wx.setStorageSync("sameMajorRecList", res);                
-        //   that.setData({
-        //     sameMajorRecList: res
-        //   })
-        //   if (res.length < 3) {
-        //     let tmpArray = [];
-        //     for (let i=0; i<3-res.length; i++) {
-        //       tmpArray.push("1");
-        //     }
-        //     that.setData({
-        //       sameMajorFixList: tmpArray
-        //     })
-        //   }
-        // })(),]).then().catch(e => {
-        //   msg = e.message;
-        //   console.log("获取用户资料出错：" + msg);
-        //   toast("获取用户资料出错", "none");
-        // })
+        const possibleKnow = new Promise(async (resolve) => {
+          try {
+            let possibleKnowList = await rec.possibleKnow();
+            wx.setStorage({key: "possibleKnowList", data: possibleKnowList});
+            let realLength = possibleKnowList.length;
+            if (realLength <= 9) {
+              for (var i=realLength; i<9; i++) {
+                possibleKnowList[i] = {avatarUrl: "/images/user-unlogin.png"};
+              }
+            }
+            that.setData({
+              possibleKnowList,
+              possibleKnowListLength: realLength
+            })
+          } catch (error) {
+            console.log(error.message);
+          }
+        });
+
+        const sameYearRecList = new Promise(async (resolve) => {
+          try {
+            let sameYearRecList = await rec.same("degreeStartTime");
+            wx.setStorageSync("sameYearRecList", sameYearRecList); 
+            that.setData({
+              sameYearRecList
+            })
+            let realLength = sameYearRecList.length;
+            if (realLength < 3) {
+              for (let i=0; i<3-realLength; i++) {
+                sameYearRecList.push("1");
+              }
+              that.setData({
+                sameYearFixList: sameYearRecList
+              })
+            }
+          } catch (error) {
+            console.log(error.message);
+          }
+        });
+
+        const sameMajorRecList = new Promise(async (resolve) => {
+          try {
+            let sameMajorRecList = await rec.same("major");
+            wx.setStorageSync("sameMajorRecList", sameMajorRecList); 
+            that.setData({
+              sameMajorRecList
+            })
+            let realLength = sameMajorRecList.length;
+            if (realLength < 3) {
+              for (let i=0; i<3-realLength; i++) {
+                sameMajorRecList.push("1");
+              }
+              that.setData({
+                sameMajorFixList: sameMajorRecList
+              })
+            }
+          } catch (error) {
+            console.log(error.message);
+          }
+        });
+
+        let parallel = [possibleKnow, sameYearRecList, sameMajorRecList];
+
+        Promise.all(parallel);
 
         let { avatarUrl, nickName, 
           bgImgUrl, isProfileEmpty } = curUserProfile;
