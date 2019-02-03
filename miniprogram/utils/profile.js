@@ -286,6 +286,7 @@ const decode = (tmpUserInfo, that) => {
             degree: {},
             school: {},
             major: {},
+            className: {},
             headteacher: {},
             degreeStartTime: {},
             degreeEndTime: {},

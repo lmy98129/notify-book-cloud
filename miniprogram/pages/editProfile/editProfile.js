@@ -38,20 +38,18 @@ Page({
       jobStartTime: "请选择入职时间",
       jobEndTime: "请选择离职时间"
     }],
-    contactArray: [{
-      contactType: "",
-      content: ""
-    }],
+    contactArray: [],
     // intro: "",
     degreeArray: [{
       degree: "请选择学历",
       school: "",
       major: "",
+      className: "",
       headteacher: "",
       degreeStartTime: "请选择入学时间",
       degreeEndTime: "请选择毕业时间",
     }],
-    degreeTypeArray: ["本科", "硕士", "博士", "博士后", "其他"],
+    degreeTypeArray: ["本科", "硕士", "博士", "博士后", "专科", "其他"],
     pagePos: "请向上滑动页面继续填写",
     canSubmit: false
   },
@@ -268,6 +266,7 @@ Page({
       case "headteacher":
       case "contactType":
       case "content":
+      case "className":
         newUserInfo[arrayType][index][inputType] = value;
         // NOTE: 深拷贝中常用的concat和slice对多维数组以及对象数组是无效的，所以只能用JSON来解决问题了，
         tmpArray = JSON.parse(JSON.stringify(this.data[arrayType]));
@@ -365,6 +364,7 @@ Page({
         case "nickName":
         case "realName":
         case "address":
+        case "phoneNumber":
           if (newUserInfo[item] === undefined || newUserInfo[item] === "") {
             confirmOnly(initValue[item].name + "为空，此项为必填项");
             return;
@@ -424,6 +424,7 @@ Page({
               switch(subItem) {
                 case "school":
                 case "major":
+                case "className":
                   if (tmpDegreeArray[i][subItem] === undefined || tmpDegreeArray[i][subItem] === "") {
                     confirmOnly("“学历信息" + (i + 1) + "”的" + initValue[subItem].name + "为空，此项为必填项");
                     return;

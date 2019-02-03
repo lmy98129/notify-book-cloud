@@ -36,18 +36,12 @@
                   <profile-item title="{{item.degree.title}}" content="{{item.degree.content}}" class="profile-item-wrapper"></profile-item>
                   <profile-item title="{{item.school.title}}" content="{{item.school.content}}" class="profile-item-wrapper"></profile-item>
                   <profile-item title="{{item.major.title}}" content="{{item.major.content}}" class="profile-item-wrapper"></profile-item>
+                  <profile-item title="{{item.className.title}}" content="{{item.className.content}}" class="profile-item-wrapper"></profile-item>
                   <profile-item title="{{item.headteacher.title}}" content="{{item.headteacher.content}}" class="profile-item-wrapper"></profile-item>
                   <profile-item title="{{item.degreeStartTime.title}}" content="{{item.degreeStartTime.content}}" class="profile-item-wrapper"></profile-item>
                   <profile-item title="{{item.degreeEndTime.title}}" content="{{item.degreeEndTime.content}}" class="profile-item-wrapper"></profile-item>
                 </view>
-              </block>  
-
-              <view class="item-wrapper">
-                <view class="item-title" wx:if="{{contactArray.length > 0}}">联系方式</view>
-                <block wx:for="{{contactArray}}" wx:key="{{index}}">
-                  <profile-item title="{{item.contactType.content}}" content="{{item.content.content}}" class="profile-item-wrapper"></profile-item>
-                </block>
-              </view>
+              </block>
           
               <block wx:for="{{jobArray}}" wx:key="{{index}}">
                 <view class="item-wrapper">
@@ -58,6 +52,13 @@
                   <profile-item title="{{item.jobEndTime.title}}" content="{{item.jobEndTime.content}}" class="profile-item-wrapper"></profile-item>
                 </view>
               </block>  
+
+              <view class="item-wrapper" wx:if="{{contactArray.length > 0}}">
+                <view class="item-title">其他联系方式</view>
+                <block wx:for="{{contactArray}}" wx:key="{{index}}">
+                    <profile-item title="{{item.contactType.content}}" content="{{item.content.content}}" class="profile-item-wrapper"></profile-item>
+                </block>
+              </view>
 
             </view>
           </block>

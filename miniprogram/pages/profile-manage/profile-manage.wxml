@@ -1,0 +1,40 @@
+<!--miniprogram/pages/profile-manage/profile-manage.wxml-->
+<top-widget mode="title" title="校友资料管理">
+</top-widget>
+
+<view class="main">
+  <view class="manage-row">
+    <view class="row-head">显示列项：</view>
+    <view class="manage-add" bind:tap="showSelectColumn">+</view>
+  </view>
+
+  <view class="table">
+    <view class="tr bg-w">
+      <view class="th">序号</view>
+
+      <view class="th">真实姓名</view>
+      <view class="th">性别</view>
+      <view class="th">学历</view>
+      <view class="th">毕业时间</view>
+
+      <view class="th">更多</view>
+    </view>
+    <block wx:for="{{curPageProfiles}}" wx:key="{{index}}">
+      <view class="tr {{index % 2 == 0 ? 'bg-g' : ''}}">
+        <view class="td">{{index + 1}}</view>
+        <view class="td">{{item.realName}}</view>
+        <view class="td">{{item.gender}}</view>
+        <view class="td">{{item.degreeArray[item.degreeArray.length - 1].degree}}</view>
+        <view class="td">{{item.degreeArray[item.degreeArray.length - 1].degreeEndTime}}</view>
+      </view>
+    </block>
+  </view>
+</view>
+
+<modal hidden="{{isSelectColumnModalHidden}}" title="选择显示的列项" no-cancel="{{true}}" bindconfirm="selectColumn">
+  <checkbox-group class="checkbox-list">
+    <label wx:for="{{[{name: '真实姓名', value: true}, {name: '性别', value: false}]}}" wx:key="{{item.id}}" class="checkbox">
+      <checkbox value="{{item.value}}" /> {{item.name}}
+    </label>
+  </checkbox-group>
+</modal>

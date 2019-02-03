@@ -1,0 +1,47 @@
+/* miniprogram/pages/profile-manage/profile-manage.wxss */
+.table {
+  border: 0px solid darkgray;
+}
+.tr {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  height: 3rem;
+  align-items: center;
+}
+.td {
+  width:40%;
+  justify-content: center;
+  text-align: center;
+  font-size: .8rem;
+}
+.bg-w{
+  background: snow;
+}
+.bg-g{
+  background: #E6F3F9;
+}
+.th {
+  width: 40%;
+  justify-content: center;
+  background: rgb(81, 81, 81);
+  color: #fff;
+  display: flex;
+  height: 3rem;
+  align-items: center;
+  font-size: .8rem;
+}
+
+.checkbox-list {
+  display: flex;
+  flex-direction: column;
+  width: 66%;
+  margin-left: auto;
+  margin-right: auto;
+
+}
+
+.checkbox-list .checkbox {
+  margin-top: 10rpx;
+}
+

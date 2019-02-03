@@ -20,23 +20,17 @@
 
     <profile-input title="现住址" place-holder="请输入您的现住址" value="{{address}}" bind:input="inputHandler" input-type="address" />
 
-    <!-- <profile-input title="学历" mode="picker" picker-mode="selector" picker-range="{{degreeArray}}" value="{{degree}}" bind:input="inputHandler" input-type="degree" bind:del="pickerDel"/> -->
-
-    <!-- <profile-input title="专业" place-holder="请输入您的专业" value="{{major}}" bind:input="inputHandler" input-type="major" /> -->
-
-    <!-- <profile-input title="入校时间" mode="picker" picker-fields="month" value="{{enterSchoolTime}}" bind:input="inputHandler" input-type="enterSchoolTime" bind:del="pickerDel"/> -->
-
-    <!-- <profile-input title="离校时间" asterisk="{{false}}" mode="picker" picker-fields="month" value="{{leaveSchoolTime}}" bind:input="inputHandler" input-type="leaveSchoolTime" bind:del="pickerDel"/> -->
-
     <block wx:for="{{degreeArray}}" wx:key="{{index}}">
       <view class="item-wrapper">
         <view class="item-title">学历信息 {{index + 1}}</view>
 
         <profile-input title="学历" mode="picker" picker-mode="selector" picker-range="{{degreeTypeArray}}" value="{{item.degree}}" bind:input="inputHandler" input-type="degree" index="{{index}}" array-type="degreeArray" bind:del="pickerDel"/>
-        
+
         <profile-input title="学院" place-holder="请输入学院名称" value="{{item.school}}" bind:input="inputHandler" input-type="school" index="{{index}}" array-type="degreeArray" />
 
         <profile-input title="专业" place-holder="请输入专业名称" value="{{item.major}}" bind:input="inputHandler" input-type="major" index="{{index}}" array-type="degreeArray" />
+        
+        <profile-input title="班级" place-holder="请输入班级名称" value="{{item.className}}" bind:input="inputHandler" input-type="className" index="{{index}}" array-type="degreeArray" />
 
         <profile-input title="班主任" asterisk="{{false}}" place-holder="请输入班主任名字" value="{{item.headteacher}}" bind:input="inputHandler" input-type="headteacher" index="{{index}}" array-type="degreeArray" />
 
@@ -74,6 +68,10 @@
       <button class="item add-wrap add-btn submit-no-style" data-type="jobArray" bindtap="addBtn" form-type="submit">+ 点击添加工作职务</button>
     </form>
 
+    <profile-input title="手机号" place-holder="推荐填写微信绑定的号码" value="{{phoneNumber}}" bind:input="inputHandler" input-type="phoneNumber"/>
+
+    <profile-input title="微信号" asterisk="{{false}}" place-holder="请输入微信号（非昵称）" value="{{wechatId}}" bind:input="inputHandler" input-type="wechatId"/>
+
     <block wx:for="{{contactArray}}" wx:key="{{index}}">
       <view class="item-wrapper">
         <view class="item-title">联系方式 {{index + 1}}</view>
@@ -83,21 +81,18 @@
         <profile-input title="内容" place-holder="请输入联系方式内容" value="{{item.content}}" bind:input="inputHandler" input-type="content" index="{{index}}" array-type="contactArray"/>
         
         <form bindsubmit="getFormid" report-submit="true">
-          <button wx:if="{{index !== 0 || contactArray.length !== 1}}" class="del-btn submit-no-style" data-type="contactArray" bindtap="delBtn" data-index="{{index}}" form-type="submit">删除</button>
+          <button class="del-btn submit-no-style" data-type="contactArray" bindtap="delBtn" data-index="{{index}}" form-type="submit">删除</button>
         </form>
         
       </view>
     </block>
 
     <form bindsubmit="getFormid" report-submit='true'>
-      <button class="item add-wrap add-btn submit-no-style" data-type="contactArray" bindtap="addBtn" form-type="submit">+ 点击添加联系方式</button>
+      <button class="item add-wrap add-btn submit-no-style" data-type="contactArray" bindtap="addBtn" form-type="submit">+ 点击添加其他联系方式</button>
     </form>
 
-    <profile-input title="微信号" asterisk="{{false}}" place-holder="请输入微信号（非昵称）" value="{{wechatId}}" bind:input="inputHandler" input-type="wechatId"/>
 
-    <profile-input title="手机号" asterisk="{{false}}" place-holder="推荐填写微信绑定的号码" value="{{phoneNumber}}" bind:input="inputHandler" input-type="phoneNumber"/>
-
-    <view class="hint"><text>1. 标注<text class="asterisk">*</text>的选项为必填项。\n2. 对于一些弹出选择框的选项，可以通过长按该选项右侧内容的方式清空原有的输入内容。\n3. 点击“修改头像”并上传的新头像将立即生效，无需点击“提交”按钮。\n4. 如需撤销当前更改，请退出本页面后重新操作。</text></view>
+    <view class="hint"><text>1. 标注<text class="asterisk">*</text>的选项为必填项。\n2. 对于一些弹出选择框的选项，可以通过长按该选项右侧框中内容的方式清空原有的输入内容。\n3. 点击“修改头像”并上传的新头像将立即生效，无需点击“提交”按钮。\n4. 如需撤销当前更改，请退出本页面后重新操作。</text></view>
 
   </scroll-view>
   <form bindsubmit="getFormid" report-submit='true'>

@@ -55,6 +55,9 @@ const initValue = {
   major: {
     name: "专业"
   },
+  className: {
+    name: "班级"
+  },
   degreeStartTime: {
     name: "入学时间",
     default: "请选择入学时间"
@@ -94,6 +97,7 @@ const userInfo = {
     degree: "请选择学历",
     school: "",
     major: "",
+    className: "",
     headteacher: "",
     degreeStartTime: "请选择入学时间",
     degreeEndTime: "请选择毕业时间",
