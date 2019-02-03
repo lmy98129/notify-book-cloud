@@ -95,6 +95,12 @@
                           <block wx:if="{{item === 'phoneNumber'}}">
                             手机号
                           </block>
+                          <block wx:if="{{item === 'className'}}">
+                            班级
+                          </block>
+                          <block wx:if="{{item === 'school'}}">
+                            学院
+                          </block>
                         </view>
                       </block>
                     </block>

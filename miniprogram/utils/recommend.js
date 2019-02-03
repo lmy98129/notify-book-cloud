@@ -55,6 +55,7 @@ module.exports = {
                   case "degree":
                   case "major":
                   case "school":
+                  case "className":
                     text = degree[subItem];
                     value = 4;
                     break;

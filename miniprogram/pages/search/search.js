@@ -128,6 +128,7 @@ Page({
                 "institution",
                 "realName",
                 "major",
+                "className",
                 "phoneNumber",
                 "wechatId",
                 "intro",

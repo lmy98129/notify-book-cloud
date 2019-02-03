@@ -65,6 +65,7 @@ const search = async (collection, text, weightArray) => {
       case "headTeacher":
       case "major":
       case "school":
+      case "className":
         arrayType = "degreeArray";
         break;
       default:
