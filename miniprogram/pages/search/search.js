@@ -155,6 +155,7 @@ Page({
       let res = await wx.cloud.callFunction({
         name: "search",
         data: {
+          $url: "search",
           requestArray,
           collection: "profile-new"
         }

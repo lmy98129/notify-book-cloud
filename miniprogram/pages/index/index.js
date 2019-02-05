@@ -1,6 +1,5 @@
 //index.js
 const app = getApp()
-const localData = require("../../test/local-data");
 const sys = require("../../utils/system");
 const login = require("../../utils/login");
 const formid = require("../../utils/formid");

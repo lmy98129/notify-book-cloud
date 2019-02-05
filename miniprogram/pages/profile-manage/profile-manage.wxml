@@ -4,37 +4,54 @@
 
 <view class="main">
   <view class="manage-row">
-    <view class="row-head">显示列项：</view>
+    <view class="row-head">显示列项</view>
     <view class="manage-add" bind:tap="showSelectColumn">+</view>
   </view>
 
-  <view class="table">
-    <view class="tr bg-w">
-      <view class="th">序号</view>
-
-      <view class="th">真实姓名</view>
-      <view class="th">性别</view>
-      <view class="th">学历</view>
-      <view class="th">毕业时间</view>
-
-      <view class="th">更多</view>
-    </view>
-    <block wx:for="{{curPageProfiles}}" wx:key="{{index}}">
-      <view class="tr {{index % 2 == 0 ? 'bg-g' : ''}}">
-        <view class="td">{{index + 1}}</view>
-        <view class="td">{{item.realName}}</view>
-        <view class="td">{{item.gender}}</view>
-        <view class="td">{{item.degreeArray[item.degreeArray.length - 1].degree}}</view>
-        <view class="td">{{item.degreeArray[item.degreeArray.length - 1].degreeEndTime}}</view>
+  <view class="section section_gap">
+    <scroll-view class="table" scroll-x>
+      <view class="table-inner">
+        <view class="thead" style='width: {{bodyWidth + 20}}px'>
+          <view class='th' wx:for="{{rows}}" wx:key="{{index}}" wx:for-item="col">
+            <view class='content' style="width: {{columnInfo[col.key]}}px">{{col.col}}</view>
+          </view>
+        </view>
+        <scroll-view id='table-body' style='width: {{bodyWidth + 20}}px' scroll-y>
+          <view class="body">
+            <view class='tr' wx:for="{{datas}}" wx:for-index="idx" wx:key="{{idx}}" wx:for-item="profile">
+              <view class='td {{col.key}}' wx:for="{{rows}}" wx:for-index="key" wx:key="{{key}}" wx:for-item="col">
+                <view wx:if="{{col.key === 'gender'}}" class='content' style="width: {{columnInfo[col.key]}}px">
+                  {{profile[col.key] <= 0 ? '未知': profile[col.key] == 1 ? '男' : '女'}}
+                </view> 
+                <view wx:elif="{{col.key === 'degreeArray'}}" class='content array' style="width: {{columnInfo[col.key]}}px">
+                  <view wx:for="{{profile[col.key]}}" class="array-item">
+                    {{item.degree}} {{item.major}}
+                  </view>
+                </view>
+                <view wx:elif="{{col.key === 'contactArray'}}" class='content array' style="width: {{columnInfo[col.key]}}px">
+                  <view wx:for="{{profile[col.key]}}" class="array-item">
+                    {{item.contactType}}：{{item.content}}
+                  </view>
+                </view>   
+                <view wx:elif="{{col.key === 'jobArray'}}" class='content array' style="width: {{columnInfo[col.key]}}px">
+                  <view wx:for="{{profile[col.key]}}" class="array-item">
+                    {{item.institution}} {{item.job}}
+                  </view>
+                </view>  
+                <view wx:else class='content' style="width: {{columnInfo[col.key]}}px">{{profile[col.key]}}</view>
+              </view>
+            </view>
+          </view>
+        </scroll-view>
       </view>
-    </block>
+    </scroll-view>
   </view>
 </view>
 
-<modal hidden="{{isSelectColumnModalHidden}}" title="选择显示的列项" no-cancel="{{true}}" bindconfirm="selectColumn">
-  <checkbox-group class="checkbox-list">
-    <label wx:for="{{[{name: '真实姓名', value: true}, {name: '性别', value: false}]}}" wx:key="{{item.id}}" class="checkbox">
-      <checkbox value="{{item.value}}" /> {{item.name}}
+<modal hidden="{{isSelectColumnModalHidden}}" title="选择显示的列项" no-cancel="{{true}}" bindconfirm="hideSelectColumn">
+  <checkbox-group class="checkbox-list" bindchange="selectColumn">
+    <label wx:for="{{selColumns}}" wx:key="{{index}}" class="checkbox">
+      <checkbox value="{{item.key}}" checked="{{item.checked}}" /> {{item.col}}
     </label>
   </checkbox-group>
 </modal>

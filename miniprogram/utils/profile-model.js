@@ -105,7 +105,60 @@ const userInfo = {
   intro: ""
 }
 
+const columnRank = [
+  {
+    key: "realName",
+    col: "真实姓名",
+    checked: true,
+  },
+  {
+    key: "nickName",
+    col: "昵称",
+    checked: true
+  },
+  {
+    key: "gender",
+    col: "性别",
+    checked: true
+  },
+  {
+    key: "degreeArray",
+    col: "学历信息",
+    checked: true
+  },
+  {
+    key: "phoneNumber",
+    col: "手机号",
+    checked: true
+  },
+  {
+    key: "wechatId",
+    col: "微信号",
+  },
+  {
+    key: "contactArray",
+    col: "联系方式"
+  },
+  {
+    key: "jobArray",
+    col: "工作职务"
+  },
+  {
+    key: "birthDate",
+    col: "生日"
+  },
+  {
+    key: "homeTown",
+    col: "籍贯"
+  },
+  {
+    key: "address",
+    col: "现住址"
+  },
+]
+
 module.exports = {
   initValue,
   userInfo,
+  columnRank
 }

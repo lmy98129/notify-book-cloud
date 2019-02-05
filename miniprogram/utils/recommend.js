@@ -87,6 +87,7 @@ module.exports = {
       let res = await wx.cloud.callFunction({
         name: "search",
         data: {
+          $url: "search",
           start: 0,
           pageLength: 9,
           requestArray,
@@ -130,6 +131,7 @@ module.exports = {
       let res = await wx.cloud.callFunction({
         name: "search",
         data: {
+          $url: "search",
           start: 0,
           pageLength: 10,
           requestArray,

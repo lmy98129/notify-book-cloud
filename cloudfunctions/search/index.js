@@ -1,5 +1,6 @@
 // 云函数入口文件
 const cloud = require('wx-server-sdk')
+const TcbRouter = require("tcb-router");
 
 cloud.init()
 
@@ -191,39 +192,83 @@ const searchMain = async (collection, requestArray) => {
 
 // 云函数入口函数
 exports.main = async (event, context) => {
+  const app = new TcbRouter({ event });
   const wxContext = cloud.getWXContext();
 
-  try {
-    let { start, limit, requestArray, pageLength, collection } = event;
-
-    let searchRes = await searchMain(collection, requestArray);
-
-    total = searchRes.length;
-
-    // 这个是用来分页用的
-    if (pageLength !== undefined && start != undefined && total > pageLength ) {
-      searchRes = searchRes.slice(start, start + pageLength);
-      start += pageLength;
+  app.router("search", async (ctx) => {
+    try {
+      let { start, limit, requestArray, pageLength, collection } = event;
+  
+      let searchRes = await searchMain(collection, requestArray);
+  
+      total = searchRes.length;
+  
+      // 这个是用来分页用的
+      if (pageLength !== undefined && start != undefined && total > pageLength ) {
+        searchRes = searchRes.slice(start, start + pageLength);
+        start += pageLength;
+      }
+  
+      // limit是用来选取前n个的
+      if (limit != undefined) {
+        searchRes = searchRes.slice(0, limit);
+      }
+  
+      ctx.body = {
+        code: 1,
+        searchRes,
+        start,
+        total
+      }
+      
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        code: -1,
+        err: error.message
+      }
     }
+  })
 
-    // limit是用来选取前n个的
-    if (limit != undefined) {
-      searchRes = searchRes.slice(0, limit);
-    }
+  app.router("manage", async (ctx) => {
+    try {
+      let { query, start, limit, pageLength, collection } = event;
+      let searchRes = [], total;
 
-    return {
-      code: 1,
-      searchRes,
-      start,
-      total
+      if (typeof query === "string") {
+        switch(query) {
+          case "ALL":
+            if (start !== undefined && pageLength !== undefined){
+              let countRes = await db.collection(collection).count();
+              total = countRes.total;
+              cloudRes = await db.collection(collection).skip(start).limit(start+pageLength).field(field).get();
+              if (cloudRes.data !== undefined) {
+                searchRes = cloudRes.data;
+              }
+            }
+            break;
+        }
+      }
+
+      if (limit != undefined) {
+        searchRes = searchRes.slice(0, limit);
+      }
+
+      ctx.body = {
+        code: 1,
+        searchRes,
+        start,
+        total
+      }
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        code: -1,
+        err: error.message
+      }
     }
-    
-  } catch (error) {
-    console.log(error);
-    return {
-      code: -1,
-      err: error.message
-    }
-  }
+  })
+
+  return app.serve();
 
 }
