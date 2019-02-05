@@ -36,21 +36,7 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: async function () {
+  onLoad: async function () {
     let downloadRes = await profMan.download();
     switch(downloadRes.code) {
       case 1:
@@ -70,6 +56,20 @@ Page({
     }
     convertCol(tmpSelValue, this);
     this.calc_col_width();
+  },
+
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady: function () {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function () {
+
   },
 
   /**
@@ -157,7 +157,7 @@ Page({
           columnInfo[rows[i].key] = width;
           bodyWidth += width;
         });
-        bodyWidth += 140;
+        bodyWidth += 180;
         this.setData({
           columnInfo,
           columns: Object.keys(columnInfo),
@@ -184,5 +184,11 @@ Page({
     }
     return length * 30
   },
+
+  prevProfile(e) {
+    wx.navigateTo({
+      url: "../profile/profile?mode=profileManageDataTmp&index="+e.target.dataset.index
+    })
+  }
 
 })

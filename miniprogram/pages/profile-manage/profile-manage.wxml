@@ -11,54 +11,63 @@
     </view>
   </view>
 
-  <view class="section section_gap">
-    <scroll-view class="table" scroll-x>
-      <view class="table-inner">
-        <view class="thead" style='width: {{bodyWidth + 20}}px'>
-          <view class='th' wx:for="{{rows}}" wx:key="{{index}}" wx:for-item="col">
-            <view class='content' style="width: {{columnInfo[col.key]}}px">{{col.col}}</view>
-          </view>
-          <view wx:if="{{rows.length > 0}}" class="th th-manage">
-            <view class="content">
-              管理
+  <block wx:if="{{rows.length > 0}}">
+    <view class="section section_gap">
+      <scroll-view class="table" scroll-x>
+        <view class="table-inner">
+          <view class="thead" style='width: {{bodyWidth + 20}}px'>
+            <view class='th' wx:for="{{rows}}" wx:key="{{index}}" wx:for-item="col">
+              <view class='content' style="width: {{columnInfo[col.key]}}px">{{col.col}}</view>
+            </view>
+            <view wx:if="{{rows.length > 0}}" class="th th-manage">
+              <view class="content">
+                管理
+              </view>
             </view>
           </view>
+          <scroll-view id='table-body' style='width: {{bodyWidth + 20}}px' scroll-y>
+            <view class="body">
+              <view class='tr' wx:for="{{datas}}" wx:for-index="idx" wx:key="{{idx}}" wx:for-item="profile">
+                <view class='td {{col.key}}' wx:for="{{rows}}" wx:for-index="key" wx:key="{{key}}" wx:for-item="col">
+                  <view wx:if="{{col.key === 'gender'}}" class='content' style="width: {{columnInfo[col.key]}}px">
+                    {{profile[col.key] <= 0 ? '未知': profile[col.key] == 1 ? '男' : '女'}}
+                  </view> 
+                  <view wx:elif="{{col.key === 'degreeArray'}}" class='content array' style="width: {{columnInfo[col.key]}}px">
+                    <view wx:for="{{profile[col.key]}}" wx:key="{{index}}" class="array-item">
+                      {{item.degree}} {{item.major}}
+                    </view>
+                  </view>
+                  <view wx:elif="{{col.key === 'contactArray'}}" class='content array' style="width: {{columnInfo[col.key]}}px">
+                    <view wx:for="{{profile[col.key]}}" wx:key="{{index}}" class="array-item">
+                      {{item.contactType}}：{{item.content}}
+                    </view>
+                  </view>   
+                  <view wx:elif="{{col.key === 'jobArray'}}" class='content array' style="width: {{columnInfo[col.key]}}px">
+                    <view wx:for="{{profile[col.key]}}" wx:key="{{index}}" class="array-item">
+                      {{item.institution}} {{item.job}}
+                    </view>
+                  </view>  
+                  <view wx:else class='content' style="width: {{columnInfo[col.key]}}px">{{profile[col.key]}}</view>
+                </view>
+                <view class="td td-manage">
+                  <view class="content" wx:if="{{rows.length > 0}}">
+                    <button class="manage-btn" bind:tap="prevProfile" data-index="{{idx}}">查看</button>
+                    <button class="manage-btn" type="primary">编辑</button>
+                    <button class="manage-btn" type="warn">删除</button>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </scroll-view>
         </view>
-        <scroll-view id='table-body' style='width: {{bodyWidth + 20}}px' scroll-y>
-          <view class="body">
-            <view class='tr' wx:for="{{datas}}" wx:for-index="idx" wx:key="{{idx}}" wx:for-item="profile">
-              <view class='td {{col.key}}' wx:for="{{rows}}" wx:for-index="key" wx:key="{{key}}" wx:for-item="col">
-                <view wx:if="{{col.key === 'gender'}}" class='content' style="width: {{columnInfo[col.key]}}px">
-                  {{profile[col.key] <= 0 ? '未知': profile[col.key] == 1 ? '男' : '女'}}
-                </view> 
-                <view wx:elif="{{col.key === 'degreeArray'}}" class='content array' style="width: {{columnInfo[col.key]}}px">
-                  <view wx:for="{{profile[col.key]}}" wx:key="{{index}}" class="array-item">
-                    {{item.degree}} {{item.major}}
-                  </view>
-                </view>
-                <view wx:elif="{{col.key === 'contactArray'}}" class='content array' style="width: {{columnInfo[col.key]}}px">
-                  <view wx:for="{{profile[col.key]}}" wx:key="{{index}}" class="array-item">
-                    {{item.contactType}}：{{item.content}}
-                  </view>
-                </view>   
-                <view wx:elif="{{col.key === 'jobArray'}}" class='content array' style="width: {{columnInfo[col.key]}}px">
-                  <view wx:for="{{profile[col.key]}}" wx:key="{{index}}" class="array-item">
-                    {{item.institution}} {{item.job}}
-                  </view>
-                </view>  
-                <view wx:else class='content' style="width: {{columnInfo[col.key]}}px">{{profile[col.key]}}</view>
-              </view>
-              <view class="td td-manage">
-                <view class="content" wx:if="{{rows.length > 0}}">
-                  查看 编辑 删除
-                </view>
-              </view>
-            </view>
-          </view>
-        </scroll-view>
-      </view>
-    </scroll-view>
-  </view>
+      </scroll-view>
+    </view>
+  </block>
+  <block wx:elif="{{rows.length <= 0}}">
+    <view class="hint">
+      请至少选择一个列项
+    </view>
+  </block>
 </view>
 
 <modal hidden="{{isSelectColumnModalHidden}}" title="选择显示的列项" no-cancel="{{true}}" bindconfirm="hideSelectColumn">

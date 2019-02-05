@@ -1,4 +1,5 @@
 /* miniprogram/pages/profile-manage/profile-manage.wxss */
+
 page {
   height: auto;
 }
@@ -18,9 +19,11 @@ page {
   padding-top: 1px;
   display: none;
 }
-.section_gap .fixed-list.show{
+
+.section_gap .fixed-list.show {
   display: block;
 }
+
 .fixedListContent {
   height: 200px;
 }
@@ -91,11 +94,30 @@ page {
 }
 
 .th.th-manage {
-  width: 140px;
+  width: 180px;
 }
 
 .td.td-manage {
-  width: 140px;
+  width: 180px;
+}
+
+.td.td-manage .content {
+  display: flex;
+  flex-direction: row;
+}
+
+.td.td-manage .content .manage-btn {
+  padding-left: 15rpx;
+  padding-right: 15rpx;
+  line-height: 70rpx;
+  font-size: 32rpx;
+}
+
+.hint {
+  margin:0 auto;
+  color:#aaa;
+  font-size:30rpx;
+  padding-top:40%;
 }
 
 /* .table {
@@ -177,7 +199,6 @@ page {
   line-height: 40rpx;
   margin-top: 10rpx;
 }
-
 
 .manage-row .row-content .row {
   padding-left: 25rpx;

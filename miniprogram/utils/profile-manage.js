@@ -5,7 +5,7 @@ import regeneratorRuntime, { async } from "./regenerator-runtime/runtime";
 const decode = (result) => {
   let { searchRes } = result;
   let removeItem = ["_id", "_openid", "intro", "bgImgUrl"];
-  wx.setStorage({ key: "profileManageDataTmp", searchRes});
+  wx.setStorage({ key: "profileManageDataTmp", data: searchRes});
   for(let profile of searchRes ) {
     for (let item of removeItem) {
       delete profile[item]
@@ -22,7 +22,7 @@ const download = async () => {
         collection: "profile-test",
         query: "ALL",
         start: 0,
-        pageLength: 10,
+        pageLength: 30,
       }
     });
     
