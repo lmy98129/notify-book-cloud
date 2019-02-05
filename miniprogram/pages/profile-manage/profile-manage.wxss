@@ -1,4 +1,7 @@
 /* miniprogram/pages/profile-manage/profile-manage.wxss */
+page {
+  height: auto;
+}
 
 .section_gap {
   position: relative;
@@ -87,6 +90,14 @@
   white-space: nowrap;
 }
 
+.th.th-manage {
+  width: 140px;
+}
+
+.td.td-manage {
+  width: 140px;
+}
+
 /* .table {
   border: 0px solid darkgray;
 }
@@ -147,13 +158,34 @@
 .manage-row .row-head {
   margin-right: 15rpx;
   font-size: 32rpx;
+  margin-top: 10rpx;
 }
 
-.manage-row .manage-add {
+.manage-row .row-content {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  max-width: 80%;
+}
+
+.manage-row .row-content .manage-add {
   padding-left: 25rpx;
   padding-right: 25rpx;
   border: 1rpx solid #808080;
   border-radius: 40rpx;
   font-size: 40rpx;
   line-height: 40rpx;
+  margin-top: 10rpx;
+}
+
+
+.manage-row .row-content .row {
+  padding-left: 25rpx;
+  padding-right: 25rpx;
+  border: 1rpx solid #808080;
+  border-radius: 40rpx;
+  font-size: 32rpx;
+  line-height: 40rpx;
+  margin-right: 10rpx;
+  margin-top: 10rpx;
 }

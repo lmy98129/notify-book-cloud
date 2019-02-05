@@ -108,7 +108,8 @@ Page({
   },
 
   selectColumn(e) {
-    convertCol(e.detail.value, this);
+    let value = e.detail.value;
+    convertCol(value, this);
     this.calc_col_width();
   },
   
@@ -153,14 +154,14 @@ Page({
               width = this.get_str_length(rows[i].col) > row.width ? this.get_str_length(rows[i].col) : row.width;
               break;
           }
-          console.log(rows[i].key, this.get_str_length(rows[i].col), row.width);
           columnInfo[rows[i].key] = width;
           bodyWidth += width;
-          this.setData({
-            columnInfo,
-            columns: Object.keys(columnInfo),
-            bodyWidth
-          });
+        });
+        bodyWidth += 140;
+        this.setData({
+          columnInfo,
+          columns: Object.keys(columnInfo),
+          bodyWidth
         });
         console.log(this.data.columnInfo);
       }).exec();

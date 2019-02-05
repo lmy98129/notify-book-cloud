@@ -5,7 +5,10 @@
 <view class="main">
   <view class="manage-row">
     <view class="row-head">显示列项</view>
-    <view class="manage-add" bind:tap="showSelectColumn">+</view>
+    <view class="row-content">
+      <view wx:for="{{rows}}" class="row" wx:key="{{index}}">{{item.col}}</view>
+      <view class="manage-add" bind:tap="showSelectColumn">+</view>
+    </view>
   </view>
 
   <view class="section section_gap">
@@ -14,6 +17,11 @@
         <view class="thead" style='width: {{bodyWidth + 20}}px'>
           <view class='th' wx:for="{{rows}}" wx:key="{{index}}" wx:for-item="col">
             <view class='content' style="width: {{columnInfo[col.key]}}px">{{col.col}}</view>
+          </view>
+          <view wx:if="{{rows.length > 0}}" class="th th-manage">
+            <view class="content">
+              管理
+            </view>
           </view>
         </view>
         <scroll-view id='table-body' style='width: {{bodyWidth + 20}}px' scroll-y>
@@ -24,21 +32,26 @@
                   {{profile[col.key] <= 0 ? '未知': profile[col.key] == 1 ? '男' : '女'}}
                 </view> 
                 <view wx:elif="{{col.key === 'degreeArray'}}" class='content array' style="width: {{columnInfo[col.key]}}px">
-                  <view wx:for="{{profile[col.key]}}" class="array-item">
+                  <view wx:for="{{profile[col.key]}}" wx:key="{{index}}" class="array-item">
                     {{item.degree}} {{item.major}}
                   </view>
                 </view>
                 <view wx:elif="{{col.key === 'contactArray'}}" class='content array' style="width: {{columnInfo[col.key]}}px">
-                  <view wx:for="{{profile[col.key]}}" class="array-item">
+                  <view wx:for="{{profile[col.key]}}" wx:key="{{index}}" class="array-item">
                     {{item.contactType}}：{{item.content}}
                   </view>
                 </view>   
                 <view wx:elif="{{col.key === 'jobArray'}}" class='content array' style="width: {{columnInfo[col.key]}}px">
-                  <view wx:for="{{profile[col.key]}}" class="array-item">
+                  <view wx:for="{{profile[col.key]}}" wx:key="{{index}}" class="array-item">
                     {{item.institution}} {{item.job}}
                   </view>
                 </view>  
                 <view wx:else class='content' style="width: {{columnInfo[col.key]}}px">{{profile[col.key]}}</view>
+              </view>
+              <view class="td td-manage">
+                <view class="content" wx:if="{{rows.length > 0}}">
+                  查看 编辑 删除
+                </view>
               </view>
             </view>
           </view>
