@@ -22,8 +22,8 @@ Page({
    * 页面的初始数据
    */
   data: {
-    skip: 0,
-    limit: 10,
+    start: 0,
+    pageLength: 30,
     isSelectColumnModalHidden: true,
     columnInfo: [],
     bodyWidth: 0,
@@ -37,7 +37,11 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: async function () {
-    let downloadRes = await profMan.download();
+    wx.showLoading({
+      title: "数据加载中"
+    })
+    let { start, pageLength } = this.data;
+    let downloadRes = await profMan.download(start, pageLength);
     switch(downloadRes.code) {
       case 1:
         this.setData({ datas: downloadRes.result.searchRes });
@@ -56,6 +60,7 @@ Page({
     }
     convertCol(tmpSelValue, this);
     this.calc_col_width();
+    wx.hideLoading();
   },
 
   /**

@@ -13,7 +13,7 @@ const decode = (result) => {
   }
 }
 
-const download = async () => {
+const download = async (start, pageLength) => {
   try {
     let manageRes = await wx.cloud.callFunction({
       name: "search",
@@ -21,8 +21,8 @@ const download = async () => {
         $url: "manage",
         collection: "profile-test",
         query: "ALL",
-        start: 0,
-        pageLength: 30,
+        start,
+        pageLength,
       }
     });
     

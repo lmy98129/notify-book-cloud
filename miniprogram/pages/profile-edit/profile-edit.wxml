@@ -1,4 +1,4 @@
-<!--pages/editProfile/editProfile.wxml-->
+<!--pages/profile-edit/profile-edit.wxml-->
 <top-widget mode="title" title="资料填写">
 </top-widget>
 <view class="main">

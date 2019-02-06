@@ -1,4 +1,4 @@
-// pages/editProfile/editProfile.js
+// pages/profile-edit/profile-edit.js
 const app = getApp();
 const avatar = require("../../utils/avatar");
 const profile = require("../../utils/profile");

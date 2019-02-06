@@ -281,7 +281,7 @@ Page({
       })
     } else {
       wx.navigateTo({
-        url: '../editProfile/editProfile',
+        url: '../profile-edit/profile-edit',
       })
     }
   },

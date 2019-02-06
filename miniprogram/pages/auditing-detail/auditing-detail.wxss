@@ -1,5 +1,5 @@
 /* pages/auditing-detail/auditing-detail.wxss */
-@import "../../pages/editProfile/editProfile.wxss";
+@import "../../pages/profile-edit/profile-edit.wxss";
 page {
   background: #fff;
 }

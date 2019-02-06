@@ -6,7 +6,7 @@
     "pages/contact/contact",
     "pages/profile/profile",
     "pages/login/login",
-    "pages/editProfile/editProfile",
+    "pages/profile-edit/profile-edit",
     "pages/search/search",
     "pages/auth/auth",
     "pages/settings/settings",
