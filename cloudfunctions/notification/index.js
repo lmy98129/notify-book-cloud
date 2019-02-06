@@ -15,18 +15,21 @@ exports.main = async (event, context) => {
 
   app.router("download", async (ctx) => {
     try {
-      // NOTE: 兼顾全体用户性质的消息
       let hasReadArray = [], unReadArray = [], tmpRes, myDate;
+      // 先获取用户除了删除过的信息以外的非群发信息
       let res = await db.collection("user-notification").where({
         userOpenid: openid,
         status: _.neq("delete")
       }).get();
       if (res.data.length !== 0) {
+        // 对每条信息获取其对应内容
         for (let item of res.data) {
           tmpRes = await db.collection("notification").where({
             _id: item.msgId
           }).get();
+          // 若该信息的userList不等于"0"也就是说不等于群发信息
           if (tmpRes.data[0].userList !== "0") {
+            // 处理一下时间格式
             myDate = new Date(item.createTime);
             item.content = tmpRes.data[0].content;
             item.title = tmpRes.data[0].title;
@@ -36,11 +39,13 @@ exports.main = async (event, context) => {
           }
         }
       }
+      // 再获取群发的信息
       res = await db.collection("notification").where({
         userList: "0"
       }).get();
       if (res.data.length !== 0) {
         for (let item of res.data) {
+          // 注意不能把用户已经删除了的信息再获取进来
           tmpRes = await db.collection("user-notification").where({
             msgId: item._id,
             userOpenid: openid,
@@ -48,6 +53,7 @@ exports.main = async (event, context) => {
           }).get();
           delete item.userList;
           item._id = "ALL,"+item._id;
+          // 同样处理时间
           if (tmpRes.data.length !== 0) {
             myDate = new Date(item.createTime);
             item.date = new Date(myDate.setHours(myDate.getHours() + 8)).toLocaleString().slice(5, -3);
@@ -59,6 +65,9 @@ exports.main = async (event, context) => {
               userOpenid: openid,
               status: _.eq("delete")
             }).get();
+            // 如果发现对于群发的消息，删除了的也没有、没删除了的也没有，就说明是用户未读的，加入未读序列（这就是所谓的新增用户的补发了）
+            // 也就是说补发的消息一般是不予以微信模板消息的，因为可能出现重复发送的情况
+            //（首次登录未读和多次登录之后登录未读会被当成一种情况，而且既然登录了就应当看得见前端的红点提示，就不需要模板消息画蛇添足了）
             if (tmpRes.data.length === 0) {
               myDate = new Date(item.createTime);
               item.status = "un-read";
@@ -93,7 +102,6 @@ exports.main = async (event, context) => {
 
   app.router("delete", async (ctx) => {
     try {
-      // NOTE: 还要继续改，如果是全体用户性质的反而要添加已删除数据
       let idArray = event.idArray;
       for (let item of idArray) {
         if (item.indexOf("ALL,") >= 0) {
@@ -134,7 +142,6 @@ exports.main = async (event, context) => {
 
   app.router("changeStatus", async (ctx) => {
     try {
-      // NOTE: 也一样的，若全体用户性质也需要改。
       let idArray = event.idArray;
       for (let item of idArray) {
         if (item.indexOf("ALL,") >= 0) {
@@ -339,14 +346,14 @@ exports.main = async (event, context) => {
       }
       if (event.notifyDetail.userList !== "0") {
         for(let item of event.notifyDetail.userList) {
-          res = await db.collection("profile").where({
+          res = await db.collection("profile-new").where({
             realName: item
           }).get();
           if(res.data.length === 0) {
-            res = await db.collection("profile").where({
+            res = await db.collection("profile-new").where({
               nickName: item
             }).get();
-            if (res.data.length === 0) break;
+            if (res.data.length === 0) continue;
           } 
           openidList.push(res.data[0]._openid);
           await db.collection("user-notification").add({
@@ -359,10 +366,10 @@ exports.main = async (event, context) => {
           });
         }
       } else {
-        res = await db.collection("profile").count();
+        res = await db.collection("profile-new").count();
         let total = res.total, allProfile = [], skip = 0;
         while(skip <= total) {
-          res = await db.collection("profile").skip(skip).limit(100).get();
+          res = await db.collection("profile-new").skip(skip).limit(100).get();
           allProfile = allProfile.concat(res.data);
           skip += 100;
         }
