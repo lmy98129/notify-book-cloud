@@ -36,7 +36,7 @@ const increase = (data, final, weight, key) => {
       item.keyFound.push(key);
       final.push(item);
     } else {
-      final[i].weight += weight;
+      final[i].rank += weight;
       final[i].keyFound.push(key);
     }
   }
@@ -63,7 +63,7 @@ const search = async (collection, text, weightArray) => {
       case "degree":
       case "degreeEndTime":
       case "degreeStartTime":
-      case "headTeacher":
+      case "headteacher":
       case "major":
       case "school":
       case "className":
