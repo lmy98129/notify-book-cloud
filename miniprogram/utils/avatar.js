@@ -180,6 +180,7 @@ const uploadForManage = async (that, mode, index) => {
             toast("上传图片成功");
 
             profiles[index].avatarUrl = avatarUrl;
+            profiles[index].isAvatarCustomed = true;
 
             wx.setStorage({ key: mode, data: profiles });
 
@@ -223,7 +224,7 @@ const defaultForManage = async (that, mode, index) => {
           avatarUrl: defaultAvatarUrl,
           _id,
           collection: "profile-test",
-          isAvatarCustomed: true,
+          isAvatarCustomed: false,
         }
       });
 
@@ -236,6 +237,7 @@ const defaultForManage = async (that, mode, index) => {
       toast("上传图片成功");
 
       profiles[index].avatarUrl = defaultAvatarUrl;
+      profiles[index].isAvatarCustomed = false;
 
       wx.setStorage({ key: mode, data: profiles });
 

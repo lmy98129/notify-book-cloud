@@ -47,6 +47,9 @@ Page({
     }
     if (options.index !== undefined) {
       index = options.index;
+      this.setData({
+        index
+      })
     }
     if (mode === "searchResult") {
       let curUserProfile = wx.getStorageSync("searchResult")[index];
@@ -250,6 +253,7 @@ Page({
         url: "../auth/auth"
       })
     } else {
+      let { mode, index } = this.data
       let that = this;
       wx.showActionSheet({
         itemList: ["上传自定义背景图片", "使用默认背景图片"],
@@ -257,10 +261,18 @@ Page({
         success: async function(res) {
           switch(res.tapIndex) {
             case 0:
-              await bgImg.upload(that);
+              if (mode !== undefined && mode === "profileManageDataTmp") {
+                await bgImg.uploadForManage(that, mode, index);
+              } else {
+                await bgImg.upload(that);
+              }
               break;
             case 1:
-              await bgImg.default(that);
+              if (mode !== undefined && mode === "profileManageDataTmp") {
+                await bgImg.defaultForManage(that, mode, index);              
+              } else {
+                await bgImg.default(that);
+              }
               break;
           }
         }
@@ -276,9 +288,14 @@ Page({
 
 
   editProfile: function() {
+    let { mode, index } = this.data;
     if (wx.getStorageSync("curUserProfile").authStatus !== "authorized") {
       wx.navigateTo({
         url: "../auth/auth"
+      })
+    } else if (mode !== undefined && mode === "profileManageDataTmp"){
+      wx.navigateTo({
+        url: "../profile-edit/profile-edit?mode=profileManageDataTmp&index="+index
       })
     } else {
       wx.navigateTo({

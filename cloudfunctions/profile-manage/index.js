@@ -36,9 +36,12 @@ exports.main = async (event, context) => {
   app.router("uploadAvatar", async (ctx) => {
     try {
       let { avatarUrl, collection, _id, isAvatarCustomed } = event;
-      if (isAvatarCustomed == "true") {
+      if (isAvatarCustomed === "true") {
         isAvatarCustomed = true;
+      } else if (isAvatarCustomed === "false") {
+        isAvatarCustomed = false;
       }
+
       let updateRes = await db.collection(collection).doc(_id).update({
         data: {
           avatarUrl,
@@ -51,6 +54,33 @@ exports.main = async (event, context) => {
         updateRes
       }
 
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        code: -1,
+        err: error.message
+      }
+    }
+  })
+
+  app.router("uploadBgImg", async (ctx) => {
+    try {
+      let { bgImgUrl, collection, _id, isBgImgCustomed } = event;
+      if (isBgImgCustomed === "true") {
+        isBgImgCustomed = true;
+      } else if (isBgImgCustomed === "false") {
+        isBgImgCustomed = false;
+      }
+      let updateRes = await db.collection(collection).doc(_id).update({
+        data: {
+          bgImgUrl,
+          isBgImgCustomed
+        }
+      })
+      ctx.body = {
+        code: 1,
+        updateRes
+      }
     } catch (error) {
       console.log(error);
       ctx.body = {
