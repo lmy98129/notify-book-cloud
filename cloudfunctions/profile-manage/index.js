@@ -90,5 +90,24 @@ exports.main = async (event, context) => {
     }
   })
 
+  app.router("deleteProfile", async (ctx) => {
+    try {
+      let { _id, collection } = event;
+
+      let deleteRes = await db.collection(collection).doc(_id).remove();
+
+      ctx.body = {
+        code: 1,
+        deleteRes
+      }
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        code: -1,
+        err: error.message
+      }
+    }
+  })
+
   return app.serve();
 }

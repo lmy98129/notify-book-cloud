@@ -61,11 +61,11 @@ Page({
    */
   onLoad: async function (options) {
     let { mode, index } = options;
-    this.setData({ mode, index })
     let curUserProfile;
     if (mode !== undefined) {
+      this.setData({ mode, index })
       curUserProfile = wx.getStorageSync(mode)[index];
-      newUserInfo = profile.decodeForEdit(curUserProfile, this);
+      newUserInfo = profile.decodeForEdit(curUserProfile, initValue, this);
     } else {
       curUserProfile = await profile.check();
   
@@ -75,7 +75,7 @@ Page({
         this.setData({ avatarUrl, nickName, gender })
         newUserInfo = { ...newUserInfo, avatarUrl, nickName, gender };
       } else {
-        newUserInfo = profile.decodeForEdit(curUserProfile, this);
+        newUserInfo = profile.decodeForEdit(curUserProfile, initValue, this);
       }
     } 
   },

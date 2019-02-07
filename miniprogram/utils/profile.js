@@ -234,7 +234,7 @@ const introUpload = async (intro) => {
   }
 }
 
-const decodeForEdit = (tmpUserInfo, that) => {
+const decodeForEdit = (tmpUserInfo, initValue, that) => {
   let tmpArray, tmpDate;
   delete tmpUserInfo._id;
   delete tmpUserInfo._openid;

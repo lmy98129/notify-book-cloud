@@ -51,32 +51,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: async function () {
-    wx.showLoading({
-      title: "数据加载中"
-    })
-    let { start, pageLength } = this.data;
-    let downloadRes = await profMan.download(start, pageLength);
-    switch(downloadRes.code) {
-      case 1:
-        let datas = downloadRes.result;
-        wx.setStorage({ key: "profileManageDataTmp", data: datas })
-        this.setData({ datas });
-        break;
-      case -1:
-        toast("加载资料数据出错", "none");
-        break;
-    }
-    let selColumns = JSON.parse(JSON.stringify(columnRank));
-    let tmpSelValue = []
-    this.setData({ selColumns });
-    for (let column of selColumns) {
-      if (column.checked !== undefined && column.checked === true) {
-        tmpSelValue.push(column.key);
-      }
-    }
-    convertCol(tmpSelValue, this);
-    this.calc_col_width();
-    wx.hideLoading();
+    this.download()
   },
 
   /**
@@ -112,6 +87,35 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+
+  download: async function() {
+    wx.showLoading({
+      title: "数据加载中"
+    })
+    let { start, pageLength } = this.data;
+    let downloadRes = await profMan.download(start, pageLength);
+    switch(downloadRes.code) {
+      case 1:
+        let datas = downloadRes.result;
+        wx.setStorage({ key: "profileManageDataTmp", data: datas })
+        this.setData({ datas });
+        break;
+      case -1:
+        toast("加载资料数据出错", "none");
+        break;
+    }
+    let selColumns = JSON.parse(JSON.stringify(columnRank));
+    let tmpSelValue = []
+    this.setData({ selColumns });
+    for (let column of selColumns) {
+      if (column.checked !== undefined && column.checked === true) {
+        tmpSelValue.push(column.key);
+      }
+    }
+    convertCol(tmpSelValue, this);
+    this.calc_col_width();
+    wx.hideLoading();
   },
 
   selectColumn(e) {
@@ -201,6 +205,20 @@ Page({
   editProfile(e) {
     wx.navigateTo({
       url: "../profile-edit/profile-edit?mode=profileManageDataTmp&index="+e.target.dataset.index
+    })
+  },
+
+  deleteProfile: function(e) {
+    wx.showModal({
+      title: "确认删除",
+      content: "即将删除该用户的所有资料、相关文件以及认证信息。一旦执行成功，以上数据将不可恢复，请您谨慎操作！！！",
+      confirmColor: "#f00",
+      success: async (res) => {
+        if (res.confirm) {
+          await profMan.deleteProfile("profileManageDataTmp", e.target.dataset.index);
+          this.download();
+        }
+      }
     })
   }
 
