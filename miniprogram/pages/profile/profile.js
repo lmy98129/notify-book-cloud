@@ -73,6 +73,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: async function () {
+    // 若非用户本人
     if (mode !== "normal") {
       let curUserProfile = wx.getStorageSync(mode)[index];
       try {

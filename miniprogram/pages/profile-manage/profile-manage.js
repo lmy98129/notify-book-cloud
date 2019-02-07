@@ -36,7 +36,21 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: async function () {
+  onLoad: function () {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady: function () {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: async function () {
     wx.showLoading({
       title: "数据加载中"
     })
@@ -44,7 +58,9 @@ Page({
     let downloadRes = await profMan.download(start, pageLength);
     switch(downloadRes.code) {
       case 1:
-        this.setData({ datas: downloadRes.result.searchRes });
+        let datas = downloadRes.result;
+        wx.setStorage({ key: "profileManageDataTmp", data: datas })
+        this.setData({ datas });
         break;
       case -1:
         toast("加载资料数据出错", "none");
@@ -61,20 +77,6 @@ Page({
     convertCol(tmpSelValue, this);
     this.calc_col_width();
     wx.hideLoading();
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
   },
 
   /**
@@ -193,6 +195,12 @@ Page({
   prevProfile(e) {
     wx.navigateTo({
       url: "../profile/profile?mode=profileManageDataTmp&index="+e.target.dataset.index
+    })
+  },
+
+  editProfile(e) {
+    wx.navigateTo({
+      url: "../profile-edit/profile-edit?mode=profileManageDataTmp&index="+e.target.dataset.index
     })
   }
 

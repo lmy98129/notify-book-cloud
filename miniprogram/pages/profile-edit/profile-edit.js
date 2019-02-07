@@ -51,88 +51,33 @@ Page({
     }],
     degreeTypeArray: ["本科", "硕士", "博士", "博士后", "专科", "其他"],
     pagePos: "请向上滑动页面继续填写",
-    canSubmit: false
+    canSubmit: false,
+    mode: "",
+    index: 0
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: async function (options) {
-    let curUserProfile = await profile.check();
-    let tmpArray, tmpDate;
-
-    if (curUserProfile.isProfileEmpty) {
-      let { avatarUrl, nickName, gender } = curUserProfile;
-      if (gender <= 0) gender = 1;
-      this.setData({ avatarUrl, nickName, gender })
-      newUserInfo = { ...newUserInfo, avatarUrl, nickName, gender };
+    let { mode, index } = options;
+    this.setData({ mode, index })
+    let curUserProfile;
+    if (mode !== undefined) {
+      curUserProfile = wx.getStorageSync(mode)[index];
+      newUserInfo = profile.decodeForEdit(curUserProfile, this);
     } else {
-      newUserInfo = curUserProfile;
-      delete newUserInfo._id;
-      delete newUserInfo._openid;
-      this.setData({
-        avatarUrl: newUserInfo.avatarUrl
-      })
-      for (let item in newUserInfo) {
-        switch(item) {
-          case "birthDate": 
-            tmpDate = newUserInfo[item].split("-");
-            this.setData({
-              [item]: parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月" + parseInt(tmpDate[2]) + "日"
-            });
-            break;
-          case "jobArray":
-            tmpArray = JSON.parse(JSON.stringify(newUserInfo[item]));
-            for(let i=0; i<tmpArray.length; i++) {
-              for (let subItem in tmpArray[i]) {
-                if (tmpArray[i][subItem] === undefined || tmpArray[i][subItem] === "") {
-                  tmpArray[i][subItem] = initValue[subItem].default;
-                  this.setData({
-                    [item]: tmpArray
-                  });
-                } else if (subItem === "jobStartTime" || subItem === "jobEndTime") {
-                  tmpDate = tmpArray[i][subItem].split("-");
-                  tmpArray[i][subItem] = parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月";
-                  this.setData({
-                    [item]: tmpArray
-                  });
-                }
-              }
-            }
-            break;
-          case "contactArray":
-            tmpArray = JSON.parse(JSON.stringify(newUserInfo[item]));
-            this.setData({
-              [item]: tmpArray
-            })
-            break;
-          case "degreeArray":
-            tmpArray = JSON.parse(JSON.stringify(newUserInfo[item]));
-            for(let i=0; i<tmpArray.length; i++) {
-              for (let subItem in tmpArray[i]) {
-                if (tmpArray[i][subItem] === undefined || tmpArray[i][subItem] === "") {
-                  tmpArray[i][subItem] = initValue[subItem].default;
-                  this.setData({
-                    [item]: tmpArray
-                  });
-                } else if (subItem === "degreeStartTime" || subItem === "degreeEndTime") {
-                  tmpDate = tmpArray[i][subItem].split("-");
-                  tmpArray[i][subItem] = parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月";
-                  this.setData({
-                    [item]: tmpArray
-                  });
-                }
-              }
-            }
-            break;
-          default:
-            this.setData({
-              [item]: newUserInfo[item]
-            });
-            break;
-        }
+      curUserProfile = await profile.check();
+  
+      if (curUserProfile.isProfileEmpty) {
+        let { avatarUrl, nickName, gender } = curUserProfile;
+        if (gender <= 0) gender = 1;
+        this.setData({ avatarUrl, nickName, gender })
+        newUserInfo = { ...newUserInfo, avatarUrl, nickName, gender };
+      } else {
+        newUserInfo = profile.decodeForEdit(curUserProfile, this);
       }
-    }
+    } 
   },
 
   uploadAvatar() {
@@ -178,7 +123,7 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-
+    newUserInfo = JSON.parse(JSON.stringify(profModel.userInfo));
   },
 
   /**
@@ -455,6 +400,11 @@ Page({
       }
     }
     console.log("上传用户资料：", newUserInfo);
-    profile.upload(newUserInfo);
+    let { mode, index } = this.data;
+    if (mode !== "" && mode !== undefined) {
+      profile.uploadForManage(newUserInfo, mode, index);
+    } else {
+      profile.upload(newUserInfo);
+    }
   }
 })

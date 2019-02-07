@@ -147,6 +147,43 @@ const download = async (that, callback) => {
 
 }
 
+const uploadForManage = async (userInfo, mode, index, that) => {
+  try {
+    wx.showLoading({
+      title: "资料上传中"
+    });
+    
+    userInfo.isProfileEmpty = false;
+    
+    let profiles = wx.getStorageSync(mode);
+
+    let res = await wx.cloud.callFunction({
+      name: "profile-manage",
+      data: {
+        $url: "upload",
+        profile: userInfo,
+        collection: "profile-test",
+        _id: profiles[index]._id
+      }
+    })
+    
+
+    for (let subItem in userInfo) {
+      profiles[index][subItem] = userInfo[subItem];
+    }
+
+    wx.setStorage({ key: mode, data: profiles });
+
+    wx.hideLoading();
+    toast("资料上传成功", "success");
+    console.log("更新用户资料成功：", res);
+  } catch (error) {
+    wx.hideLoading();
+    console.log("更新用户资料出错：", error.message);
+    toast("更新资料出错", "none");
+  }
+}
+
 const upload = async (userInfo) => {
   try {
     wx.showLoading({
@@ -195,6 +232,76 @@ const introUpload = async (intro) => {
     console.log("更新用户资料出错：" + error.message);
     toast("更新资料出错", "none");
   }
+}
+
+const decodeForEdit = (tmpUserInfo, that) => {
+  let tmpArray, tmpDate;
+  delete tmpUserInfo._id;
+  delete tmpUserInfo._openid;
+  that.setData({
+    avatarUrl: tmpUserInfo.avatarUrl
+  })
+  for (let item in tmpUserInfo) {
+    switch(item) {
+      case "birthDate": 
+        tmpDate = tmpUserInfo[item].split("-");
+        that.setData({
+          [item]: parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月" + parseInt(tmpDate[2]) + "日"
+        });
+        break;
+      case "jobArray":
+        tmpArray = JSON.parse(JSON.stringify(tmpUserInfo[item]));
+        for(let i=0; i<tmpArray.length; i++) {
+          for (let subItem in tmpArray[i]) {
+            if (tmpArray[i][subItem] === undefined || tmpArray[i][subItem] === "") {
+              tmpArray[i][subItem] = initValue[subItem].default;
+              that.setData({
+                [item]: tmpArray
+              });
+            } else if (subItem === "jobStartTime" || subItem === "jobEndTime") {
+              tmpDate = tmpArray[i][subItem].split("-");
+              tmpArray[i][subItem] = parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月";
+              that.setData({
+                [item]: tmpArray
+              });
+            }
+          }
+        }
+        break;
+      case "contactArray":
+        tmpArray = JSON.parse(JSON.stringify(tmpUserInfo[item]));
+        that.setData({
+          [item]: tmpArray
+        })
+        break;
+      case "degreeArray":
+        tmpArray = JSON.parse(JSON.stringify(tmpUserInfo[item]));
+        for(let i=0; i<tmpArray.length; i++) {
+          for (let subItem in tmpArray[i]) {
+            if (tmpArray[i][subItem] === undefined || tmpArray[i][subItem] === "") {
+              tmpArray[i][subItem] = initValue[subItem].default;
+              that.setData({
+                [item]: tmpArray
+              });
+            } else if (subItem === "degreeStartTime" || subItem === "degreeEndTime") {
+              tmpDate = tmpArray[i][subItem].split("-");
+              tmpArray[i][subItem] = parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月";
+              that.setData({
+                [item]: tmpArray
+              });
+            }
+          }
+        }
+        break;
+      default:
+        that.setData({
+          [item]: tmpUserInfo[item]
+        });
+        break;
+    }
+  }
+
+  return tmpUserInfo;
 }
 
 const decode = (tmpUserInfo, that) => {
@@ -342,12 +449,16 @@ const decode = (tmpUserInfo, that) => {
     profileStatus: 1
   });
 
+  return tmpUserInfo;
+
 }
 
 module.exports = {
   upload,
+  uploadForManage,
   download,
   introUpload,
   decode,
+  decodeForEdit,
   check: checkLocal,
 }

@@ -52,7 +52,7 @@
                 <view class="td td-manage">
                   <view class="content" wx:if="{{rows.length > 0}}">
                     <button class="manage-btn" bind:tap="prevProfile" data-index="{{idx}}">查看</button>
-                    <button class="manage-btn" type="primary">编辑</button>
+                    <button class="manage-btn" type="primary" bind:tap="editProfile" data-index="{{idx}}">编辑</button>
                     <button class="manage-btn" type="warn">删除</button>
                   </view>
                 </view>

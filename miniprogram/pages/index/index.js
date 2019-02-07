@@ -42,29 +42,8 @@ Page({
       })
       return;
     }
-
-    // 导入可能认识的人信息
-    // let rand = localData.rand;
-    // this.setData({
-    //   randListLength: rand.length
-    // })
-    // if (rand.length < 9) {
-    //   for (var i=rand.length; i<9; i++) {
-    //     rand[i] = {avatarUrl: "/images/user-unlogin.png"}
-    //   }
-    // }
-    // let year = localData.year, classmate = localData.classmate;
-    // this.setData({
-    //   randRecList: rand,
-    //   sameYearRecList: year, 
-    //   sameClassRecList: classmate
-    // })
-
+    
     sys.checkPhone(this);
-
-    // setInterval(() => {
-    //   login.download();
-    // }, 10000)
 
   },
 

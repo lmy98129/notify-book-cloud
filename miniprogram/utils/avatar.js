@@ -6,118 +6,11 @@ const app = getApp();
 
 import regeneratorRuntime, { async } from "./regenerator-runtime/runtime";
 
-
-/**
- * 维护用户头像记录状态为最新，目测可以弃用了
- * @param {*} that 
- * @param {string} avatarUrl 
- */
-const checkAvatar = (avatarUrl) => {
-  let msg = {};
-
-  // let oldTimeStamp = wx.getStorageSync("shortTimer"),
-  //   curTimeStamp = (new Date()).getTime();
-
-  // // 拉长查询周期，减少API调用次数
-  // if (!oldTimeStamp) {
-  //   // 首次查询
-  //   wx.setStorageSync("shortTimer", curTimeStamp);
-  // } else if (curTimeStamp - oldTimeStamp < 900000) {
-  //   // 查询时间未到
-  //   msg = {
-  //     code: 0,
-  //     msg: "not checking time"
-  //   }
-  //   return Promise.resolve(msg);
-  // } else {
-  //   // 更新时间，并执行下方的查询
-  //   wx.setStorageSync("shortTimer", curTimeStamp);
-  // }
-
-  // 查询用户的openid 
-  return (db.collection("avatar").where({
-      _openid: app.globalData.openid
-      // wx.getStorageSync("openid")
-    }).get()
-  // 根据查询结果判断是否需要添加或更新头像记录
-  .then(res => {
-
-    if (res.data.length === 0) {
-      
-      // 首次登录，需要添加头像记录
-      return db.collection("avatar").add({
-        data: {
-          avatarUrl: avatarUrl,
-          isCustom: false,
-        }
-      })
-      .then(res => {
-        // 无需更改本地存储的userInfo中的avatarUrl值
-        msg = {
-          code: 1,
-          msg: "wechat avatar record added"
-        };
-        return Promise.resolve(msg);
-      })
-
-    } else if (!res.data[0].isCustom && res.data[0].avatarUrl !== avatarUrl) {
-
-      // 头像采用微信头像，且需要更新头像记录
-      return db.collection("avatar").doc(res.data[0]._id).update({
-        data: {
-          avatarUrl: avatarUrl
-        }
-      })
-      .then(res => {
-        // 无需更改本地存储的userInfo中的avatarUrl值
-        msg = {
-          code: 2,
-          msg: "wechat avatar record updated"
-        };
-        return Promise.resolve(msg);
-      })
-
-    } else if(res.data[0].isCustom) {
-
-      // 头像采用用户自定义头像, 更新本地存储的userInfo
-      let tmpUserInfo = wx.getStorageSync("curUserProfile");
-      tmpUserInfo.avatarUrl = res.data[0].avatarUrl;
-      wx.setStorageSync("userInfo", tmpUserInfo);
-
-      msg = {
-        code: 3,
-        msg: "custom avatar downloaded"
-      }
-
-      return Promise.resolve(msg);
-
-    } else {
-      // 微信头像记录为最新，无需操作
-      msg = {
-        code: 4,
-        msg: "wechat avatar record is latest"
-      };
-      return Promise.resolve(msg);
-
-    }
-  })
-  .catch(err => {
-
-    msg = {
-      code: -1,
-      msg: "avatar check fail",
-      err: err
-    }
-    return Promise.reject(msg);
-    
-  }))
-}
-
 /**
  * 上传用户自定义头像
  * @param {*} that 
  */
-const uploadAvatar = (that) => {
+const upload = (that) => {
   let avatarUrl;
   // 选取图片文件
   wx.chooseImage({
@@ -187,7 +80,7 @@ const uploadAvatar = (that) => {
  * 使用微信头像
  * @param {*} that 
  */
-const wechatAvatar = (that) => {
+const wechat = (that) => {
   wx.getUserInfo({
     success: async function(res) {
       let wechatAvatarUrl = res.userInfo.avatarUrl;
@@ -243,7 +136,6 @@ const wechatAvatar = (that) => {
 }
 
 module.exports = {
-  check: checkAvatar,
-  upload: uploadAvatar,
-  wechat: wechatAvatar,
+  upload,
+  wechat,
 }
