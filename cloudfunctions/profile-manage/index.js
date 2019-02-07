@@ -12,7 +12,7 @@ exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
   const app = new TcbRouter({ event });
 
-  app.router("upload", async (ctx) => {
+  app.router("uploadProfile", async (ctx) => {
     try {
       let { profile, collection, _id } = event;
 
@@ -33,7 +33,32 @@ exports.main = async (event, context) => {
     }
   })
 
+  app.router("uploadAvatar", async (ctx) => {
+    try {
+      let { avatarUrl, collection, _id, isAvatarCustomed } = event;
+      if (isAvatarCustomed == "true") {
+        isAvatarCustomed = true;
+      }
+      let updateRes = await db.collection(collection).doc(_id).update({
+        data: {
+          avatarUrl,
+          isAvatarCustomed,
+        }
+      })
 
+      ctx.body = {
+        code: -1,
+        updateRes
+      }
+
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        code: -1,
+        err: error.message
+      }
+    }
+  })
 
   return app.serve();
 }

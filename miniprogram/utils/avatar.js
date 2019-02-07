@@ -135,7 +135,127 @@ const wechat = (that) => {
   })
 }
 
+const uploadForManage = async (that, mode, index) => {
+  let avatarUrl;
+  // 选取图片文件
+  wx.chooseImage({
+    count: 1,
+    sizeType: ['compressed'],
+    sourceType: ['album', 'camera'],
+    success: async function(res) {
+      wx.showLoading({
+        title: '上传图片中',
+      })
+      let profiles = wx.getStorageSync(mode);
+
+      const curAvatarUrl = profiles[index].avatarUrl;
+      let { _id, _openid } = profiles[index];
+      // 上传图片文件到云存储
+      const filePath = res.tempFilePaths[0];
+      const cloudPath = 'avatar/avatar-' + _openid + (new Date()).getTime() + filePath.match(/\.[^.]+?$/)[0];
+      wx.cloud.uploadFile({
+        cloudPath,
+        filePath,
+        success: async res => {
+          console.log('上传自定义头像成功：', res)
+          avatarUrl = res.fileID;
+          try {
+            let updateRes = await wx.cloud.callFunction({
+              name: "profile-manage",
+              data: {
+                $url: "uploadAvatar",
+                avatarUrl,
+                _id,
+                collection: "profile-test",
+                isAvatarCustomed: true,
+              }
+            });
+
+            wx.cloud.deleteFile({
+              fileList: [curAvatarUrl]
+            })
+
+            wx.hideLoading();
+            console.log("更新自定义头像成功：", updateRes);
+            toast("上传图片成功");
+
+            profiles[index].avatarUrl = avatarUrl;
+
+            wx.setStorage({ key: mode, data: profiles });
+
+            // 更新当前页面中的头像图片地址
+            that.setData({
+              avatarUrl
+            })
+            
+          } catch (error) {
+            wx.hideLoading();
+            console.log('更新自定义头像失败：', error.message);
+            toast("上传失败", "none");
+          }
+
+        }
+      })
+
+    }
+  })
+}
+
+const defaultForManage = async (that, mode, index) => {
+  let profiles = wx.getStorageSync(mode);
+  let { _id, avatarUrl } = profiles[index];
+
+  if (avatarUrl === app.globalData.DEFAULT_AVATARURL || avatarUrl === "") {
+    toast("当前正在使用默认头像", "none");
+    return;
+  } else {
+    let defaultAvatarUrl = app.globalData.DEFAULT_AVATARURL;
+    // 需要更新数据库，查询记录的_id
+    wx.showLoading({
+      title: '更新头像中',
+    })
+
+    try {
+      await wx.cloud.callFunction({
+        name: "profile-manage",
+        data: {
+          $url: "uploadAvatar",
+          avatarUrl: defaultAvatarUrl,
+          _id,
+          collection: "profile-test",
+          isAvatarCustomed: true,
+        }
+      });
+
+      let deleteRes = await wx.cloud.deleteFile({
+        fileList: [avatarUrl]
+      });
+
+      wx.hideLoading();
+      console.log("更新头像成功：", deleteRes);
+      toast("上传图片成功");
+
+      profiles[index].avatarUrl = defaultAvatarUrl;
+
+      wx.setStorage({ key: mode, data: profiles });
+
+      // 更新当前页面中的头像图片地址
+      that.setData({
+        avatarUrl: defaultAvatarUrl
+      })
+      
+    } catch (error) {
+      wx.hideLoading();
+      console.log('更新头像失败：', error.message);
+      toast("上传失败", "none");
+    }
+  }
+
+}
+
 module.exports = {
   upload,
+  uploadForManage,
+  defaultForManage,
   wechat,
 }

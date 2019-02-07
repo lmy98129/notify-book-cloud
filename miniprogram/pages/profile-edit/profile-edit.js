@@ -82,20 +82,39 @@ Page({
 
   uploadAvatar() {
     let that = this;
-    wx.showActionSheet({
-      itemList: ["上传自定义头像", "使用微信头像"],
-      itemColor: "#333",
-      success: function(res) {
-        switch(res.tapIndex) {
-          case 0:
-            avatar.upload(that);
-            break;
-          case 1:
-            avatar.wechat(that);
-            break;
+    let { mode, index } = this.data;
+
+    if (mode !== "" && mode !== undefined) {
+      wx.showActionSheet({
+        itemList: ["上传自定义头像", "使用默认头像"],
+        itemColor: "#333",
+        success: function(res) {
+          switch(res.tapIndex) {
+            case 0:
+              avatar.uploadForManage(that, mode, index);
+              break;
+            case 1:
+              avatar.defaultForManage(that, mode, index);
+              break;
+          }
         }
-      }
-    })
+      })
+    } else {
+      wx.showActionSheet({
+        itemList: ["上传自定义头像", "使用微信头像"],
+        itemColor: "#333",
+        success: function(res) {
+          switch(res.tapIndex) {
+            case 0:
+              avatar.upload(that);
+              break;
+            case 1:
+              avatar.wechat(that);
+              break;
+          }
+        }
+      })
+    }
   },
 
   /**

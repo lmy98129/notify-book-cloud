@@ -160,7 +160,7 @@ const uploadForManage = async (userInfo, mode, index, that) => {
     let res = await wx.cloud.callFunction({
       name: "profile-manage",
       data: {
-        $url: "upload",
+        $url: "uploadProfile",
         profile: userInfo,
         collection: "profile-test",
         _id: profiles[index]._id
