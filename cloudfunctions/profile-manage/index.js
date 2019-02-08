@@ -108,6 +108,28 @@ exports.main = async (event, context) => {
       }
     }
   })
+  
+  app.router("uploadIntro", async (ctx) => {
+    try {
+      let { _id, collection, intro } = event;
+
+      let updateRes = await db.collection(collection).doc(_id).update({
+        data: { intro }
+      })
+
+      ctx.body = {
+        code: 1,
+        updateRes
+      }
+
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        code: -1,
+        err: error.message
+      }
+    }
+  })
 
   return app.serve();
 }

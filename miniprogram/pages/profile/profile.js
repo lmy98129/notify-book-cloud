@@ -218,33 +218,12 @@ Page({
   },
   
   submitIntro() {
-    let that = this;
-    wx.showLoading({
-      title: "数据提交中"
-    })
-    profile.introUpload(this.data.tmpIntro)
-    .then(res => {
-      wx.hideLoading();
-      toast("提交成功");
-      console.log("自我介绍上传成功：", res);
-      that.setData({
-        introStatus: 'default',
-        intro: this.data.tmpIntro
-      });
-      wx.createSelectorQuery().select('#intro').fields({
-        rect: true,
-        size: true,
-      }, function (res) {
-        sys.adjustSwiper(
-          swiperFirstHeight, that.data.tabIndex, res.height, that
-        );
-      }).exec();
-    })
-    .catch(err => {
-      wx.hideLoading();
-      toast("错误：提交失败", "none");
-      console.log("自我介绍上传成功：", err);
-    })
+    let { tmpIntro, mode, index } = this.data
+    if (mode === "profileManageDataTmp") {
+      profile.introUploadForManage(this, tmpIntro, mode, index);
+    } else {
+      profile.introUpload(this, tmpIntro);
+    }
   },
 
   customBgImg() {

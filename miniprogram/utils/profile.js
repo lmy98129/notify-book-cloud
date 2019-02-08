@@ -213,7 +213,7 @@ const upload = async (userInfo) => {
   }
 }
 
-const introUpload = async (intro) => {
+const introUpload = async (that, intro) => {
   try {
     wx.showLoading({
       title: "资料上传中"
@@ -227,6 +227,11 @@ const introUpload = async (intro) => {
 
     wx.hideLoading();
     console.log("更新用户资料成功：" + updateRes.errMsg);
+
+    that.setData({
+      introStatus: "default",
+      intro
+    })
   } catch (error) {
     wx.hideLoading();
     console.log("更新用户资料出错：" + error.message);
@@ -453,11 +458,47 @@ const decode = (tmpUserInfo, that) => {
 
 }
 
+const introUploadForManage = async (that, intro, mode, index) => {
+  try {
+    wx.showLoading({
+      title: "资料上传中"
+    });
+    let profiles = wx.getStorageSync(mode);
+    let { _id } = profiles[index];
+
+    let updateRes = await wx.cloud.callFunction({
+      name: "profile-manage",
+      data: {
+        $url: "uploadIntro",
+        collection: "profile-test",
+        _id,
+        intro
+      }
+    })
+
+    profiles[index].intro = intro;
+    wx.setStorage({ key: mode, data: profiles });
+
+    wx.hideLoading();
+
+    that.setData({
+      introStatus: "default",
+      intro
+    })
+    console.log("更新用户资料成功：" + updateRes);
+  } catch (error) {
+    wx.hideLoading();
+    console.log("更新用户资料出错：" + error.message);
+    toast("更新资料出错", "none");
+  }
+}
+
 module.exports = {
   upload,
   uploadForManage,
   download,
   introUpload,
+  introUploadForManage,
   decode,
   decodeForEdit,
   check: checkLocal,

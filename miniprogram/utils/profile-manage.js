@@ -22,10 +22,12 @@ const download = async (start, pageLength) => {
       switch(manageRes.result.code) {
         case 1:
           let { result } = manageRes;
-          let { searchRes } = result;
+          let { searchRes, start, total } = result;
           return {
             code: 1,
-            result: searchRes
+            result: searchRes,
+            start,
+            total,
           }
           break;
         case -1:

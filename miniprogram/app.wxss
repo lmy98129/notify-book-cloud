@@ -123,7 +123,7 @@ page {
   background: rgba(120, 120, 120, .7)
 }
 
-.bottom-wrap .btn:nth-child(2) {
+.bottom-wrap .btn:not(:first-child) {
   border-left: .1rpx solid #aaa;
 }
 

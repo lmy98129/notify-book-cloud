@@ -10,10 +10,16 @@
       <view class="manage-add" bind:tap="showSelectColumn">+</view>
     </view>
   </view>
+  <view class="manage-row">
+    <view class="row-head">检索条件</view>
+    <view class="row-content">
+      <view class="manage-add" bind:tap="addSearchFields">+</view>
+    </view>
+  </view>
 
   <block wx:if="{{rows.length > 0}}">
     <view class="section section_gap">
-      <scroll-view class="table" scroll-x>
+      <scroll-view class="table" scroll-x scroll-left="{{scrollViewLeft}}">
         <view class="table-inner">
           <view class="thead" style='width: {{bodyWidth + 20}}px'>
             <view class='th' wx:for="{{rows}}" wx:key="{{index}}" wx:for-item="col">
@@ -25,7 +31,7 @@
               </view>
             </view>
           </view>
-          <scroll-view id='table-body' style='width: {{bodyWidth + 20}}px' scroll-y>
+          <scroll-view id='table-body' style='width: {{bodyWidth + 20}}px' scroll-y scroll-top="{{scrollViewTop}}">
             <view class="body">
               <view class='tr' wx:for="{{datas}}" wx:for-index="idx" wx:key="{{idx}}" wx:for-item="profile">
                 <view class='td {{col.key}}' wx:for="{{rows}}" wx:for-index="key" wx:key="{{key}}" wx:for-item="col">
@@ -68,6 +74,29 @@
       请至少选择一个列项
     </view>
   </block>
+
+  <view class="manage-row">
+    <view class="row-content">
+      <view class="row" bind:tap="addProfile">新建资料 + </view>
+    </view>
+  </view>
+  <view class="manage-row bottom-manage-row"  wx:if="{{page !== undefined && totalPage !== undefined}}">
+    <view class="row-head">当前页数</view>
+    <view class="row-content">
+      <view class="row">{{page}} / {{totalPage}}</view>
+    </view>
+    <view class="row-head">每页显示</view>
+    <view class="row-content">
+      <view class="row">{{pageLength}}</view>
+    </view>
+  </view>
+
+  <view class="bottom-wrap">
+    <view class="btn" bindtap="import">导入</view>
+    <view class="btn" bindtap="export">导出</view>
+    <view class="btn" bindtap="prevPage">上一页</view>
+    <view class="btn" bindtap="nextPage">下一页</view>
+  </view>
 </view>
 
 <modal hidden="{{isSelectColumnModalHidden}}" title="选择显示的列项" no-cancel="{{true}}" bindconfirm="hideSelectColumn">

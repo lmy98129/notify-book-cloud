@@ -24,6 +24,8 @@ Page({
   data: {
     start: 0,
     pageLength: 30,
+    scrollViewTop: 0,
+    scrollViewLeft: 0,
     isSelectColumnModalHidden: true,
     columnInfo: [],
     bodyWidth: 0,
@@ -51,7 +53,8 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: async function () {
-    this.download()
+    let { start, pageLength } = this.data;
+    this.download(start, pageLength);
   },
 
   /**
@@ -89,17 +92,19 @@ Page({
 
   },
 
-  download: async function() {
+  download: async function(start, pageLength) {
     wx.showLoading({
       title: "数据加载中"
     })
-    let { start, pageLength } = this.data;
     let downloadRes = await profMan.download(start, pageLength);
     switch(downloadRes.code) {
       case 1:
         let datas = downloadRes.result;
-        wx.setStorage({ key: "profileManageDataTmp", data: datas })
-        this.setData({ datas });
+        let { total } = downloadRes;
+        wx.setStorage({ key: "profileManageDataTmp", data: datas });
+        let page = Math.ceil(start / pageLength) + 1;
+        let totalPage = Math.ceil(total / pageLength);
+        this.setData({ datas, page, totalPage, total });
         break;
       case -1:
         toast("加载资料数据出错", "none");
@@ -216,10 +221,49 @@ Page({
       success: async (res) => {
         if (res.confirm) {
           await profMan.deleteProfile("profileManageDataTmp", e.target.dataset.index);
-          this.download();
+          let { start, pageLength } = this.data;
+          this.download(start, pageLength);
         }
       }
     })
-  }
+  },
+
+  prevPage() {
+    let { start, pageLength } = this.data;
+    if (start <= 0) {
+      toast("当前已经是第一页", "none");
+      return;
+    } else {
+      start -= pageLength;
+      this.setData({ start });
+      this.download(start, pageLength);
+      wx.pageScrollTo({
+        scrollTop: 0
+      });
+      this.setData({
+        scrollViewTop: 0,
+        scrollViewLeft: 0,
+      });
+    }
+  },
+
+  nextPage() {
+    let { start, pageLength, total } = this.data;
+    start += pageLength;
+    if (start > total) {
+      toast("当前已经是最后一页", "none");
+      return;
+    } else {
+      this.setData({ start });
+      this.download(start, pageLength);
+      wx.pageScrollTo({
+        scrollTop: 0
+      });
+      this.setData({
+        scrollViewTop: 0,
+        scrollViewLeft: 0,
+      });
+    }
+  },
 
 })
