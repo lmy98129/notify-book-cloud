@@ -113,9 +113,23 @@
 </modal>
 
 <modal hidden="{{isAddSearchFieldModalHidden}}" title="添加检索条件" bindconfirm="addSearchField" bindcancel="hideAddSearchField">
-  <profile-input title="检索列项" asterisk="{{false}}" mode="modal-picker" picker-mode="selector" picker-range="{{searchColumnArray}}" value="{{selectedSearchColumn}}"  bind:input="setSearchColumn" ></profile-input>
-  <block wx:if="{{selectedSearchColumn === 'jobArray' || selectedSearchColumn === 'contactArray' || selectedSearchColumn === 'degreeArray'}}">
-    <profile-input title="检索子项" asterisk="{{false}}" mode="modal-picker" picker-mode="selector" picker-range="{{searchColumnItemArray}}" value="{{selectedSearchColumnItem}}"  bind:input="setSearchColumnItem" ></profile-input>
+  <profile-input title="检索列项" asterisk="{{false}}" mode="modal-picker" picker-mode="selector" picker-range="{{searchColumnArray}}" value="{{selectedSearchColumnName}}"  bind:input="setSearchColumn" ></profile-input>
+  <block wx:if="{{selectedSearchColumnKey === 'jobArray' || selectedSearchColumnKey === 'contactArray' || selectedSearchColumnKey === 'degreeArray'}}">
+    <profile-input title="检索子项" asterisk="{{false}}" mode="modal-picker" picker-mode="selector" picker-range="{{searchColumnItemArray}}" value="{{selectedSearchColumnItemName}}"  bind:input="setSearchColumnItem" ></profile-input>
   </block>
-  <profile-input title="检索内容" asterisk="{{false}}" mode="modal-input" bind:input="setSearchContent" ></profile-input>
+  <block wx:if="{{searchType === 'contain'}}">
+    <profile-input title="检索内容" asterisk="{{false}}" mode="modal-input" bind:input="setSearchContent" ></profile-input>
+  </block>
+  <block wx:if="{{searchType === 'range'}}">
+    <block wx:if="{{(selectedSearchColumnKey === 'jobArray' && (selectedSearchColumnItemKey === 'jobStartTime' || selectedSearchColumnItemKey === 'jobEndTime')) || (selectedSearchColumnKey === 'degreeArray' && (selectedSearchColumnItemKey === 'degreeStartTime' || selectedSearchColumnItemKey === 'degreeEndTime')) || (selectedSearchColumnKey === 'birthDate')}}">
+      <profile-input title="起始时间" asterisk="{{false}}" mode="modal-picker" picker-fields="{{selectedSearchColumnKey === 'birthDate' ? 'day' : 'month'}}" value="{{startTime}}" bind:input="setStartTime" bind:del="pickerDel"/>
+      <profile-input title="结束时间" asterisk="{{false}}" mode="modal-picker" picker-fields="{{selectedSearchColumnKey === 'birthDate' ? 'day' : 'month'}}" value="{{endTime}}" bind:input="setStartTime" bind:del="pickerDel"/>
+    </block>
+  </block>
+  <block wx:if="{{searchType === 'equal'}}">
+    <block wx:if="{{selectedSearchColumnKey === 'gender'}}">
+      <profile-input title="检索内容" asterisk="{{false}}" mode="modal-gender" bind:gender="getGender" input-type="gender" gender="{{gender}}"/> 
+    </block>
+  </block>
+  <view class="modal-hint">检索方式：{{searchTypeName}}</view>
 </modal>

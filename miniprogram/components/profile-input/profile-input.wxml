@@ -13,10 +13,10 @@
 
 </block>
 
-<block wx:if="{{mode === 'gender'}}">
+<block wx:if="{{mode === 'gender' || mode === 'modal-gender'}}">
   <form bindsubmit="getFormid" report-submit='true'>
     <button class="submit-no-style" form-type='submit'>
-      <view class="item">
+      <view class="item {{mode === 'modal-gender' ? 'modal' : ''}}">
         <view class="title">{{title}}<text wx:if="{{asterisk}}" class="asterisk">*</text></view>
         <view class="select">
           <view class="option {{gender === 2 ? 'selected' : ''}}" data-gender='2' bindtap="getGender" >女</view>

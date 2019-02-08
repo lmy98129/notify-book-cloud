@@ -2,6 +2,7 @@
 const profMan = require("../../utils/profile-manage");
 const toast = require("../../utils/message").toast;
 const columnRank = require("../../utils/profile-model").columnRank;
+const searchField = require("../../utils/profile-model").searchField;
 
 import regeneratorRuntime, { async } from "../../utils/regenerator-runtime/runtime";
 
@@ -29,6 +30,13 @@ Page({
     isSelectColumnModalHidden: true,
     isPageControlModalHidden: true,
     isAddSearchFieldModalHidden: true,
+    searchColumnArray: searchField.searchColumn.searchColumnItem,
+    selectedSearchColumnName: "请选择检索列项",
+    selectedSearchColumnKey: "",
+    selectedSearchColumnItemName: "请选择检索子项",
+    startTime: "请选择起始时间",
+    endTime: "请选择结束时间",
+    gender: 1,
     columnInfo: [],
     bodyWidth: 0,
     columns: [],
@@ -385,8 +393,103 @@ Page({
 
   hideAddSearchField() {
     this.setData({
-      isAddSearchFieldModalHidden: true
+      isAddSearchFieldModalHidden: true,
+      selectedSearchColumnName: "请选择检索列项",
+      selectedSearchColumnKey: "",
+      selectedSearchColumnItemKey: ""
     })
-  }
+  },
+
+  setSearchColumn(e) {
+    let { value } = e.detail;
+    let { searchColumnArray } = this.data;
+    let selectedSearchColumnKey = searchField.searchColumn.searchColumnKey[value];
+    this.setData({
+      selectedSearchColumnName: searchColumnArray[value],
+      selectedSearchColumnKey,
+      selectedSearchColumnItemName: "请选择检索子项"
+    })
+    if (selectedSearchColumnKey === 'jobArray' || 
+    selectedSearchColumnKey === 'contactArray' || 
+    selectedSearchColumnKey === 'degreeArray') {
+      let searchColumnItemArray = searchField[selectedSearchColumnKey][selectedSearchColumnKey+"Item"];
+      this.setData({
+        searchColumnItemArray
+      })
+    }
+    switch(selectedSearchColumnKey) {
+      case "gender":
+        this.setData({
+          searchTypeName: "等于",
+          searchType: "equal"
+        });
+        break;
+      case "nickName":
+      case "realName":
+      case "homeTown":
+      case "address":
+      case "phoneNumber":
+      case "wechatId":
+        this.setData({
+          searchTypeName: "包含",
+          searchType: "contain"
+        });
+        break;
+      case "birthDate":
+        this.setData({
+          searchTypeName: "范围",
+          searchType: "range"
+        });
+        break;
+    }
+  },
+
+  setSearchColumnItem(e) {
+    let { value } = e.detail;
+    let { searchColumnItemArray, selectedSearchColumnKey } = this.data;
+    let selectedSearchColumnItemKey = searchField[selectedSearchColumnKey][selectedSearchColumnKey+"Key"][value];
+    this.setData({
+      selectedSearchColumnItemName: searchColumnItemArray[value],
+      selectedSearchColumnItemKey,
+    })
+    switch(selectedSearchColumnItemKey) {
+      case "degree":
+        this.setData({
+          searchTypeName: "等于",
+          searchType: "equal"
+        });
+        break;
+      case "school":
+      case "major":
+      case "className":
+      case "headteacher":
+      case "contactType":
+      case "content":
+      case "institution":
+      case "job":
+        this.setData({
+          searchTypeName: "包含",
+          searchType: "contain",
+        });
+        break;
+      case "degreeStartTime":
+      case "degreeEndTime":
+      case "jobStartTime":
+      case "jobEndTime":
+        this.setData({
+          searchTypeName: "范围",
+          searchType: "range"
+        });
+        break;
+    }
+  },
+
+  getGender(e) {
+    let { gender } = e.detail;
+    this.setData({
+      gender: parseInt(gender)
+    })
+  },
+
 
 })
