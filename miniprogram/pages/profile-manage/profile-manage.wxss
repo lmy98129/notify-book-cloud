@@ -118,6 +118,7 @@ page {
   color:#aaa;
   font-size:30rpx;
   padding-top:40%;
+  padding-bottom: 40%;
 }
 
 /* .table {
@@ -217,5 +218,13 @@ page {
 }
 
 .manage-row .row-content.row-content-special {
+  max-width: 100%;
+}
+
+.manage-row.row-center {
+  justify-content: center;
+}
+
+.manage-row .row-content.row-full-width {
   max-width: 100%;
 }

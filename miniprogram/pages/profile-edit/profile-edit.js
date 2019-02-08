@@ -62,10 +62,20 @@ Page({
   onLoad: async function (options) {
     let { mode, index } = options;
     let curUserProfile;
-    if (mode !== undefined) {
-      this.setData({ mode, index })
+    if (mode !== undefined && mode !== "" && mode !== "addProfileManage") {
+      this.setData({ mode, index });
       curUserProfile = wx.getStorageSync(mode)[index];
       newUserInfo = profile.decodeForEdit(curUserProfile, initValue, this);
+    } else if (mode === "addProfileManage") {
+      let gender = 1;
+      newUserInfo.gender = gender;
+      newUserInfo.jobArray = [];
+      newUserInfo.degreeArray = [];
+      newUserInfo.contactArray = [];
+      this.setData({ mode, gender,
+        jobArray: [], degreeArray: []
+      });
+      return;
     } else {
       curUserProfile = await profile.check();
   
@@ -84,7 +94,7 @@ Page({
     let that = this;
     let { mode, index } = this.data;
 
-    if (mode !== "" && mode !== undefined) {
+    if (mode !== undefined && mode !== "" && mode !== "addProfileManage") {
       wx.showActionSheet({
         itemList: ["上传自定义头像", "使用默认头像"],
         itemColor: "#333",
@@ -99,6 +109,8 @@ Page({
           }
         }
       })
+    } else if (mode === "addProfileManage") {
+      confirmOnly("暂不支持在新建资料成功之前上传头像。请在新建资料提交成功后，再通过校友资料管理页面该资料最右侧的“编辑”按钮进入本页面，进行修改头像操作。")
     } else {
       wx.showActionSheet({
         itemList: ["上传自定义头像", "使用微信头像"],
@@ -320,108 +332,112 @@ Page({
 
   submit() {
     formid.upload()
-    if (!this.data.canSubmit) return;
+    let { canSubmit, mode, index } = this.data;
+    if (!canSubmit) return;
     let tmpJobArray, tmpContentArray, tmpDegreeArray;
-    for(let item in newUserInfo) {
-      switch(item) {
-        // 处理普通input类型的必填项
-        case "nickName":
-        case "realName":
-        case "address":
-        case "phoneNumber":
-          if (newUserInfo[item] === undefined || newUserInfo[item] === "") {
-            confirmOnly(initValue[item].name + "为空，此项为必填项");
-            return;
-          }
-          break;
-        // 处理picker类型的必填项
-        case "birthDate":
-        case "homeTown":
-          if(newUserInfo[item] === initValue[item].default) {
-            confirmOnly(initValue[item].name + "为空，此项为必填项");
-            return;
-          }
-          break;
-        // 处理数组内部的必填项目
-        case "contactArray":
-          tmpContentArray = newUserInfo[item];
-          for (let i=0; i<tmpContentArray.length; i++) {
-            for (let subItem in tmpContentArray[i]) {
-              if (tmpContentArray[i][subItem] === undefined || tmpContentArray[i][subItem] === "") {
-                confirmOnly("“联系方式" + (i + 1) + "”的"+ initValue[subItem].name + "为空，此项为必填项");
-                return;
+    if (mode === undefined || mode === "") {
+      for(let item in newUserInfo) {
+        switch(item) {
+          // 处理普通input类型的必填项
+          case "nickName":
+          case "realName":
+          case "address":
+          case "phoneNumber":
+            if (newUserInfo[item] === undefined || newUserInfo[item] === "") {
+              confirmOnly(initValue[item].name + "为空，此项为必填项");
+              return;
+            }
+            break;
+          // 处理picker类型的必填项
+          case "birthDate":
+          case "homeTown":
+            if(newUserInfo[item] === initValue[item].default) {
+              confirmOnly(initValue[item].name + "为空，此项为必填项");
+              return;
+            }
+            break;
+          // 处理数组内部的必填项目
+          case "contactArray":
+            tmpContentArray = newUserInfo[item];
+            for (let i=0; i<tmpContentArray.length; i++) {
+              for (let subItem in tmpContentArray[i]) {
+                if (tmpContentArray[i][subItem] === undefined || tmpContentArray[i][subItem] === "") {
+                  confirmOnly("“联系方式" + (i + 1) + "”的"+ initValue[subItem].name + "为空，此项为必填项");
+                  return;
+                }
               }
             }
-          }
-          break;          
-        case "jobArray":
-          tmpJobArray = newUserInfo[item];
-          for (let i=0; i<tmpJobArray.length; i++) {
-            for (let subItem in tmpJobArray[i]) {
-              switch(subItem) {
-                case "institution":
-                case "job":
-                  if (tmpJobArray[i][subItem] === undefined || tmpJobArray[i][subItem] === "") {
-                    confirmOnly("“工作职务" + (i + 1) + "”的" + initValue[subItem].name + "为空，此项为必填项");
-                    return;
-                  }
-                  break;
-                case "jobStartTime":
-                  if (tmpJobArray[i][subItem] === initValue[subItem].default) {
-                    confirmOnly("“工作职务" + (i + 1) + "”的" + initValue[subItem].name + "为空，此项为必填项");
-                    return;
-                  }
-                  break;
-                case "jobEndTime": 
-                  if (tmpJobArray[i][subItem] === initValue[subItem].default) {
-                    newUserInfo[item][i][subItem] = "";
-                  }
-                  break;
+            break;          
+          case "jobArray":
+            tmpJobArray = newUserInfo[item];
+            for (let i=0; i<tmpJobArray.length; i++) {
+              for (let subItem in tmpJobArray[i]) {
+                switch(subItem) {
+                  case "institution":
+                  case "job":
+                    if (tmpJobArray[i][subItem] === undefined || tmpJobArray[i][subItem] === "") {
+                      confirmOnly("“工作职务" + (i + 1) + "”的" + initValue[subItem].name + "为空，此项为必填项");
+                      return;
+                    }
+                    break;
+                  case "jobStartTime":
+                    if (tmpJobArray[i][subItem] === initValue[subItem].default) {
+                      confirmOnly("“工作职务" + (i + 1) + "”的" + initValue[subItem].name + "为空，此项为必填项");
+                      return;
+                    }
+                    break;
+                  case "jobEndTime": 
+                    if (tmpJobArray[i][subItem] === initValue[subItem].default) {
+                      newUserInfo[item][i][subItem] = "";
+                    }
+                    break;
+                }
               }
             }
-          }
-          break;
-        case "degreeArray":
-          tmpDegreeArray = newUserInfo[item];
-          for (let i=0; i<tmpDegreeArray.length; i++) {
-            for (let subItem in tmpDegreeArray[i]) {
-              switch(subItem) {
-                case "school":
-                case "major":
-                case "className":
-                  if (tmpDegreeArray[i][subItem] === undefined || tmpDegreeArray[i][subItem] === "") {
-                    confirmOnly("“学历信息" + (i + 1) + "”的" + initValue[subItem].name + "为空，此项为必填项");
-                    return;
-                  }
-                  break;
-                case "degree":
-                case "degreeStartTime":
-                  if (tmpDegreeArray[i][subItem] === initValue[subItem].default) {
-                    confirmOnly("“学历信息" + (i + 1) + "”的" + initValue[subItem].name + "为空，此项为必填项");
-                    return;
-                  }
-                  break;
-                case "degreeEndTime":
-                  if (tmpDegreeArray[i][subItem] === initValue[subItem].default) {
-                    newUserInfo[item][i][subItem] = "";
-                  }
-                  break;
+            break;
+          case "degreeArray":
+            tmpDegreeArray = newUserInfo[item];
+            for (let i=0; i<tmpDegreeArray.length; i++) {
+              for (let subItem in tmpDegreeArray[i]) {
+                switch(subItem) {
+                  case "school":
+                  case "major":
+                  case "className":
+                    if (tmpDegreeArray[i][subItem] === undefined || tmpDegreeArray[i][subItem] === "") {
+                      confirmOnly("“学历信息" + (i + 1) + "”的" + initValue[subItem].name + "为空，此项为必填项");
+                      return;
+                    }
+                    break;
+                  case "degree":
+                  case "degreeStartTime":
+                    if (tmpDegreeArray[i][subItem] === initValue[subItem].default) {
+                      confirmOnly("“学历信息" + (i + 1) + "”的" + initValue[subItem].name + "为空，此项为必填项");
+                      return;
+                    }
+                    break;
+                  case "degreeEndTime":
+                    if (tmpDegreeArray[i][subItem] === initValue[subItem].default) {
+                      newUserInfo[item][i][subItem] = "";
+                    }
+                    break;
+                }
               }
             }
-          }
-          break;
-        case "phoneNumber": 
-          if (newUserInfo[item] !== "" && isNaN(newUserInfo[item])) {
-            confirmOnly(initValue[item].name + "应为数字");
-            return;
-          }
-          break;
+            break;
+          case "phoneNumber": 
+            if (newUserInfo[item] !== "" && isNaN(newUserInfo[item])) {
+              confirmOnly(initValue[item].name + "应为数字");
+              return;
+            }
+            break;
+        }
       }
     }
     console.log("上传用户资料：", newUserInfo);
-    let { mode, index } = this.data;
-    if (mode !== "" && mode !== undefined) {
+    if (mode !== "" && mode !== undefined && mode !== "addProfileManage") {
       profile.uploadForManage(newUserInfo, mode, index);
+    } else if (mode === "addProfileManage") {
+      profile.uploadForAddProflieManage(newUserInfo);
     } else {
       profile.upload(newUserInfo);
     }

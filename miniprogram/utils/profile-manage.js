@@ -87,7 +87,7 @@ const deleteProfile = async (mode, index) => {
       fileList.concat(authImgUrl)
     }
 
-    let deleteRes = wx.cloud.deleteFile({
+    let deleteRes = await wx.cloud.deleteFile({
       fileList
     })
 

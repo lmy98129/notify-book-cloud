@@ -13,7 +13,14 @@
   <view class="manage-row">
     <view class="row-head">检索条件</view>
     <view class="row-content">
-      <view class="manage-add" bind:tap="addSearchFields">+</view>
+      <view class="manage-add" bind:tap="showAddSearchField">+</view>
+    </view>
+  </view>
+  <view class="manage-row">
+    <view class="row-content row-full-width">
+      <view class="row" bind:tap="addProfile">新建资料 + </view>
+      <view class="row" bindtap="import">批量导入</view>
+      <view class="row" bindtap="export">批量导出</view>
     </view>
   </view>
 
@@ -75,23 +82,19 @@
     </view>
   </block>
 
-  <view class="manage-row">
-    <view class="row-content">
-      <view class="row" bind:tap="addProfile">新建资料 + </view>
-    </view>
-  </view>
-  <view class="manage-row bottom-manage-row"  wx:if="{{page !== undefined && totalPage !== undefined}}">
+  <view class="manage-row row-center bottom-manage-row"  wx:if="{{page !== undefined && totalPage !== undefined}}">
     <view class="row-content row-content-special">
       <view class="row">当前页数 {{page}} / {{totalPage}} | 每页显示 {{pageLength}}</view>
       <view class="row" bind:tap="showPageControl">修改</view>
     </view>
   </view>
 
+
   <view class="bottom-wrap">
-    <view class="btn" bindtap="import">导入</view>
-    <view class="btn" bindtap="export">导出</view>
-    <view class="btn" bindtap="prevPage">上一页</view>
-    <view class="btn" bindtap="nextPage">下一页</view>
+    <view class="btn" bind:tap="firstPage">首页</view>
+    <view class="btn" bind:tap="prevPage">上一页</view>
+    <view class="btn" bind:tap="nextPage">下一页</view>
+    <view class="btn" bind:tap="lastPage">末页</view>
   </view>
 </view>
 
@@ -104,7 +107,15 @@
 </modal>
 
 <modal hidden="{{isPageControlModalHidden}}" title="修改页面参数" bindconfirm="pageControl" bindcancel="hidePageControl">
-  <profile-input title="当前页数" asterisk="{{false}}" mode="modal" bind:input="setPage" value="{{tmpPage}}"></profile-input>
-  <profile-input title="每页显示" asterisk="{{false}}" mode="modal" bind:input="setPageLength" value="{{tmpPageLength}}"></profile-input>
+  <profile-input title="当前页数" asterisk="{{false}}" mode="modal-input" bind:input="setPage" value="{{tmpPage}}"></profile-input>
+  <profile-input title="每页显示" asterisk="{{false}}" mode="modal-input" bind:input="setPageLength" value="{{tmpPageLength}}"></profile-input>
   <view class="modal-hint">当前最大页数：{{tmpTotalPage}}</view>
+</modal>
+
+<modal hidden="{{isAddSearchFieldModalHidden}}" title="添加检索条件" bindconfirm="addSearchField" bindcancel="hideAddSearchField">
+  <profile-input title="检索列项" asterisk="{{false}}" mode="modal-picker" picker-mode="selector" picker-range="{{searchColumnArray}}" value="{{selectedSearchColumn}}"  bind:input="setSearchColumn" ></profile-input>
+  <block wx:if="{{selectedSearchColumn === 'jobArray' || selectedSearchColumn === 'contactArray' || selectedSearchColumn === 'degreeArray'}}">
+    <profile-input title="检索子项" asterisk="{{false}}" mode="modal-picker" picker-mode="selector" picker-range="{{searchColumnItemArray}}" value="{{selectedSearchColumnItem}}"  bind:input="setSearchColumnItem" ></profile-input>
+  </block>
+  <profile-input title="检索内容" asterisk="{{false}}" mode="modal-input" bind:input="setSearchContent" ></profile-input>
 </modal>

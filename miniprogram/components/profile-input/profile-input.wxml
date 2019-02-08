@@ -1,8 +1,8 @@
 <!--components/profile-input/profile-input.wxml-->
-<block wx:if="{{mode === 'normal' || mode === 'modal'}}">
+<block wx:if="{{mode === 'normal' || mode === 'modal-input'}}">
   <form bindsubmit="getFormid" report-submit='true'>
     <button class="submit-no-style" form-type='submit'>
-      <view class="item {{mode === 'modal' ? 'modal' : ''}}">
+      <view class="item {{mode === 'modal-input' ? 'modal' : ''}}">
         <view class="title">{{title}}<text wx:if="{{asterisk}}" class="asterisk">*</text></view>
         <view class="input">
           <input bindinput="bindInput" value="{{value}}" placeholder="{{placeHolder}}" ></input>
@@ -27,10 +27,10 @@
   </form>
 </block>
 
-<block wx:if="{{mode === 'picker'}}">
+<block wx:if="{{mode === 'picker' || mode === 'modal-picker'}}">
   <form bindsubmit="getFormid" report-submit='true'>
     <button class="submit-no-style" form-type='submit'>
-      <view class="item">
+      <view class="item {{mode === 'modal-picker' ? 'modal' : ''}}">
         <view class="title">{{title}}<text wx:if="{{asterisk}}" class="asterisk">*</text></view>
         <view class="input">
           <picker mode="{{pickerMode}}" class="picker" bindchange="bindInput" fields="{{pickerFields}}" range="{{pickerRange}}" bindlongpress="bindDel">

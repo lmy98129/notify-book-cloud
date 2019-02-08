@@ -49,20 +49,20 @@ page {
   padding-left: 0;
   width: 92%;
   display: block;
-  margin-top: 0rpx;
+  margin-top: 20rpx;
   margin-bottom: 0rpx;
   color: rgb(110, 110, 110);
   line-height: 70rpx;
   border-radius: 0;
 }
 
-.item.add-wrap .add-btn {
+/* .item.add-wrap .add-btn {
   width: 100%;
   color: rgb(110, 110, 110);
   font-size: 35rpx;
   padding-top: 10rpx;
   padding-bottom: 10rpx;
-}
+} */
 
 .submit {
   padding-top: 15rpx;

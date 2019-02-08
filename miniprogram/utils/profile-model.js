@@ -12,7 +12,7 @@ const initValue = {
     name: "现住址"
   },
   wechatId: {
-    name: "微信"
+    name: "微信号"
   },
   phoneNumber: {
     name: "手机号"
@@ -157,8 +157,101 @@ const columnRank = [
   },
 ]
 
+const searchColumnItem = [
+  "学历信息",
+  "工作职务",
+  "联系方式",
+  "昵称",
+  "真实姓名",
+  "性别",
+  "生日",
+  "籍贯",
+  "现住址",
+  "手机号",
+  "微信号",
+]
+
+const searchColumnKey = [
+  "degreeArray",
+  "jobArray",
+  "contactArray",
+  "nickName",
+  "realName",
+  "gender",
+  "birthDate",
+  "homeTown",
+  "address",
+  "phoneNumber",
+  "wechatId",
+]
+
+const degreeArrayItem = [
+  "学历",
+  "学院",
+  "专业",
+  "班级",
+  "班主任",
+  "入学时间",
+  "毕业时间"
+]
+
+const degreeArrayKey = [
+  "degree",
+  "school",
+  "major",
+  "className",
+  "headteacher",
+  "degreeStartTime",
+  "degreeEndTime",
+]
+
+const contactArrayItem = [
+  "联系方式类型",
+  "联系方式内容",
+]
+
+const contactArrayKey = [
+  "contactType",
+  "content"
+]
+
+const jobArrayItem = [
+  "工作单位",
+  "职务名称",
+  "入职时间",
+  "离职时间"
+]
+
+const jobArrayKey = [
+  "institution",
+  "job",
+  "jobStartTime",
+  "jobEndTime"
+]
+
+const searchField = {
+  searchColumn: {
+    searchColumnItem,
+    searchColumnKey,
+  },
+  degreeArray: {
+    degreeArrayItem,
+    degreeArrayKey,
+  },
+  contactArray: {
+    contactArrayItem,
+    contactArrayKey
+  },
+  jobArray: {
+    jobArrayItem,
+    jobArrayKey
+  }
+  
+}
+
 module.exports = {
   initValue,
   userInfo,
-  columnRank
+  columnRank,
+  searchField
 }

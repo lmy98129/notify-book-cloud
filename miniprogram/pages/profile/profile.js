@@ -80,16 +80,16 @@ Page({
     if (mode !== "normal") {
       let curUserProfile = wx.getStorageSync(mode)[index];
       try {
-        let avatarUrl = curUserProfile.avatarUrl,
-        nickName = curUserProfile.nickName,
-        bgImgUrl = curUserProfile.bgImgUrl;
+        let { avatarUrl, nickName, bgImgUrl } = curUserProfile;
         if (avatarUrl !== undefined) {
-          this.setData({avatarUrl});
+          this.setData({ avatarUrl });
         }
-        this.setData({
-          nickName,
-          bgImgUrl
-        })
+        if (bgImgUrl !== undefined) {
+          this.setData({ bgImgUrl })
+        }
+        if (nickName !== undefined) {
+          this.setData({ nickName })
+        }
         if (bgImgUrl === "" || bgImgUrl === undefined) {
           this.setData({
             bgImgUrl: app.globalData.DEFAULT_BGIMGURL

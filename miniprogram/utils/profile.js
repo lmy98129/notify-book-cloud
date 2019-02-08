@@ -3,6 +3,7 @@ const db = wx.cloud.database();
 const app = getApp();
 const profModel = require("./profile-model");
 const toast = require("./message").toast;
+const confirmOnly = require("./message").confirmOnly;
 
 import regeneratorRuntime, { async } from "./regenerator-runtime/runtime";
 
@@ -243,9 +244,11 @@ const decodeForEdit = (tmpUserInfo, initValue, that) => {
   let tmpArray, tmpDate;
   delete tmpUserInfo._id;
   delete tmpUserInfo._openid;
-  that.setData({
-    avatarUrl: tmpUserInfo.avatarUrl
-  })
+  if (tmpUserInfo.avatarUrl !== undefined) {
+    that.setData({
+      avatarUrl: tmpUserInfo.avatarUrl
+    })
+  }
   for (let item in tmpUserInfo) {
     switch(item) {
       case "birthDate": 
@@ -260,18 +263,15 @@ const decodeForEdit = (tmpUserInfo, initValue, that) => {
           for (let subItem in tmpArray[i]) {
             if (tmpArray[i][subItem] === undefined || tmpArray[i][subItem] === "") {
               tmpArray[i][subItem] = initValue[subItem].default;
-              that.setData({
-                [item]: tmpArray
-              });
             } else if (subItem === "jobStartTime" || subItem === "jobEndTime") {
               tmpDate = tmpArray[i][subItem].split("-");
               tmpArray[i][subItem] = parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月";
-              that.setData({
-                [item]: tmpArray
-              });
             }
           }
         }
+        that.setData({
+          [item]: tmpArray
+        });
         break;
       case "contactArray":
         tmpArray = JSON.parse(JSON.stringify(tmpUserInfo[item]));
@@ -285,18 +285,15 @@ const decodeForEdit = (tmpUserInfo, initValue, that) => {
           for (let subItem in tmpArray[i]) {
             if (tmpArray[i][subItem] === undefined || tmpArray[i][subItem] === "") {
               tmpArray[i][subItem] = initValue[subItem].default;
-              that.setData({
-                [item]: tmpArray
-              });
             } else if (subItem === "degreeStartTime" || subItem === "degreeEndTime") {
               tmpDate = tmpArray[i][subItem].split("-");
               tmpArray[i][subItem] = parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月";
-              that.setData({
-                [item]: tmpArray
-              });
             }
           }
         }
+        that.setData({
+          [item]: tmpArray
+        });
         break;
       default:
         that.setData({
@@ -493,9 +490,36 @@ const introUploadForManage = async (that, intro, mode, index) => {
   }
 }
 
+const uploadForAddProflieManage = async (profile) => {
+  try {
+    wx.showLoading({
+      title: "资料上传中"
+    });
+
+    let res = await wx.cloud.callFunction({
+      name: "profile-manage",
+      data: {
+        $url: "addProfile",
+        profile,
+        collection: "profile-test",
+      }
+    })
+
+    wx.hideLoading();
+    confirmOnly("本次添加成功的用户资料在校友资料的最后一页，如需查看，请点击校友资料管理页面右下角“末页”按钮并滚动表格到底部。");
+    console.log("更新用户资料成功：", res);
+  } catch (error) {
+    wx.hideLoading();
+    console.log("更新用户资料出错：", error.message);
+    toast("更新资料出错", "none");
+  }
+
+}
+
 module.exports = {
   upload,
   uploadForManage,
+  uploadForAddProflieManage,
   download,
   introUpload,
   introUploadForManage,

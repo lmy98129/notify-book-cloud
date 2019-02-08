@@ -131,5 +131,24 @@ exports.main = async (event, context) => {
     }
   })
 
+  app.router("addProfile", async (ctx) => {
+    try {
+      let { profile, collection } = event;
+
+      let addRes = await db.collection(collection).add({ data: profile });
+
+      ctx.body = {
+        code: 1,
+        addRes,
+      }
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        code: -1,
+        err: error.message
+      }
+    }
+  })
+
   return app.serve();
 }

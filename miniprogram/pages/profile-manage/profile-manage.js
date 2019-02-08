@@ -28,6 +28,7 @@ Page({
     scrollViewLeft: 0,
     isSelectColumnModalHidden: true,
     isPageControlModalHidden: true,
+    isAddSearchFieldModalHidden: true,
     columnInfo: [],
     bodyWidth: 0,
     columns: [],
@@ -229,13 +230,17 @@ Page({
     })
   },
 
-  prevPage() {
+  prevPage(tmpStart) {
     let { start, pageLength } = this.data;
     if (start <= 0) {
       toast("当前已经是第一页", "none");
       return;
     } else {
-      start -= pageLength;
+      if (tmpStart !== undefined && typeof tmpStart !== "object") {
+        start = tmpStart;
+      } else {
+        start -= pageLength;
+      }
       this.setData({ start });
       this.download(start, pageLength);
       wx.pageScrollTo({
@@ -248,13 +253,26 @@ Page({
     }
   },
 
-  nextPage() {
-    let { start, pageLength, total } = this.data;
-    start += pageLength;
-    if (start > total) {
+  firstPage() {
+    this.prevPage(0);
+  },
+
+  lastPage() {
+    let { totalPage, pageLength } = this.data;
+    this.nextPage((totalPage-1)*pageLength);
+  },
+
+  nextPage(tmpStart) {
+    let { start, pageLength, totalPage } = this.data;
+    if (start >= (totalPage-1)*pageLength) {
       toast("当前已经是最后一页", "none");
       return;
     } else {
+      if (tmpStart !== undefined && typeof tmpStart !== "object") {
+        start = tmpStart;
+      } else {
+        start += pageLength;
+      }
       this.setData({ start });
       this.download(start, pageLength);
       wx.pageScrollTo({
@@ -329,9 +347,46 @@ Page({
     if (tmpPageLength > 0 && tmpPageLength !== null && 
       tmpPageLength !== undefined && !isNaN(tmpPageLength)) {
       this.setData({
-      tmpTotalPage: Math.ceil(total / tmpPageLength)
+       tmpTotalPage: Math.ceil(total / tmpPageLength)
       })
     }
   },
+
+  addProfile() {
+    wx.navigateTo({
+      url: "../profile-edit/profile-edit?mode=addProfileManage"
+    })
+  },
+
+  import() {
+    wx.chooseMessageFile({
+      count: 1,
+      type: "file",
+      success: res => {
+        const filePath = res.tempFiles[0].path;
+        const cloudPath = "import/import-" + (new Date()).getTime() + filePath.match(/\.[^.]+?$/)[0];
+        wx.cloud.uploadFile({
+          cloudPath,
+          filePath,
+          success: async res => {
+            console.log('上传文档成功：', res);
+            toast("上传文档成功");
+          }
+        })
+      }
+    })
+  },
+
+  showAddSearchField() {
+    this.setData({
+      isAddSearchFieldModalHidden: false
+    })
+  },
+
+  hideAddSearchField() {
+    this.setData({
+      isAddSearchFieldModalHidden: true
+    })
+  }
 
 })

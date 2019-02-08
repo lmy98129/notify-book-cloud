@@ -257,7 +257,7 @@ const defaultForManage = async (that, mode, index) => {
 
 module.exports = {
   upload,
+  wechat,
   uploadForManage,
   defaultForManage,
-  wechat,
 }
