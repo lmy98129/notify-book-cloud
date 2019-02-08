@@ -11,6 +11,11 @@
   font-size: 36rpx;
 }
 
+.item.modal {
+  width: 100%;
+  padding-left: 10rpx;
+}
+
 .item view {
   padding-top: 6rpx;
 }

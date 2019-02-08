@@ -241,7 +241,7 @@ exports.main = async (event, context) => {
             if (start !== undefined && pageLength !== undefined){
               let countRes = await db.collection(collection).count();
               total = countRes.total;
-              cloudRes = await db.collection(collection).skip(start).limit(start+pageLength).field(field).get();
+              cloudRes = await db.collection(collection).skip(start).limit(pageLength).field(field).get();
               if (cloudRes.data !== undefined) {
                 searchRes = cloudRes.data;
               }

@@ -27,6 +27,7 @@ Page({
     scrollViewTop: 0,
     scrollViewLeft: 0,
     isSelectColumnModalHidden: true,
+    isPageControlModalHidden: true,
     columnInfo: [],
     bodyWidth: 0,
     columns: [],
@@ -263,6 +264,73 @@ Page({
         scrollViewTop: 0,
         scrollViewLeft: 0,
       });
+    }
+  },
+
+  showPageControl() {
+    let { page, pageLength, total } = this.data;
+    this.setData({
+      isPageControlModalHidden: false,
+      tmpPage: page,
+      tmpPageLength: pageLength,
+      tmpTotalPage: Math.ceil(total / pageLength)
+    })
+  },
+
+  hidePageControl() {
+    this.setData({
+      isPageControlModalHidden: true
+    })
+  },
+
+  pageControl() {
+    let { tmpPage, tmpPageLength, total, page, pageLength } = this.data;
+    if (tmpPage == "" || tmpPageLength == "" || 
+      tmpPage <= 0 || tmpPageLength <= 0 || 
+      tmpPage === null || tmpPageLength === null || 
+      tmpPage === undefined || tmpPageLength === undefined ||
+      isNaN(tmpPage) || isNaN(tmpPageLength)) {
+      toast("输入格式有误，请重新输入或取消", "none");
+      return;
+    } else if (tmpPage > Math.ceil(total / tmpPageLength) ||
+    tmpPageLength > total ) {
+      toast("输入超出范围，请重新输入或取消", "none");
+      return;
+    } else if (tmpPage === page && tmpPageLength === pageLength) {
+      this.setData({
+        isPageControlModalHidden: true
+      })
+      return;
+    } else {
+      this.download((tmpPage-1)*tmpPageLength, tmpPageLength);
+      this.setData({
+        start: (tmpPage-1)*tmpPageLength,
+        page: tmpPage,
+        pageLength: tmpPageLength,
+        isPageControlModalHidden: true
+      })
+    }
+  },
+
+  setPage(e) {
+    let { value } = e.detail;
+    this.setData({
+      tmpPage: parseInt(value),
+    })
+  },
+
+  setPageLength(e) {
+    let { value } = e.detail;
+    let { total } = this.data;
+    let tmpPageLength = parseInt(value);
+    this.setData({
+      tmpPageLength
+    })
+    if (tmpPageLength > 0 && tmpPageLength !== null && 
+      tmpPageLength !== undefined && !isNaN(tmpPageLength)) {
+      this.setData({
+      tmpTotalPage: Math.ceil(total / tmpPageLength)
+      })
     }
   },
 

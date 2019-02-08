@@ -196,7 +196,7 @@ page {
   border: 1rpx solid #808080;
   border-radius: 40rpx;
   font-size: 40rpx;
-  line-height: 35rpx;
+  line-height: 36rpx;
   margin-top: 10rpx;
 }
 
@@ -209,8 +209,13 @@ page {
   line-height: 40rpx;
   margin-right: 10rpx;
   margin-top: 10rpx;
+  text-align: center;
 }
 
 .manage-row.bottom-manage-row {
   margin-bottom: 100px;
+}
+
+.manage-row .row-content.row-content-special {
+  max-width: 100%;
 }

@@ -1,8 +1,8 @@
 <!--components/profile-input/profile-input.wxml-->
-<block wx:if="{{mode === 'normal'}}">
+<block wx:if="{{mode === 'normal' || mode === 'modal'}}">
   <form bindsubmit="getFormid" report-submit='true'>
     <button class="submit-no-style" form-type='submit'>
-      <view class="item">
+      <view class="item {{mode === 'modal' ? 'modal' : ''}}">
         <view class="title">{{title}}<text wx:if="{{asterisk}}" class="asterisk">*</text></view>
         <view class="input">
           <input bindinput="bindInput" value="{{value}}" placeholder="{{placeHolder}}" ></input>
