@@ -199,6 +199,7 @@ page {
   font-size: 40rpx;
   line-height: 36rpx;
   margin-top: 10rpx;
+  margin-right: 10rpx;
 }
 
 .manage-row .row-content .row {
@@ -211,6 +212,10 @@ page {
   margin-right: 10rpx;
   margin-top: 10rpx;
   text-align: center;
+  display: flex;
+  flex-direction: row;
+  max-width: 90%;
+  align-items: center;
 }
 
 .manage-row.bottom-manage-row {
@@ -227,4 +232,19 @@ page {
 
 .manage-row .row-content.row-full-width {
   max-width: 100%;
+}
+
+.manage-row .row-content .row .manage-delete {
+  font-size: 35rpx;
+  margin-left: 13rpx;
+  line-height: 40rpx;
+}
+
+.manage-row .row-content .row .search-field {
+  max-width: 100%;
+  /* white-space: nowrap; */
+  word-break: break-all;
+  /* overflow: hidden; */
+  /* text-overflow: ellipsis; */
+  text-align: left;
 }

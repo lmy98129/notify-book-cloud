@@ -34,8 +34,16 @@ Page({
     selectedSearchColumnName: "请选择检索列项",
     selectedSearchColumnKey: "",
     selectedSearchColumnItemName: "请选择检索子项",
-    startTime: "请选择起始时间",
-    endTime: "请选择结束时间",
+    startTimeForm: "请选择起始时间",
+    endTimeForm: "请选择结束时间",
+    startTime: "",
+    endTime: "",
+    searchContent: "",
+    degreeTypeArray: ["本科", "硕士", "博士", "博士后", "专科", "其他"],
+    degreeForm: "请选择学历",
+    degree: "",
+    searchTypeName: "",
+    searchType: "",
     gender: 1,
     columnInfo: [],
     bodyWidth: 0,
@@ -43,6 +51,7 @@ Page({
     datas: [],
     rows: [],
     selColumns: [],
+    searchFieldArray: [],
   },
 
   /**
@@ -106,7 +115,8 @@ Page({
     wx.showLoading({
       title: "数据加载中"
     })
-    let downloadRes = await profMan.download(start, pageLength);
+    let { searchFieldArray } = this.data;
+    let downloadRes = await profMan.download(start, pageLength, searchFieldArray);
     switch(downloadRes.code) {
       case 1:
         let datas = downloadRes.result;
@@ -232,7 +242,7 @@ Page({
         if (res.confirm) {
           await profMan.deleteProfile("profileManageDataTmp", e.target.dataset.index);
           let { start, pageLength } = this.data;
-          this.download(start, pageLength);
+          this.download(start, pageLength );
         }
       }
     })
@@ -396,7 +406,15 @@ Page({
       isAddSearchFieldModalHidden: true,
       selectedSearchColumnName: "请选择检索列项",
       selectedSearchColumnKey: "",
-      selectedSearchColumnItemKey: ""
+      selectedSearchColumnItemName: "请选择检索子项",
+      selectedSearchColumnItemKey: "",
+      startTimeForm: "请选择起始时间",
+      endTimeForm: "请选择结束时间",
+      degreeForm: "请选择学历",
+      degree: "",
+      startTime: "",
+      endTime: "",
+      searchContent: "",
     })
   },
 
@@ -407,7 +425,15 @@ Page({
     this.setData({
       selectedSearchColumnName: searchColumnArray[value],
       selectedSearchColumnKey,
-      selectedSearchColumnItemName: "请选择检索子项"
+      selectedSearchColumnItemName: "请选择检索子项",
+      selectedSearchColumnItemKey: "",
+      startTimeForm: "请选择起始时间",
+      endTimeForm: "请选择结束时间",
+      degreeForm: "请选择学历",
+      degree: "",
+      startTime: "",
+      endTime: "",
+      searchContent: "",
     })
     if (selectedSearchColumnKey === 'jobArray' || 
     selectedSearchColumnKey === 'contactArray' || 
@@ -437,7 +463,7 @@ Page({
         break;
       case "birthDate":
         this.setData({
-          searchTypeName: "范围",
+          searchTypeName: "范围为",
           searchType: "range"
         });
         break;
@@ -451,6 +477,13 @@ Page({
     this.setData({
       selectedSearchColumnItemName: searchColumnItemArray[value],
       selectedSearchColumnItemKey,
+      startTimeForm: "请选择起始时间",
+      endTimeForm: "请选择结束时间",
+      degreeForm: "请选择学历",
+      degree: "",
+      startTime: "",
+      endTime: "",
+      searchContent: "",
     })
     switch(selectedSearchColumnItemKey) {
       case "degree":
@@ -477,7 +510,7 @@ Page({
       case "jobStartTime":
       case "jobEndTime":
         this.setData({
-          searchTypeName: "范围",
+          searchTypeName: "范围为",
           searchType: "range"
         });
         break;
@@ -490,6 +523,268 @@ Page({
       gender: parseInt(gender)
     })
   },
+
+  setTime(e) {
+    let { inputType, value } = e.detail;
+    let formated = value.split("-");
+    if (formated.length <= 2) {
+      this.setData({
+        [inputType + "Form"]: parseInt(formated[0]) + "年" + parseInt(formated[1]) + "月",
+        [inputType]: value
+      })
+    } else {
+      this.setData({
+        [inputType + "Form"]: parseInt(formated[0]) + "年" + parseInt(formated[1]) + "月" + parseInt(formated[2]) + "日",
+        [inputType]: value
+      })
+    }
+  },
+
+  setDegree(e) {
+    let { inputType, value } = e.detail;
+    let { degreeTypeArray } = this.data;
+    this.setData({
+      [inputType + "Form"]: degreeTypeArray[value],
+      [inputType]: degreeTypeArray[value]
+    });
+  },
+
+  pickerDel(e) {
+    let { inputType } = e.detail;
+    switch(inputType) {
+      case "degree":
+        this.setData({
+          [inputType + "Form"]: "请选择学历",
+          [inputType]: ""
+        })
+        break;
+      case "startTime":
+        this.setData({
+          [inputType + "Form"]: "请选择起始时间",
+          [inputType]: ""
+        })
+        break;
+      case "endTime":
+        this.setData({
+          [inputType + "Form"]: "请选择结束时间",
+          [inputType]: ""
+        })
+        break;
+    }
+  },
+
+  setSearchContent(e) {
+    let { value } = e.detail;
+    this.setData({
+      searchContent: value,
+    })
+  },
+
+  addSearchField() {
+    let { selectedSearchColumnKey, selectedSearchColumnItemKey, 
+      selectedSearchColumnName, selectedSearchColumnItemName,
+      startTime, endTime, degree, gender, searchContent, searchTypeName, searchType, searchFieldArray } = this.data;
+    let colKey = selectedSearchColumnKey, colItemKey = selectedSearchColumnItemKey,
+      colName = selectedSearchColumnName, colItemName = selectedSearchColumnItemName,
+      searchFieldObj = {}, formated, searchContentFormated = "";
+    switch(colKey) {
+      case "gender":
+        // query[colKey] = gender;
+        if (gender === 1) {
+          searchContent = "男";
+        } else {
+          searchContent = "女";
+        }
+        break;
+      case "nickName":
+      case "realName":
+      case "homeTown":
+      case "address":
+      case "phoneNumber":
+      case "wechatId":
+        if (searchContent === "" || searchContent === undefined) {
+          toast("请填写检索内容", "none");
+          return;
+        }
+        // query[colKey] = {
+        //   $regex: searchContent, 
+        //   $options: 'im',
+        // }
+        break;
+      case "birthDate":
+        if (startTime === "" && endTime === "") {
+          toast("请至少填写一个时间", "none");
+          return;
+        }
+        // query[colKey] = {
+        //   $gte: startTime,
+        //   $lte: endTime
+        // }
+        // if (startTime === "请选择起始时间") {
+        //   delete query[colKey].$gte
+        // }
+        // if (endTime === "请选择结束时间") {
+        //   delete query[colKey].$lte
+        // }
+        searchContent = startTime + "~" + endTime;
+        if (startTime !== "") {
+          formated = startTime.split("-");
+          searchContentFormated += parseInt(formated[0]) + "年" + parseInt(formated[1]) + "月" + parseInt(formated[2]) + "日";
+        }
+        searchContentFormated += "~";
+        if (endTime !== "") {
+          formated = endTime.split("-");
+          searchContentFormated += parseInt(formated[0]) + "年" + parseInt(formated[1]) + "月" + parseInt(formated[2]) + "日";
+        }
+        break;
+      case "degreeArray":
+        // if (query[colKey] === undefined) {
+        //   query[colKey] = {
+        //     $elemMatch: {}
+        //   };
+        // }
+        switch(colItemKey) {
+          case "degree":
+            if (degree === "请选择学历") {
+              toast("请填写检索内容", "none");
+              return;
+            }
+            // query[colKey].$elemMatch[colItemKey] = degree;
+            searchContent = degree;
+            break;
+          case "school":
+          case "major":
+          case "className":
+          case "headteacher":
+            if (searchContent === "" || searchContent === undefined) {
+              toast("请填写检索内容", "none");
+              return;
+            }
+            // query[colKey].$elemMatch[colItemKey] = {
+            //   $regex: searchContent, 
+            //   $options: 'im',
+            // };
+            break;
+          case "degreeStartTime":
+          case "degreeEndTime":
+            if (startTime === "" && endTime === "") {
+              toast("请至少填写一个时间", "none");
+              return;
+            }
+            // query[colKey].$elemMatch[colItemKey] = {
+            //   $gte: startTime,
+            //   $lte: endTime
+            // }
+            // if (startTime === "请选择起始时间") {
+            //   delete query[colKey].$elemMatch[colItemKey].$gte
+            // }
+            // if (endTime === "请选择结束时间") {
+            //   delete query[colKey].$elemMatch[colItemKey].$lte
+            // }
+            searchContent = startTime + "~" + endTime;
+            if (startTime !== "") {
+              formated = startTime.split("-");
+              searchContentFormated += parseInt(formated[0]) + "年" + parseInt(formated[1]) + "月";
+            }
+            searchContentFormated += "~";
+            if (endTime !== "") {
+              formated = endTime.split("-");
+              searchContentFormated += parseInt(formated[0]) + "年" + parseInt(formated[1]) + "月";
+            }
+            break;
+        }
+        break;
+      case "contactArray":
+        // if (query[colKey] === undefined) {
+        //   query[colKey] = {
+        //     $elemMatch: {}
+        //   };
+        // }
+        switch(colItemKey) {
+          case "contactType":
+          case "content":
+            if (searchContent === "" || searchContent === undefined) {
+              toast("请填写检索内容", "none");
+              return;
+            }
+            // query[colKey].$elemMatch[colItemKey] = {
+            //   $regex: searchContent, 
+            //   $options: 'im',
+            // };
+            break;
+        }
+        break;
+      case "jobArray":
+        // if (query[colKey] === undefined) {
+        //   query[colKey] = {
+        //     $elemMatch: {}
+        //   };
+        // }
+        switch(colItemKey) {
+          case "institution":
+          case "job":
+            if (searchContent === "" || searchContent === undefined) {
+              toast("请填写检索内容", "none");
+              return;
+            }
+            // query[colKey].$elemMatch[colItemKey] = {
+            //   $regex: searchContent, 
+            //   $options: 'im',
+            // };
+            break;
+          case "jobStartTime":
+          case "jobEndTime":
+            if (startTime === "" && endTime === "") {
+              toast("请至少填写一个时间", "none");
+              return;
+            }
+            // query[colKey].$elemMatch[colItemKey] = {
+            //   $gte: startTime,
+            //   $lte: endTime
+            // };
+            // if (startTime === "请选择起始时间") {
+            //   delete query[colKey].$elemMatch[colItemKey].$gte
+            // }
+            // if (endTime === "请选择结束时间") {
+            //   delete query[colKey].$elemMatch[colItemKey].$lte
+            // }
+            searchContent = startTime + "~" + endTime;
+            if (startTime !== "") {
+              formated = startTime.split("-");
+              searchContentFormated += parseInt(formated[0]) + "年" + parseInt(formated[1]) + "月";
+            }
+            searchContentFormated += "~";
+            if (endTime !== "") {
+              formated = endTime.split("-");
+              searchContentFormated += parseInt(formated[0]) + "年" + parseInt(formated[1]) + "月";
+            }
+            break;
+        }
+        break;
+    }
+    if (colKey === 'jobArray' || 
+      colKey === 'contactArray' || 
+      colKey === 'degreeArray') {
+      searchFieldObj = { colKey, colItemKey, searchType, searchTypeName,  searchContent, colName, colItemName };
+    } else {
+      searchFieldObj = { colKey, searchType, searchTypeName, searchContent, colName };
+    }
+    if (searchContentFormated !== undefined) {
+      searchFieldObj.searchContentFormated = searchContentFormated;
+    }
+    searchFieldArray.push(searchFieldObj);
+    this.setData({ searchFieldArray, isAddSearchFieldModalHidden: true });
+    this.hideAddSearchField();
+  },
+
+  deleteSearchField(e) {
+    let { index } = e.target.dataset;
+    let { searchFieldArray } = this.data;
+    searchFieldArray.splice(index, 1);
+    this.setData({ searchFieldArray });
+  }
+
+
 
 
 })

@@ -206,8 +206,8 @@ const degreeArrayKey = [
 ]
 
 const contactArrayItem = [
-  "联系方式类型",
-  "联系方式内容",
+  "类型",
+  "内容",
 ]
 
 const contactArrayKey = [
