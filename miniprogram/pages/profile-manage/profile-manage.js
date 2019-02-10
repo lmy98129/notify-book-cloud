@@ -765,4 +765,8 @@ Page({
     this.download(start, pageLength);
   },
 
+  modalTouchMove(e) {
+    
+  }
+
 })

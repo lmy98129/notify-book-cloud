@@ -120,7 +120,7 @@
   </view>
 </view>
 
-<modal hidden="{{isSelectColumnModalHidden}}" title="选择显示的列项" no-cancel="{{true}}" bindconfirm="hideSelectColumn">
+<modal hidden="{{isSelectColumnModalHidden}}" title="选择显示的列项" no-cancel="{{true}}" bindconfirm="hideSelectColumn" catchtouchmove="modalTouchMove">
   <checkbox-group class="checkbox-list" bindchange="selectColumn">
     <label wx:for="{{selColumns}}" wx:key="{{index}}" class="checkbox">
       <checkbox value="{{item.key}}" checked="{{item.checked}}" /> {{item.col}}
@@ -128,13 +128,13 @@
   </checkbox-group>
 </modal>
 
-<modal hidden="{{isPageControlModalHidden}}" title="修改页面参数" bindconfirm="pageControl" bindcancel="hidePageControl">
+<modal hidden="{{isPageControlModalHidden}}" title="修改页面参数" bindconfirm="pageControl" bindcancel="hidePageControl" catchtouchmove="modalTouchMove">
   <profile-input title="当前页数" asterisk="{{false}}" mode="modal-input" bind:input="setPage" value="{{tmpPage}}"></profile-input>
   <profile-input title="每页显示" asterisk="{{false}}" mode="modal-input" bind:input="setPageLength" value="{{tmpPageLength}}"></profile-input>
   <view class="modal-hint">当前最大页数：{{tmpTotalPage}}</view>
 </modal>
 
-<modal hidden="{{isAddSearchFieldModalHidden}}" title="添加检索条件" bindconfirm="addSearchField" bindcancel="hideAddSearchField">
+<modal hidden="{{isAddSearchFieldModalHidden}}" title="添加检索条件" bindconfirm="addSearchField" bindcancel="hideAddSearchField" catchtouchmove="modalTouchMove">
   <profile-input title="检索列项" asterisk="{{false}}" mode="modal-picker" picker-mode="selector" picker-range="{{searchColumnArray}}" value="{{selectedSearchColumnName}}"  bind:input="setSearchColumn" ></profile-input>
   <block wx:if="{{selectedSearchColumnKey === 'jobArray' || selectedSearchColumnKey === 'contactArray' || selectedSearchColumnKey === 'degreeArray'}}">
     <profile-input title="检索子项" asterisk="{{false}}" mode="modal-picker" picker-mode="selector" picker-range="{{searchColumnItemArray}}" value="{{selectedSearchColumnItemName}}"  bind:input="setSearchColumnItem" ></profile-input>
