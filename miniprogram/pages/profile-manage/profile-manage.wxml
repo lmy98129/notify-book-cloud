@@ -104,7 +104,7 @@
     </view>
   </block>
 
-  <view class="manage-row row-center bottom-manage-row"  wx:if="{{page !== undefined && totalPage !== undefined}}">
+  <view class="manage-row row-center bottom-manage-row"  wx:if="{{page !== undefined && totalPage !== undefined && datas.length > 0}}">
     <view class="row-content row-content-special">
       <view class="row">当前页数 {{page}} / {{totalPage}} | 每页 {{pageLength}} | 总计 {{total}}</view>
       <view class="row" bind:tap="showPageControl">修改</view>

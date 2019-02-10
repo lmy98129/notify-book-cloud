@@ -1,7 +1,7 @@
 const confirmOnly = (content) => {
   wx.showModal({
     title: '提示',
-    content: content,
+    content,
     showCancel: false,
     confirmText: '好的',
   })
@@ -20,7 +20,20 @@ const toast = (title, icon, duration) => {
   wx.showToast(obj);
 }
 
+const modal = (content) => {
+  return new Promise((resolve) => {
+    wx.showModal({
+      title: '提示',
+      content,
+      success(res) {
+        resolve(res);
+      }
+    })
+  })
+}
+
 module.exports = {
-  confirmOnly: confirmOnly,
-  toast: toast
+  confirmOnly,
+  toast,
+  modal
 }

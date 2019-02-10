@@ -1,6 +1,7 @@
 // miniprogram/pages/profile-manage/profile-manage.js
 const profMan = require("../../utils/profile-manage");
 const toast = require("../../utils/message").toast;
+const modal = require("../../utils/message").modal;
 const columnRank = require("../../utils/profile-model").columnRank;
 const searchField = require("../../utils/profile-model").searchField;
 
@@ -415,6 +416,8 @@ Page({
       startTime: "",
       endTime: "",
       searchContent: "",
+      searchType: "",
+      searchTypeName: "",
     })
   },
 
@@ -434,6 +437,8 @@ Page({
       startTime: "",
       endTime: "",
       searchContent: "",
+      searchType: "",
+      searchTypeName: "",
     })
     if (selectedSearchColumnKey === 'jobArray' || 
     selectedSearchColumnKey === 'contactArray' || 
@@ -484,6 +489,8 @@ Page({
       startTime: "",
       endTime: "",
       searchContent: "",
+      searchType: "",
+      searchTypeName: "",
     })
     switch(selectedSearchColumnItemKey) {
       case "degree":
@@ -580,20 +587,19 @@ Page({
     })
   },
 
-  addSearchField() {
+  addSearchField: async function() {
     let { selectedSearchColumnKey, selectedSearchColumnItemKey, 
       selectedSearchColumnName, selectedSearchColumnItemName,
       startTime, endTime, degree, gender, searchContent, searchTypeName, searchType, searchFieldArray } = this.data;
     let colKey = selectedSearchColumnKey, colItemKey = selectedSearchColumnItemKey,
       colName = selectedSearchColumnName, colItemName = selectedSearchColumnItemName,
-      searchFieldObj = {}, formated, searchContentFormated = "";
+      isOverride = false, searchFieldObj = {}, formated, searchContentFormated = "", overrideIndex;
     if (colKey === "" || colKey === undefined) {
       toast("请选择检索内容", "none");
       return;      
     }
     switch(colKey) {
       case "gender":
-        // query[colKey] = gender;
         if (gender === 1) {
           searchContent = "男";
         } else {
@@ -610,26 +616,12 @@ Page({
           toast("请填写检索内容", "none");
           return;
         }
-        // query[colKey] = {
-        //   $regex: searchContent, 
-        //   $options: 'im',
-        // }
         break;
       case "birthDate":
         if (startTime === "" && endTime === "") {
           toast("请至少填写一个时间", "none");
           return;
         }
-        // query[colKey] = {
-        //   $gte: startTime,
-        //   $lte: endTime
-        // }
-        // if (startTime === "请选择起始时间") {
-        //   delete query[colKey].$gte
-        // }
-        // if (endTime === "请选择结束时间") {
-        //   delete query[colKey].$lte
-        // }
         searchContent = startTime + "~" + endTime;
         if (startTime !== "") {
           formated = startTime.split("-");
@@ -642,18 +634,12 @@ Page({
         }
         break;
       case "degreeArray":
-        // if (query[colKey] === undefined) {
-        //   query[colKey] = {
-        //     $elemMatch: {}
-        //   };
-        // }
         switch(colItemKey) {
           case "degree":
             if (degree === "请选择学历") {
               toast("请填写检索内容", "none");
               return;
             }
-            // query[colKey].$elemMatch[colItemKey] = degree;
             searchContent = degree;
             break;
           case "school":
@@ -664,10 +650,6 @@ Page({
               toast("请填写检索内容", "none");
               return;
             }
-            // query[colKey].$elemMatch[colItemKey] = {
-            //   $regex: searchContent, 
-            //   $options: 'im',
-            // };
             break;
           case "degreeStartTime":
           case "degreeEndTime":
@@ -675,16 +657,6 @@ Page({
               toast("请至少填写一个时间", "none");
               return;
             }
-            // query[colKey].$elemMatch[colItemKey] = {
-            //   $gte: startTime,
-            //   $lte: endTime
-            // }
-            // if (startTime === "请选择起始时间") {
-            //   delete query[colKey].$elemMatch[colItemKey].$gte
-            // }
-            // if (endTime === "请选择结束时间") {
-            //   delete query[colKey].$elemMatch[colItemKey].$lte
-            // }
             searchContent = startTime + "~" + endTime;
             if (startTime !== "") {
               formated = startTime.split("-");
@@ -699,11 +671,6 @@ Page({
         }
         break;
       case "contactArray":
-        // if (query[colKey] === undefined) {
-        //   query[colKey] = {
-        //     $elemMatch: {}
-        //   };
-        // }
         switch(colItemKey) {
           case "contactType":
           case "content":
@@ -711,19 +678,10 @@ Page({
               toast("请填写检索内容", "none");
               return;
             }
-            // query[colKey].$elemMatch[colItemKey] = {
-            //   $regex: searchContent, 
-            //   $options: 'im',
-            // };
             break;
         }
         break;
       case "jobArray":
-        // if (query[colKey] === undefined) {
-        //   query[colKey] = {
-        //     $elemMatch: {}
-        //   };
-        // }
         switch(colItemKey) {
           case "institution":
           case "job":
@@ -731,10 +689,6 @@ Page({
               toast("请填写检索内容", "none");
               return;
             }
-            // query[colKey].$elemMatch[colItemKey] = {
-            //   $regex: searchContent, 
-            //   $options: 'im',
-            // };
             break;
           case "jobStartTime":
           case "jobEndTime":
@@ -742,16 +696,6 @@ Page({
               toast("请至少填写一个时间", "none");
               return;
             }
-            // query[colKey].$elemMatch[colItemKey] = {
-            //   $gte: startTime,
-            //   $lte: endTime
-            // };
-            // if (startTime === "请选择起始时间") {
-            //   delete query[colKey].$elemMatch[colItemKey].$gte
-            // }
-            // if (endTime === "请选择结束时间") {
-            //   delete query[colKey].$elemMatch[colItemKey].$lte
-            // }
             searchContent = startTime + "~" + endTime;
             if (startTime !== "") {
               formated = startTime.split("-");
@@ -770,14 +714,38 @@ Page({
       colKey === 'contactArray' || 
       colKey === 'degreeArray') {
       searchFieldObj = { colKey, colItemKey, searchType, searchTypeName,  searchContent, colName, colItemName };
+      overrideIndex = searchFieldArray.findIndex((x) => (x.colKey === colKey && x.colItemKey === colItemKey));
+      if (overrideIndex >= 0) {
+        let modalRes = await modal("检索条件列表中已有相同种类项目，若点击确定，则当前检索条件将覆盖同类项目");
+        if (modalRes.confirm) {
+          isOverride = true;
+          overrideIndex
+        } else if (modalRes.cancel) {
+          return;
+        }
+      }
     } else {
       searchFieldObj = { colKey, searchType, searchTypeName, searchContent, colName };
+      overrideIndex = searchFieldArray.findIndex((x) => (x.colKey === colKey));
+      if (overrideIndex >= 0) {
+        let modalRes = await modal("检索条件列表中已有相同种类项目，若点击确定，则当前检索条件将覆盖同类项目");
+        if (modalRes.confirm) {
+          isOverride = true;
+        } else if (modalRes.cancel) {
+          return;
+        }
+      }
     }
     if (searchContentFormated !== undefined) {
       searchFieldObj.searchContentFormated = searchContentFormated;
     }
-    searchFieldArray.push(searchFieldObj);
-    this.setData({ searchFieldArray, isAddSearchFieldModalHidden: true });
+    if (!isOverride) {
+      searchFieldArray.push(searchFieldObj);
+    } else if (isOverride && overrideIndex >= 0){
+      searchFieldArray.splice(overrideIndex, 1);
+      searchFieldArray.splice(overrideIndex, 0, searchFieldObj);
+    }
+    this.setData({ searchFieldArray });
     this.hideAddSearchField();
   },
 
