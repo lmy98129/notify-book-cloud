@@ -7,7 +7,7 @@ let { DEFAULT_AVATARURL, DEFAULT_BGIMGURL } = app.globalData;
 
 const download = async (start, pageLength, searchFieldArray) => {
   try {
-    let query;
+    let query, startTime, endTime, tmpArray, manageRes;
     if (searchFieldArray === undefined || searchFieldArray.length <= 0) {
       query = "ALL";
     } else {
@@ -16,7 +16,7 @@ const download = async (start, pageLength, searchFieldArray) => {
         let { colKey, colItemKey, searchContent } = field;
         switch(colKey) {
           case "gender":
-            query[colKey] = gender;
+            query[colKey] = searchContent;
             break;
           case "nickName":
           case "realName":
@@ -30,128 +30,110 @@ const download = async (start, pageLength, searchFieldArray) => {
             }
             break;
           case "birthDate":
-
+            tmpArray = searchContent.split("~");
+            startTime = tmpArray[0];
+            endTime = tmpArray[1];
             query[colKey] = {
               $gte: startTime,
               $lte: endTime
             }
-            if (startTime === "请选择起始时间") {
+            if (startTime === "") {
               delete query[colKey].$gte
             }
-            if (endTime === "请选择结束时间") {
+            if (endTime === "") {
               delete query[colKey].$lte
             }
             break;
           case "degreeArray":
-            // if (query[colKey] === undefined) {
-            //   query[colKey] = {
-            //     $elemMatch: {}
-            //   };
-            // }
+            if (query[colKey] === undefined) {
+              query[colKey] = {
+                $elemMatch: {}
+              };
+            }
             switch(colItemKey) {
               case "degree":
-                if (degree === "请选择学历") {
-                  toast("请填写检索内容", "none");
-                  return;
-                }
-                // query[colKey].$elemMatch[colItemKey] = degree;
-                searchContent = degree;
+                query[colKey].$elemMatch[colItemKey] = searchContent;
                 break;
               case "school":
               case "major":
               case "className":
               case "headteacher":
-                if (searchContent === "" || searchContent === undefined) {
-                  toast("请填写检索内容", "none");
-                  return;
-                }
-                // query[colKey].$elemMatch[colItemKey] = {
-                //   $regex: searchContent, 
-                //   $options: 'im',
-                // };
+                query[colKey].$elemMatch[colItemKey] = {
+                  $regex: searchContent, 
+                  $options: 'im',
+                };
                 break;
               case "degreeStartTime":
               case "degreeEndTime":
-                if (startTime === "请选择起始时间" && endTime === "请选择结束时间") {
-                  toast("请至少填写一个时间", "none");
-                  return;
+                tmpArray = searchContent.split("~");
+                startTime = tmpArray[0];
+                endTime = tmpArray[1];
+                query[colKey].$elemMatch[colItemKey] = {
+                  $gte: startTime,
+                  $lte: endTime
                 }
-                // query[colKey].$elemMatch[colItemKey] = {
-                //   $gte: startTime,
-                //   $lte: endTime
-                // }
-                // if (startTime === "请选择起始时间") {
-                //   delete query[colKey].$elemMatch[colItemKey].$gte
-                // }
-                // if (endTime === "请选择结束时间") {
-                //   delete query[colKey].$elemMatch[colItemKey].$lte
-                // }
-                searchContent = startTime + "~" + endTime;
+                if (startTime === "") {
+                  delete query[colKey].$elemMatch[colItemKey].$gte
+                }
+                if (endTime === "") {
+                  delete query[colKey].$elemMatch[colItemKey].$lte
+                }
                 break;
             }
             break;
           case "contactArray":
-            // if (query[colKey] === undefined) {
-            //   query[colKey] = {
-            //     $elemMatch: {}
-            //   };
-            // }
+            if (query[colKey] === undefined) {
+              query[colKey] = {
+                $elemMatch: {}
+              };
+            }
             switch(colItemKey) {
               case "contactType":
               case "content":
-                if (searchContent === "" || searchContent === undefined) {
-                  toast("请填写检索内容", "none");
-                  return;
-                }
-                // query[colKey].$elemMatch[colItemKey] = {
-                //   $regex: searchContent, 
-                //   $options: 'im',
-                // };
+                query[colKey].$elemMatch[colItemKey] = {
+                  $regex: searchContent, 
+                  $options: 'im',
+                };
                 break;
             }
             break;
           case "jobArray":
-            // if (query[colKey] === undefined) {
-            //   query[colKey] = {
-            //     $elemMatch: {}
-            //   };
-            // }
+            if (query[colKey] === undefined) {
+              query[colKey] = {
+                $elemMatch: {}
+              };
+            }
             switch(colItemKey) {
               case "institution":
               case "job":
-                if (searchContent === "" || searchContent === undefined) {
-                  toast("请填写检索内容", "none");
-                  return;
-                }
-                // query[colKey].$elemMatch[colItemKey] = {
-                //   $regex: searchContent, 
-                //   $options: 'im',
-                // };
+                query[colKey].$elemMatch[colItemKey] = {
+                  $regex: searchContent, 
+                  $options: 'im',
+                };
                 break;
               case "jobStartTime":
               case "jobEndTime":
-                if (startTime === "请选择起始时间" && endTime === "请选择结束时间") {
-                  toast("请至少填写一个时间", "none");
-                  return;
+                tmpArray = searchContent.split("~");
+                startTime = tmpArray[0];
+                endTime = tmpArray[1];
+                query[colKey].$elemMatch[colItemKey] = {
+                  $gte: startTime,
+                  $lte: endTime
+                };
+                if (startTime === "") {
+                  delete query[colKey].$elemMatch[colItemKey].$gte
                 }
-                // query[colKey].$elemMatch[colItemKey] = {
-                //   $gte: startTime,
-                //   $lte: endTime
-                // };
-                // if (startTime === "请选择起始时间") {
-                //   delete query[colKey].$elemMatch[colItemKey].$gte
-                // }
-                // if (endTime === "请选择结束时间") {
-                //   delete query[colKey].$elemMatch[colItemKey].$lte
-                // }
-                searchContent = startTime + "~" + endTime;
+                if (endTime === "") {
+                  delete query[colKey].$elemMatch[colItemKey].$lte
+                }
                 break;
             }
             break;
         }
       }
     }
-    let manageRes = await wx.cloud.callFunction({
+
+    manageRes = await wx.cloud.callFunction({
       name: "search",
       data: {
         $url: "manage",
@@ -161,8 +143,9 @@ const download = async (start, pageLength, searchFieldArray) => {
         pageLength,
       }
     });
+
     
-    if (manageRes.result !== undefined) {
+    if (manageRes !== undefined && manageRes.result !== undefined) {
       switch(manageRes.result.code) {
         case 1:
           let { result } = manageRes;

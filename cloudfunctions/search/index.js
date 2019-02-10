@@ -235,6 +235,7 @@ exports.main = async (event, context) => {
       let { query, start, limit, pageLength, collection } = event;
       let searchRes = [], total;
 
+      console.log(query);
       if (typeof query === "string") {
         switch(query) {
           case "ALL":
@@ -247,6 +248,13 @@ exports.main = async (event, context) => {
               }
             }
             break;
+        }
+      } else if (typeof query === "object") {
+        let countRes = await db.collection(collection).where(query).field(field).count();
+        total = countRes.total;
+        cloudRes = await db.collection(collection).where(query).skip(start).limit(pageLength).field(field).get();
+        if (cloudRes.data !== undefined) {
+          searchRes = cloudRes.data
         }
       }
 

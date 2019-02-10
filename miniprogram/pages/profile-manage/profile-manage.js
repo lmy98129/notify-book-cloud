@@ -587,6 +587,10 @@ Page({
     let colKey = selectedSearchColumnKey, colItemKey = selectedSearchColumnItemKey,
       colName = selectedSearchColumnName, colItemName = selectedSearchColumnItemName,
       searchFieldObj = {}, formated, searchContentFormated = "";
+    if (colKey === "" || colKey === undefined) {
+      toast("请选择检索内容", "none");
+      return;      
+    }
     switch(colKey) {
       case "gender":
         // query[colKey] = gender;
@@ -782,9 +786,15 @@ Page({
     let { searchFieldArray } = this.data;
     searchFieldArray.splice(index, 1);
     this.setData({ searchFieldArray });
-  }
+    if (searchFieldArray.length == 0) {
+      let { start, pageLength } = this.data;
+      this.download(start, pageLength);
+    }
+  },
 
-
-
+  startSearch: async function() {
+    let { start, pageLength } = this.data;
+    this.download(start, pageLength);
+  },
 
 })
