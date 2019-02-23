@@ -1,0 +1,111 @@
+/* miniprogram/pages/profile-import/profile-import.wxss */
+
+.hint {
+  text-align:center;
+  margin:0 auto;
+  width:70%;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.main {
+  height: 100%;
+}
+
+.button-wrap {
+  display: flex;
+  width: 70%;
+}
+
+.radio-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.radio-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.radio-content .name {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 80%;
+}
+
+.radio-content .del {
+  color: #e30;
+}
+
+.select-sheet {
+  width: 80%;
+  margin: 20rpx auto;
+  height: 400rpx;
+  font-size: 35rpx;
+  word-break: break-all;
+}
+
+.select-sheet .select-sheet-checkgroup{
+  display: flex;
+  flex-direction: column;
+}
+
+.select-sheet .select-sheet-checkgroup .checkbox {
+  margin-top: 10rpx;
+}
+
+.step {
+  width: 90%;
+  font-size: 35rpx;
+  margin-bottom: 10rpx;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.step-wrap {
+  margin-bottom: 100rpx;
+}
+
+.tips {
+  width: 90%;
+  margin: 10rpx auto;
+  font-size: 29rpx;
+}
+
+.inline-btn {
+  line-height: 26rpx;
+  padding: 10rpx 20rpx;
+  overflow: visible;
+}
+
+.profile-item-wrapper {
+  width: 80%;
+  height: auto;
+  margin-left: 20rpx;
+  margin-top: 10rpx;
+  margin-bottom: 10rpx;
+}
+
+.item-wrapper {
+  width: 95%;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
+}
+
+.item-wrapper .del {
+  color: #e30;
+  margin-top: 40rpx;
+  margin-right: 20rpx;
+}
+

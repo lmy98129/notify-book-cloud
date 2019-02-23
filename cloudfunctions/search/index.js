@@ -242,9 +242,21 @@ exports.main = async (event, context) => {
             if (start !== undefined && pageLength !== undefined){
               let countRes = await db.collection(collection).count();
               total = countRes.total;
-              cloudRes = await db.collection(collection).skip(start).limit(pageLength).field(field).get();
-              if (cloudRes.data !== undefined) {
-                searchRes = cloudRes.data;
+              if (pageLength >= 100) {
+                let skip = 0;
+                while (skip <= pageLength) {
+                  let cloudRes = await db.collection(collection).
+                    skip(start+skip).limit(100).field(field).get();
+                  if (cloudRes.data !== undefined) {
+                    searchRes = searchRes.concat(cloudRes.data);
+                    skip += 100;
+                  }
+                }
+              } else {
+                cloudRes = await db.collection(collection).skip(start).limit(pageLength).field(field).get();
+                if (cloudRes.data !== undefined) {
+                  searchRes = cloudRes.data;
+                }
               }
             }
             break;
@@ -252,9 +264,21 @@ exports.main = async (event, context) => {
       } else if (typeof query === "object") {
         let countRes = await db.collection(collection).where(query).field(field).count();
         total = countRes.total;
-        cloudRes = await db.collection(collection).where(query).skip(start).limit(pageLength).field(field).get();
-        if (cloudRes.data !== undefined) {
-          searchRes = cloudRes.data
+        if (pageLength >= 100) {
+          let skip = 0;
+          while(skip <= pageLength) {
+            let cloudRes = await db.collection(collection).where(query)
+              skip(start+skip).limit(100).field(field).get();
+            if (cloudRes.data !== undefined) {
+              searchRes = searchRes.concat(cloudRes.data);
+              skip += 100;
+            }
+          }
+        } else {
+          cloudRes = await db.collection(collection).where(query).skip(start).limit(pageLength).field(field).get();
+          if (cloudRes.data !== undefined) {
+            searchRes = cloudRes.data
+          }
         }
       }
 

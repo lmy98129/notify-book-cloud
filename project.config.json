@@ -39,7 +39,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 1,
+			"current": 14,
 			"list": [
 				{
 					"id": -1,
@@ -125,6 +125,12 @@
 					"name": "校友资料管理",
 					"pathName": "pages/profile-manage/profile-manage",
 					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "导入信息",
+					"pathName": "pages/profile-import/profile-import",
+					"scene": null
 				}
 			]
 		}

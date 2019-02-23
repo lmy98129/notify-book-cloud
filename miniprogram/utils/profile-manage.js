@@ -5,139 +5,144 @@ import regeneratorRuntime, { async } from "./regenerator-runtime/runtime";
 
 let { DEFAULT_AVATARURL, DEFAULT_BGIMGURL } = app.globalData;
 
-const download = async (start, pageLength, searchFieldArray) => {
-  try {
-    let query, startTime, endTime, tmpArray, manageRes;
-    if (searchFieldArray === undefined || searchFieldArray.length <= 0) {
-      query = "ALL";
-    } else {
-      query = {};
-      for (let field of searchFieldArray) {
-        let { colKey, colItemKey, searchContent } = field;
-        switch(colKey) {
-          case "gender":
-            query[colKey] = searchContent;
-            break;
-          case "nickName":
-          case "realName":
-          case "homeTown":
-          case "address":
-          case "phoneNumber":
-          case "wechatId":
+const queryGenerator = (searchFieldArray) => {
+  let query, startTime, endTime, tmpArray;
+  if (searchFieldArray === undefined || searchFieldArray.length <= 0) {
+    query = "ALL";
+  } else {
+    query = {};
+    for (let field of searchFieldArray) {
+      let { colKey, colItemKey, searchContent } = field;
+      switch(colKey) {
+        case "gender":
+          query[colKey] = searchContent;
+          break;
+        case "nickName":
+        case "realName":
+        case "homeTown":
+        case "address":
+        case "phoneNumber":
+        case "wechatId":
+          query[colKey] = {
+            $regex: searchContent, 
+            $options: 'im',
+          }
+          break;
+        case "birthDate":
+          tmpArray = searchContent.split("~");
+          startTime = tmpArray[0];
+          endTime = tmpArray[1];
+          query[colKey] = {
+            $gte: startTime,
+            $lte: endTime
+          }
+          if (startTime === "") {
+            delete query[colKey].$gte
+          }
+          if (endTime === "") {
+            delete query[colKey].$lte
+          }
+          break;
+        case "degreeArray":
+          if (query[colKey] === undefined) {
             query[colKey] = {
-              $regex: searchContent, 
-              $options: 'im',
-            }
-            break;
-          case "birthDate":
-            tmpArray = searchContent.split("~");
-            startTime = tmpArray[0];
-            endTime = tmpArray[1];
+              $elemMatch: {}
+            };
+          }
+          switch(colItemKey) {
+            case "degree":
+              query[colKey].$elemMatch[colItemKey] = searchContent;
+              break;
+            case "school":
+            case "major":
+            case "className":
+            case "headteacher":
+              query[colKey].$elemMatch[colItemKey] = {
+                $regex: searchContent, 
+                $options: 'im',
+              };
+              break;
+            case "degreeStartTime":
+            case "degreeEndTime":
+              tmpArray = searchContent.split("~");
+              startTime = tmpArray[0];
+              endTime = tmpArray[1];
+              query[colKey].$elemMatch[colItemKey] = {
+                $gte: startTime,
+                $lte: endTime
+              }
+              if (startTime === "") {
+                delete query[colKey].$elemMatch[colItemKey].$gte
+              }
+              if (endTime === "") {
+                delete query[colKey].$elemMatch[colItemKey].$lte
+              }
+              break;
+          }
+          break;
+        case "contactArray":
+          if (query[colKey] === undefined) {
             query[colKey] = {
-              $gte: startTime,
-              $lte: endTime
-            }
-            if (startTime === "") {
-              delete query[colKey].$gte
-            }
-            if (endTime === "") {
-              delete query[colKey].$lte
-            }
-            break;
-          case "degreeArray":
-            if (query[colKey] === undefined) {
-              query[colKey] = {
-                $elemMatch: {}
+              $elemMatch: {}
+            };
+          }
+          switch(colItemKey) {
+            case "contactType":
+            case "content":
+              query[colKey].$elemMatch[colItemKey] = {
+                $regex: searchContent, 
+                $options: 'im',
               };
-            }
-            switch(colItemKey) {
-              case "degree":
-                query[colKey].$elemMatch[colItemKey] = searchContent;
-                break;
-              case "school":
-              case "major":
-              case "className":
-              case "headteacher":
-                query[colKey].$elemMatch[colItemKey] = {
-                  $regex: searchContent, 
-                  $options: 'im',
-                };
-                break;
-              case "degreeStartTime":
-              case "degreeEndTime":
-                tmpArray = searchContent.split("~");
-                startTime = tmpArray[0];
-                endTime = tmpArray[1];
-                query[colKey].$elemMatch[colItemKey] = {
-                  $gte: startTime,
-                  $lte: endTime
-                }
-                if (startTime === "") {
-                  delete query[colKey].$elemMatch[colItemKey].$gte
-                }
-                if (endTime === "") {
-                  delete query[colKey].$elemMatch[colItemKey].$lte
-                }
-                break;
-            }
-            break;
-          case "contactArray":
-            if (query[colKey] === undefined) {
-              query[colKey] = {
-                $elemMatch: {}
+              break;
+          }
+          break;
+        case "jobArray":
+          if (query[colKey] === undefined) {
+            query[colKey] = {
+              $elemMatch: {}
+            };
+          }
+          switch(colItemKey) {
+            case "institution":
+            case "job":
+              query[colKey].$elemMatch[colItemKey] = {
+                $regex: searchContent, 
+                $options: 'im',
               };
-            }
-            switch(colItemKey) {
-              case "contactType":
-              case "content":
-                query[colKey].$elemMatch[colItemKey] = {
-                  $regex: searchContent, 
-                  $options: 'im',
-                };
-                break;
-            }
-            break;
-          case "jobArray":
-            if (query[colKey] === undefined) {
-              query[colKey] = {
-                $elemMatch: {}
+              break;
+            case "jobStartTime":
+            case "jobEndTime":
+              tmpArray = searchContent.split("~");
+              startTime = tmpArray[0];
+              endTime = tmpArray[1];
+              query[colKey].$elemMatch[colItemKey] = {
+                $gte: startTime,
+                $lte: endTime
               };
-            }
-            switch(colItemKey) {
-              case "institution":
-              case "job":
-                query[colKey].$elemMatch[colItemKey] = {
-                  $regex: searchContent, 
-                  $options: 'im',
-                };
-                break;
-              case "jobStartTime":
-              case "jobEndTime":
-                tmpArray = searchContent.split("~");
-                startTime = tmpArray[0];
-                endTime = tmpArray[1];
-                query[colKey].$elemMatch[colItemKey] = {
-                  $gte: startTime,
-                  $lte: endTime
-                };
-                if (startTime === "") {
-                  delete query[colKey].$elemMatch[colItemKey].$gte
-                }
-                if (endTime === "") {
-                  delete query[colKey].$elemMatch[colItemKey].$lte
-                }
-                break;
-            }
-            break;
-        }
+              if (startTime === "") {
+                delete query[colKey].$elemMatch[colItemKey].$gte
+              }
+              if (endTime === "") {
+                delete query[colKey].$elemMatch[colItemKey].$lte
+              }
+              break;
+          }
+          break;
       }
     }
+  }
+  return query;
+}
 
-    manageRes = await wx.cloud.callFunction({
+const download = async (start, pageLength, searchFieldArray) => {
+  try {
+    let query = queryGenerator(searchFieldArray);
+
+    let manageRes = await wx.cloud.callFunction({
       name: "search",
       data: {
         $url: "manage",
-        collection: "profile-test",
+        collection: "profile-new",
         query,
         start,
         pageLength,
@@ -193,7 +198,7 @@ const deleteProfile = async (mode, index) => {
       data: {
         $url: "deleteProfile",
         _id,
-        collection: "profile-test",
+        collection: "profile-new",
       }
     })
 

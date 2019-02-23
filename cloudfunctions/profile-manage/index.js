@@ -1,6 +1,7 @@
 // 云函数入口文件
 const cloud = require('wx-server-sdk')
 const TcbRouter = require("tcb-router");
+const XLSX = require("xlsx");
 
 cloud.init()
 
@@ -147,6 +148,180 @@ exports.main = async (event, context) => {
         code: -1,
         err: error.message
       }
+    }
+  })
+
+  app.router("getImportDocuments", async (ctx) => {
+    try {
+      let cloudRes = await db.collection("import-list").get();
+
+      ctx.body = {
+        code: 1,
+      }
+      
+      if (cloudRes.data) {
+        ctx.body.data = cloudRes.data;
+      }
+
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        code: -1,
+        err: error.message
+      }
+    }
+  })
+
+  app.router("deleteImportDocuments", async (ctx) => {
+    try {
+      let { fileList } = event;
+
+      await cloud.deleteFile({
+        fileList,
+      })
+
+      for (document of fileList) {
+        await db.collection("import-list").where({ document }).remove();
+      }
+
+      ctx.body = {
+        code: 1,
+      }
+      
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        code: -1,
+        err: error.message
+      }
+    }
+  })
+
+  app.router("getExcelSheetNames", async (ctx) => {
+    try {
+      let { fileID } = event;
+
+      let downloadRes = await cloud.downloadFile({
+        fileID,
+      })
+
+      const buffer = downloadRes.fileContent;
+
+      const workbook = XLSX.read(buffer, { type: "buffer" });
+
+      const sheetNames = workbook.SheetNames;
+      
+      ctx.body = {
+        code: 1,
+        sheetNames,
+      }
+      
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        code: -1,
+        err: error.message
+      }
+    }
+  })
+
+  app.router("getHeaderColumns", async (ctx) => {
+    try {
+      let { startCol, endCol, row, range, sheetName, fileID } = event;
+  
+      let downloadRes = await cloud.downloadFile({
+        fileID,
+      })
+  
+      const buffer = downloadRes.fileContent;
+      const workbook = XLSX.read(buffer, { type: "buffer" });
+      const worksheet = workbook.Sheets[sheetName];
+  
+      worksheet["!ref"] = range;
+  
+      let cols = [];
+      if (typeof startCol !== "string" || typeof endCol !== "string" || endCol < startCol) {
+        ctx.body = {
+          code: -1,
+        }
+        return;
+      }
+      let length = endCol.toUpperCase().charCodeAt(0) - startCol.toUpperCase().charCodeAt(0) + 1;
+      for (let i=0; i< length; i++) {
+        cols.push(worksheet[String.fromCharCode(startCol.toUpperCase().charCodeAt(0) + i) + row].v);
+      }
+      ctx.body = {
+        code: 1,
+        cols
+      }
+      
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        code: -1,
+        err: error.message
+      }
+    }
+  })
+
+  app.router("getXLSXJson", async (ctx) => {
+    try {
+      let { range, selectedSheets, fileID } = event;
+  
+      let downloadRes = await cloud.downloadFile({
+        fileID,
+      })
+  
+      const buffer = downloadRes.fileContent;
+      const workbook = XLSX.read(buffer, { type: "buffer" });
+      let worksheet, json = [];
+      
+      for (sheetName of selectedSheets) {
+        worksheet = workbook.Sheets[sheetName];
+        worksheet["!ref"] = range;
+        json = json.concat(XLSX.utils.sheet_to_json(worksheet));
+      }
+
+      ctx.body = {
+        code: 1,
+        json,
+      }
+
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        code: -1,
+        err: error.message
+      }
+    }
+  })
+
+  app.router("importData", async (ctx) => {
+    try {
+      let { importData,  collection } = event;
+      
+      for (data of importData) {
+        await db.collection(collection).add({ data });
+      }
+      
+      ctx.body = {
+        code: 1,
+      }
+      
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        code: -1,
+        err: error.message
+      }
+    }
+  })
+
+  app.router("exportData", async (ctx) => {
+    try {
+      
+    } catch (error) {
+      
     }
   })
 

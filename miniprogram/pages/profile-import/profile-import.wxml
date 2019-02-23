@@ -1,0 +1,103 @@
+<!--miniprogram/pages/profile-import/profile-import.wxml-->
+<top-widget mode="title" title="导入信息">
+</top-widget>
+
+<view class="main">
+  <block wx:if="{{!isDocumentUploaded}}">
+    <view class="container">
+      <view class="hint">
+        <text decode="{{true}}">
+          点击以下按钮
+          选择微信聊天文件中的xlsx、xls文件上传至云端
+          或使用已上传的文件
+        </text>
+      </view>
+      <view class="button-wrap">
+        <button type="primary" bind:tap="upload">上传文件</button>
+        <button bind:tap="useFile">使用文件</button>
+      </view>
+    </view>
+  </block>
+  <block wx:else>
+    <view class="step-wrap">
+      <view class="step">第①步：请选择要导入信息的Excel文件中的工作表（多选，若工作表较多请滚动下方区域进行选择）</view>
+      <scroll-view class="select-sheet" scroll-y>
+        <checkbox-group bindchange="selectSheet" class="select-sheet-checkgroup">
+          <label wx:for="{{sheetNames}}" wx:key="{{index}}" class="checkbox">
+            <checkbox value="{{item}}" /> {{item}}
+          </label>
+        </checkbox-group>
+      </scroll-view>
+      <view class="tips">注意：请保证选中工作表的表头均处于同一行，表头格式均一致，若不同请分批导入或将文档按照以上要求编辑后再上传导入。</view>
+      <view class="tips">建议：在使用手机进行导入操作时，电脑打开相应文档进行预览和比对，若无电脑请点击<button size="mini" class="inline-btn" bind:tap="previewDocument">预览文件</button>。每次导入工作表数量请控制在1~5个，不建议大批量导入。</view>
+    </view>
+    <block wx:if="{{selectedSheets.length > 0}}">
+      <view class="step-wrap">
+        <view class="step">第②步：请输入导入工作表的有效范围，如果选择多个工作表请以最长的工作表为准</view>
+        <profile-input asterisk="{{false}}" title="有效范围" bind:input="setRange"></profile-input>
+        <view class="tips">格式为“左上角:右下角”，例如“A1:J100”，注意是英文冒号，如若无法判断请点击<button size="mini" class="inline-btn" bind:tap="previewDocument">预览文件</button>或重新编辑后再上传导入，输入结束后请向上滑动进入第③步</view>
+      </view>
+    </block>
+    <block wx:if="{{range !== '' && selectedSheets.length > 0}}">
+      <view class="step-wrap">
+        <view class="step">第③步：请选择每个列项对应的导入键值</view>
+          <block wx:if="{{normalize.length <= 0}}">
+            <button bind:tap="getHeaderColumns">点击获取列项列表</button>
+          </block>
+          <block wx:else>
+            <block wx:for="{{normalize}}" wx:key="index">
+              <profile-input asterisk="{{false}}" title="{{item.source}}" bind:input="setKeys" mode="picker" value="{{item.accordingName}}" picker-mode="selector" bind:del="pickerDel" input-type="{{item.source}}" picker-range="{{keysRange}}"></profile-input>
+            </block>
+            <button bind:tap="getHeaderColumns">重新获取列项列表</button>
+          </block>
+        <view class="tips">
+          <text decode="{{true}}">
+            建议：1. “班级/专业”作为“学历信息-专业”键值，将手机号单独作为“手机号”键值，其余的例如座机号、E-mail、邮编等作为“联系方式”。
+            2. 将工作单位、职务分开，存入“工作单位”和“职务名称”键值。
+            3. 留空则认为不导入该列项对应的数据，长按已选择的键值可以清空。
+            4. 下方是额外添加的键值，用于表中未填入但需要在每条信息中附加导入的数据，请先将上方的键值填写完成后再填写下方额外键值，避免数据格式错误。
+          </text>
+        </view>
+        <block wx:for="{{extraKeys}}" wx:key="index">
+          <view class="item-wrapper">
+            <profile-item title="{{item.accordingName}}" content="{{item.extraSource}}" class="profile-item-wrapper"></profile-item>
+            <view class="del" bind:tap="deleteExtraKey" data-index="{{index}}">删除</view>
+          </view>
+        </block>
+        <button bind:tap="showExtraKeyModal">添加额外键值</button>
+      </view>
+      <view class="step-wrap">
+        <view class="step">第④步：预览最终导出的数据格式，预览内容将显示在下方空白处，若符合要求则开始导入数据</view>
+        <scroll-view class="select-sheet" scroll-y>
+          {{preview}}
+        </scroll-view>
+        <button class="preview" bind:tap="preview">预览</button>
+        <button class="import" bind:tap="importData">导入</button>
+      </view>
+    </block>
+  </block>
+</view>
+
+<modal hidden="{{isSelectDocumentModalHidden}}" title="选择文件" bindconfirm="selectDocumentNext" bindcancel="hideSelectDocument" catchtouchmove="modalTouchMove">
+  <block wx:if="{{importDocuments.length <= 0}}">
+    <view style="text-align:center;"> 当前云端文件为空，请上传文件 </view>
+  </block>
+  <block wx:else>
+    <radio-group bindchange="selectDocument">
+      <label wx:for="{{importDocuments}}" wx:key="{{index}}">
+        <view class="radio-item">
+          <radio value="{{item.document}}" />
+          <view class="radio-content">
+            <view class="name">{{item.name}}</view>
+            <view class="del" bind:tap="deleteDocument" data-index="{{index}}">删除</view>
+          </view>
+        </view>
+      </label>
+    </radio-group>
+  </block>
+</modal>
+
+<modal hidden="{{isExtraKeyModalHidden}}" title="添加额外键值" bindconfirm="addExtraKeys" bindcancel="hideExtraKeyModal" catchtouchmove="modalTouchMove">
+  <profile-input asterisk="{{false}}" title="选择键值" bind:input="setExtraKey" mode="modal-picker" value="{{extraKey}}" picker-mode="selector" picker-range="{{keysRange}}"></profile-input>
+  <profile-input asterisk="{{false}}" title="输入内容" bind:input="setExtraKeyContent" mode="modal-input" place-holder="请输入该键值的内容" value="{{extraKeyContent}}"></profile-input>  
+</modal>

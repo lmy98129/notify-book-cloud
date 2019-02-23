@@ -2,6 +2,7 @@
 const profMan = require("../../utils/profile-manage");
 const toast = require("../../utils/message").toast;
 const modal = require("../../utils/message").modal;
+const confirmOnly = require("../../utils/message").confirmOnly;
 const columnRank = require("../../utils/profile-model").columnRank;
 const searchField = require("../../utils/profile-model").searchField;
 
@@ -31,6 +32,7 @@ Page({
     isSelectColumnModalHidden: true,
     isPageControlModalHidden: true,
     isAddSearchFieldModalHidden: true,
+    isSelColumnInit: true,
     searchColumnArray: searchField.searchColumn.searchColumnItem,
     selectedSearchColumnName: "请选择检索列项",
     selectedSearchColumnKey: "",
@@ -116,7 +118,7 @@ Page({
     wx.showLoading({
       title: "数据加载中"
     })
-    let { searchFieldArray } = this.data;
+    let { searchFieldArray, isSelColumnInit, selColumns } = this.data;
     let downloadRes = await profMan.download(start, pageLength, searchFieldArray);
     switch(downloadRes.code) {
       case 1:
@@ -131,15 +133,20 @@ Page({
         toast("加载资料数据出错", "none");
         break;
     }
-    let selColumns = JSON.parse(JSON.stringify(columnRank));
-    let tmpSelValue = []
-    this.setData({ selColumns });
-    for (let column of selColumns) {
-      if (column.checked !== undefined && column.checked === true) {
-        tmpSelValue.push(column.key);
+    if (isSelColumnInit) {
+      selColumns = JSON.parse(JSON.stringify(columnRank));
+      this.setData({
+        selColumns,
+        isSelColumnInit: false,
+      })
+      let tmpSelValue = []
+      for (let column of selColumns) {
+        if (column.checked !== undefined && column.checked === true) {
+          tmpSelValue.push(column.key);
+        }
       }
+      convertCol(tmpSelValue, this);
     }
-    convertCol(tmpSelValue, this);
     this.calc_col_width();
     wx.hideLoading();
   },
@@ -377,22 +384,9 @@ Page({
     })
   },
 
-  import() {
-    wx.chooseMessageFile({
-      count: 1,
-      type: "file",
-      success: res => {
-        const filePath = res.tempFiles[0].path;
-        const cloudPath = "import/import-" + (new Date()).getTime() + filePath.match(/\.[^.]+?$/)[0];
-        wx.cloud.uploadFile({
-          cloudPath,
-          filePath,
-          success: async res => {
-            console.log('上传文档成功：', res);
-            toast("上传文档成功");
-          }
-        })
-      }
+  import: function() {
+    wx.navigateTo({
+      url: '../profile-import/profile-import',
     })
   },
 
@@ -766,7 +760,44 @@ Page({
   },
 
   modalTouchMove(e) {
-    
+
+  },
+
+  export: async function() {
+    try {
+      wx.showLoading({
+        title: "导出中"
+      })
+      let { rows, searchFieldArray, total } = this.data;
+      let downloadRes = await profMan.download(0, total, searchFieldArray);
+      if (downloadRes.code === 1) {
+        let keys = [], exportDatas = [], tmpIndex, datas = downloadRes.result;
+        for (let row of rows) {
+          keys.push(row.key);
+        }
+        for (let data of datas) {
+          let tmpData = {}
+          for (let key of keys) {
+            if (data[key] instanceof Array) {
+              for (let i in data[key]) {
+                for (let subKey in data[key][i]) {
+                  tmpIndex = searchField[key][key+"Key"].findIndex(x => x === subKey);
+                  tmpData[searchField[key][key+"Item"][tmpIndex] + "-" + (parseInt(i)+1)] = data[key][i][subKey];
+                }
+              }
+            } else {
+              tmpIndex = searchField.searchColumn.searchColumnKey.findIndex(x => x === key);
+              tmpData[searchField.searchColumn.searchColumnItem[tmpIndex]] = data[key];
+            }
+          }
+          exportDatas.push(tmpData);
+        }
+      }
+      console.log(exportDatas);
+      
+    } catch (error) {
+      console.log(error);
+    }
   }
 
 })
