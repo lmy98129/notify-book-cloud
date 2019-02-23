@@ -319,9 +319,26 @@ exports.main = async (event, context) => {
 
   app.router("exportData", async (ctx) => {
     try {
-      
+      let { json, header } = event;
+      const newWorkBook = { SheetNames: ['Sheet1'], Sheets: {}, Props: {} };
+      newWorkBook.Sheets['Sheet1']  = XLSX.utils.json_to_sheet(json, { header });
+      let fileContent = XLSX.write(newWorkBook, { type: "buffer" });
+      let cloudPath = "export/导出-" + (new Date()).getTime() + ".xlsx";
+      let uploadFileRes = await cloud.uploadFile({
+        cloudPath,
+        fileContent
+      })
+      let { fileID } = uploadFileRes;
+      ctx.body = {
+        code: 1,
+        fileID,
+      }
     } catch (error) {
-      
+      console.log(error);
+      ctx.body = {
+        code: -1,
+        err: error
+      }
     }
   })
 

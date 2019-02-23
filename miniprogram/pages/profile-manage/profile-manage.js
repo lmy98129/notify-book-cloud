@@ -765,13 +765,18 @@ Page({
 
   export: async function() {
     try {
+      let modalRes = await modal("即将导出当前检索条件下得出的全部资料，导出格式为xlsx，导出成功后将自动打开文件，您可以点击右上角将文件转发到微信的文件传输助手中，以保存导出的xlsx文件");
+      if (modalRes.cancel) {
+        return;
+      }
       wx.showLoading({
         title: "导出中"
       })
       let { rows, searchFieldArray, total } = this.data;
       let downloadRes = await profMan.download(0, total, searchFieldArray);
       if (downloadRes.code === 1) {
-        let keys = [], exportDatas = [], tmpIndex, datas = downloadRes.result;
+        let keys = [], exportDatas = [], tmpIndex, datas = downloadRes.result,
+          totalKeys = [];        
         for (let row of rows) {
           keys.push(row.key);
         }
@@ -782,20 +787,89 @@ Page({
               for (let i in data[key]) {
                 for (let subKey in data[key][i]) {
                   tmpIndex = searchField[key][key+"Key"].findIndex(x => x === subKey);
-                  tmpData[searchField[key][key+"Item"][tmpIndex] + "-" + (parseInt(i)+1)] = data[key][i][subKey];
+                  if (data[key][i][subKey]) {
+                    tmpData[searchField[key][key+"Item"][tmpIndex] + "-" + (parseInt(i)+1)] = data[key][i][subKey];
+                  } else {
+                    tmpData[searchField[key][key+"Item"][tmpIndex] + "-" + (parseInt(i)+1)] = "";
+                  }
                 }
               }
             } else {
               tmpIndex = searchField.searchColumn.searchColumnKey.findIndex(x => x === key);
-              tmpData[searchField.searchColumn.searchColumnItem[tmpIndex]] = data[key];
+              if (data[key]) {
+                tmpData[searchField.searchColumn.searchColumnItem[tmpIndex]] = data[key];
+              } else {
+                tmpData[searchField.searchColumn.searchColumnItem[tmpIndex]] = "";
+              }
             }
           }
           exportDatas.push(tmpData);
         }
+        for (let data of exportDatas) {
+          for (let key in data) {
+            if (totalKeys.indexOf(key) < 0) {
+              totalKeys.push(key);
+            }
+          }
+        }
+        for (let data of exportDatas) {
+          for (let key of totalKeys) {
+            if (data[key] === undefined) {
+              data[key] = "";
+            }
+          }
+        }
+        const sortByNum = (x, y) => {
+          let xNum = x.match(/[0-9]+/ig);
+          let yNum = y.match(/[0-9]+/ig);
+          if (xNum !== null && yNum !== null) {
+            return parseInt(xNum[0]) - parseFloat(yNum[0]);
+          } else if (xNum === null && xNum === null ) {
+            return 0;
+          } else {
+            console.log(x, y);
+            return xNum == null ? -1 : 1; 
+          }
+        }
+        
+        let notNums = totalKeys.filter((value) => {
+          return !/[0-9]+/ig.test(value);
+        })
+        
+        let hasNums = totalKeys.filter((value) => {
+          return /[0-9]+/ig.test(value);
+        })
+
+        let header = notNums.concat(hasNums.sort(sortByNum));
+
+        let exportRes = await wx.cloud.callFunction({
+          name: "profile-manage",
+          data: {
+            $url: "exportData",
+            json: exportDatas,
+            header,
+          }
+        })
+
+        if (exportRes.result.code === 1) {
+          let { fileID } = exportRes.result;
+          console.log("导出成功", fileID);
+          wx.hideLoading();
+          toast("导出成功", "success");
+          let tmpFileRes = await wx.cloud.downloadFile({
+            fileID,
+          });
+          wx.openDocument({
+            filePath: tmpFileRes.tempFilePath,
+          })
+        }
+      } else {
+        wx.hideLoading();
+        toast("导出失败", "none");
       }
-      console.log(exportDatas);
-      
     } catch (error) {
+      wx.hideLoading();
+      toast("导出失败", "none");
       console.log(error);
     }
   }
