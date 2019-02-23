@@ -765,7 +765,7 @@ Page({
 
   export: async function() {
     try {
-      let modalRes = await modal("即将导出当前检索条件下得出的全部资料，导出格式为xlsx，导出成功后将自动打开文件，您可以点击右上角将文件转发到微信的文件传输助手中，以保存导出的xlsx文件");
+      let modalRes = await modal("即将导出当前检索条件、当前显示列项下得出的全部资料，如果不符合您的需要，请修改显示列项和检索条件。导出成功后将自动打开文件，点击右上角将文件转发到微信的文件传输助手中，以保存导出的xlsx文件。注意：如出现转发后.xlsx后缀丢失的情况，请在电脑端微信保存文件后，在文件名添加上相应的.xlsx后缀即可正常使用文件");
       if (modalRes.cancel) {
         return;
       }
@@ -782,6 +782,11 @@ Page({
         }
         for (let data of datas) {
           let tmpData = {}
+          if (data.gender === 1) {
+            data.gender = "男";
+          } else {
+            data.gender = "女";
+          }
           for (let key of keys) {
             if (data[key] instanceof Array) {
               for (let i in data[key]) {
@@ -859,6 +864,7 @@ Page({
           let tmpFileRes = await wx.cloud.downloadFile({
             fileID,
           });
+          await wx.cloud.deleteFile({ fileList: [fileID] });
           wx.openDocument({
             filePath: tmpFileRes.tempFilePath,
           })
