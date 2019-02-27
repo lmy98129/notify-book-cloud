@@ -33,6 +33,7 @@ Page({
     mode: "normal",
     addFriend: "添加到通讯录",
     isLoading: false,
+    tabContent: ["基本资料", "自我介绍"]
   },
 
   /**
@@ -168,17 +169,10 @@ Page({
   },
 
   tabHandler(e) {
-    let index = parseInt(e.target.dataset.index), that = this;
+    let index = parseInt(e.detail.index);
     this.setData({
       tabIndex: index
     })
-  },
-
-  bindSwiper(e) {
-    let index = e.detail.current, that = this;
-    this.setData({
-      tabIndex: index
-    });
   },
 
   onPageScroll: function(e) {

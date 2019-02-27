@@ -3,7 +3,7 @@
   display: block;
 }
 
-.tabbar {
+.tabbar-custom {
   margin-top: -8rpx;
 }
 

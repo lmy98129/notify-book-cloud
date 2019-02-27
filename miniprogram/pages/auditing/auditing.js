@@ -11,7 +11,8 @@ Page({
   data: {
     auditingList: [],
     tabIndex: 0,
-    selectedList: []
+    selectedList: [],
+    tabContent: ["审核列表", "邀请码管理"],
   },
 
   /**
@@ -75,7 +76,7 @@ Page({
   },
 
   tabHandler(e) {
-    let index = parseInt(e.target.dataset.index);
+    let index = parseInt(e.detail.index);
     this.setData({
       tabIndex: index
     })

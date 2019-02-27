@@ -76,7 +76,7 @@
   text-align: center;
 }
 
-.tabbar {
+.tabbar-custom {
   margin-top: 27rpx;
 }
 

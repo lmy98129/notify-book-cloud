@@ -45,5 +45,14 @@
         "text": "我的"
       }
     ]
+  },
+  "usingComponents": {
+    "top-widget": "/components/top-widget/top-widget",
+    "nav-btn": "/components/nav-btn/nav-btn",
+    "profile-item": "/components/profile-item/profile-item",
+    "profile-input": "/components/profile-input/profile-input",
+    "settings-item": "/components/settings-item/settings-item",
+    "tab-bar": "/components/tab-bar/tab-bar",
+    "profile-detail": "/components/profile-detail/profile-detail"
   }
 }

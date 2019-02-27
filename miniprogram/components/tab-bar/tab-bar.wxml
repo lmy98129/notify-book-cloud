@@ -1,0 +1,6 @@
+<!--components/tab-bar/tab-bar.wxml-->
+<view class="tabbar">
+  <block wx:for="{{tabContent}}" wx:key="{{index}}">
+    <view class="tabbar-item {{tabIndex === index ? 'selected':''}}" bindtap="tabHandler" data-index="{{index}}">{{item}}</view>
+  </block>
+</view>

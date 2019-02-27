@@ -20,10 +20,7 @@
 
       <block wx:if="{{profileStatus === 1}}">
         <view class="main {{mode !== 'normal' && mode !== 'profileManageDataTmp' ? 'no-highest' : ''}}" id="global">
-          <view class="tabbar">
-            <view class="tabbar-item {{tabIndex === 0 ? 'selected':''}}" bindtap="tabHandler" data-index="0">基本资料</view>
-            <view class="tabbar-item {{tabIndex === 1 ? 'selected':''}}" bindtap="tabHandler" data-index="1">自我介绍</view>
-          </view>
+          <tab-bar class="tabbar-custom" tab-content="{{tabContent}}" tab-index="{{tabIndex}}" bind:change="tabHandler"/>
           <block wx:if="{{tabIndex === 0}}">
             <view class="profile-wrapper main">
               <block wx:for="{{userInfo}}" wx:key="{{index}}">
