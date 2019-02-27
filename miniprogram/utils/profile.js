@@ -306,8 +306,8 @@ const decodeForEdit = (tmpUserInfo, initValue, that) => {
   return tmpUserInfo;
 }
 
-const decode = (tmpUserInfo, that) => {
-  let tmpDate, tmpArray, newTmpArray, tmpObj;
+const decode = (tmpUserInfo) => {
+  let tmpDate, tmpArray, newTmpArray, tmpObj, result = {};
   delete tmpUserInfo._openid;
   delete tmpUserInfo._id;
   for (let item in tmpUserInfo) {
@@ -363,9 +363,7 @@ const decode = (tmpUserInfo, that) => {
           }
           newTmpArray.push(tmpObj);
         }
-        that.setData({
-          [item]: newTmpArray
-        });
+        result[item] = newTmpArray;
         delete tmpUserInfo[item];
         break;
       case "contactArray":
@@ -382,9 +380,7 @@ const decode = (tmpUserInfo, that) => {
           }
           newTmpArray.push(tmpObj);
         }
-        that.setData({
-          [item]: newTmpArray
-        })
+        result[item] = newTmpArray;
         delete tmpUserInfo[item];
         break;
       case "degreeArray":
@@ -420,16 +416,12 @@ const decode = (tmpUserInfo, that) => {
           }
           newTmpArray.push(tmpObj);
         }
-        that.setData({
-          [item]: newTmpArray
-        });
+        result[item] = newTmpArray;
         delete tmpUserInfo[item];
         break;
       case "intro":
-        that.setData({
-          intro: tmpUserInfo[item],
-          tmpIntro: tmpUserInfo[item]
-        });
+        result[item] = tmpUserInfo[item];
+        result.tmpIntro = tmpUserInfo[item];
         delete tmpUserInfo[item];
         break;
     }
@@ -446,12 +438,10 @@ const decode = (tmpUserInfo, that) => {
     }
   }
 
-  that.setData({
-    userInfo: tmpArray,
-    profileStatus: 1
-  });
+  result.userInfo = tmpArray;
+  result.profileStatus = "normal";
 
-  return tmpUserInfo;
+  return result;
 
 }
 

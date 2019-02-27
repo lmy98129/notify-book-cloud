@@ -51,8 +51,9 @@
     "nav-btn": "/components/nav-btn/nav-btn",
     "profile-item": "/components/profile-item/profile-item",
     "profile-input": "/components/profile-input/profile-input",
+    "profile-detail": "/components/profile-detail/profile-detail",
+    "profile-intro": "/components/profile-intro/profile-intro",
     "settings-item": "/components/settings-item/settings-item",
-    "tab-bar": "/components/tab-bar/tab-bar",
-    "profile-detail": "/components/profile-detail/profile-detail"
+    "tab-bar": "/components/tab-bar/tab-bar"
   }
 }

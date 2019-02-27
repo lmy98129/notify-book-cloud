@@ -1,120 +1,33 @@
 <!--pages/profile/profile.wxml-->
 <view class="root {{introStatus}}">
   <view class="container {{fixVeryTop ? 'fixed':''}}">
-    <block wx:if="{{mode === 'normal' || mode === 'profileManageDataTmp'}}">
-      <top-widget avatarUrl="{{avatarUrl}}" bgImgUrl="{{bgImgUrl}}" nickname="{{nickName}}" fixTop="{{fixTop}}" fixVeryTop="{{fixVeryTop}}" class="top-widget-wrapper" mode="center">
-        <nav-btn slot="custom-style" btnType="custom-style" iconType="icon-gexinghua" bind:tapBtn="customBgImg"/>
-        <nav-btn slot="edit" btnType="edit" iconType="icon-bianji" bind:tapBtn="editProfile"/>
-      </top-widget>
+    <top-widget avatarUrl="{{avatarUrl}}" bgImgUrl="{{bgImgUrl}}" nickname="{{nickName}}" fixTop="{{fixTop}}" fixVeryTop="{{fixVeryTop}}" class="top-widget-wrapper" mode="center">
+      <nav-btn slot="custom-style" btnType="custom-style" iconType="icon-gexinghua" bind:tapBtn="customBgImg"/>
+      <nav-btn slot="edit" btnType="edit" iconType="icon-bianji" bind:tapBtn="editProfile"/>
+    </top-widget>
+
+    <block wx:if="{{profileStatus === 'normal'}}">
+      <view class="main" id="global">
+        <tab-bar class="tabbar-custom" tab-content="{{tabContent}}" tab-index="{{tabIndex}}" bind:change="tabHandler"/>
+        <block wx:if="{{tabIndex === 0}}">
+          <profile-detail class="profile-wrapper main" profile-data="{{profileData}}"/>
+        </block>
+        <block wx:if="{{tabIndex === 1}}">
+          <profile-intro intro="{{intro}}" mode="{{mode}}"/>
+        </block>
+      </view> 
     </block>
-    <block wx:elif="{{mode !== 'normal' }}">
-      <top-widget avatarUrl="{{avatarUrl}}" bgImgUrl="{{bgImgUrl}}" nickname="{{nickName}}" fixVeryTop="{{fixVeryTop}}" fixTop="{{fixTop}}" class="top-widget-wrapper" isBack="{{true}}" mode="center">
-      </top-widget>
-    </block>
 
-    <!-- <block wx:if="{{mode !== 'normal' && mode !== 'profileManageDataTmp'}}">
-      <button class="add-friend" type="default" loading="{{isLoading}}" bindtap="addFriend">
-        {{addFriend}}
-      </button>
-    </block> -->
-
-      <block wx:if="{{profileStatus === 1}}">
-        <view class="main {{mode !== 'normal' && mode !== 'profileManageDataTmp' ? 'no-highest' : ''}}" id="global">
-          <tab-bar class="tabbar-custom" tab-content="{{tabContent}}" tab-index="{{tabIndex}}" bind:change="tabHandler"/>
-          <block wx:if="{{tabIndex === 0}}">
-            <view class="profile-wrapper main">
-              <block wx:for="{{userInfo}}" wx:key="{{index}}">
-                <profile-item title="{{item.title}}" content="{{item.content}}" class="profile-item-wrapper"></profile-item>
-              </block>
-        
-              <block wx:for="{{degreeArray}}" wx:key="{{index}}">
-                <view class="item-wrapper">
-                  <view class="item-title">学历信息 {{index + 1}}</view>
-                  <profile-item title="{{item.degree.title}}" content="{{item.degree.content}}" class="profile-item-wrapper"></profile-item>
-                  <profile-item title="{{item.school.title}}" content="{{item.school.content}}" class="profile-item-wrapper"></profile-item>
-                  <profile-item title="{{item.major.title}}" content="{{item.major.content}}" class="profile-item-wrapper"></profile-item>
-                  <profile-item title="{{item.className.title}}" content="{{item.className.content}}" class="profile-item-wrapper"></profile-item>
-                  <profile-item title="{{item.headteacher.title}}" content="{{item.headteacher.content}}" class="profile-item-wrapper"></profile-item>
-                  <profile-item title="{{item.degreeStartTime.title}}" content="{{item.degreeStartTime.content}}" class="profile-item-wrapper"></profile-item>
-                  <profile-item title="{{item.degreeEndTime.title}}" content="{{item.degreeEndTime.content}}" class="profile-item-wrapper"></profile-item>
-                </view>
-              </block>
-          
-              <block wx:for="{{jobArray}}" wx:key="{{index}}">
-                <view class="item-wrapper">
-                  <view class="item-title">工作职务 {{index + 1}}</view>
-                  <profile-item title="{{item.institution.title}}" content="{{item.institution.content}}" class="profile-item-wrapper"></profile-item>
-                  <profile-item title="{{item.job.title}}" content="{{item.job.content}}" class="profile-item-wrapper"></profile-item>
-                  <profile-item title="{{item.jobStartTime.title}}" content="{{item.jobStartTime.content}}" class="profile-item-wrapper"></profile-item>
-                  <profile-item title="{{item.jobEndTime.title}}" content="{{item.jobEndTime.content}}" class="profile-item-wrapper"></profile-item>
-                </view>
-              </block>  
-
-              <view class="item-wrapper" wx:if="{{contactArray.length > 0}}">
-                <view class="item-title">其他联系方式</view>
-                <block wx:for="{{contactArray}}" wx:key="{{index}}">
-                    <profile-item title="{{item.contactType.content}}" content="{{item.content.content}}" class="profile-item-wrapper"></profile-item>
-                </block>
-              </view>
-
-            </view>
-          </block>
-          <block wx:if="{{tabIndex === 1}}">
-            <view class="intro-wrapper" id="intro">
-              <block wx:if="{{(intro === undefined || intro === '') && mode !== 'normal'}}">
-                <view class="add-hint"><text>该用户暂无自我介绍</text></view>
-              </block>
-              <block wx:if="{{(intro === undefined || intro === '') && introStatus === 'default' && mode === 'normal'}}">
-                <view class="add-hint"><text>介绍自己\n让校友们更好地认识您</text></view>
-                <button class="add-btn" type="default" bindtap="addIntro">
-                  添加自我介绍
-                </button>
-              </block>
-              <block wx:elif="{{(intro !== undefined && intro !== '') && introStatus === 'default'}}">
-                <view class="intro-content">
-                  <text class="quote" id="quote-left">“</text>
-                    <view class="intro">
-                        {{intro}}
-                    </view>
-                  <text class="quote" id="quote-right">”</text>
-                </view>
-                <block wx:if="{{mode === 'normal' || mode === 'profileManageDataTmp'}}">
-                  <button class="edit-btn" type="default" bindtap="addIntro">
-                    修改自我介绍
-                  </button>
-                </block>
-              </block>
-            </view>
-          </block>
-        </view> 
-      </block>
-
-      <block wx:if="{{profileStatus === -1}}">
-        <view class="hint-wrapper">
-            <view class="upper">
-              <image src="/images/contact-hl.png"></image>
-            </view>
-            <view class="hint">
-              <text>资料暂时为空\n请点击右上角编辑按钮填写\n认证审核通过后方可填写</text>
-            </view>
-        </view>
-      </block>
-
-      <block wx:if="{{introStatus === 'editing'}}">
-        <view class="float-wrap">
-          <textarea placeholder="请输入自我介绍" maxlength="-1" fixed="{{true}}" class="intro-input" bindinput="introInput" auto-focus="{{true}}" value="{{tmpIntro}}" focus="{{true}}"></textarea>
-          <view class="btn-wrap">
-            <button class="cancel-btn" type="default" bindtap="cancelIntro">
-              取消
-            </button>
-            <button class="submit-btn" type="default" bindtap="submitIntro">
-              提交
-            </button>
+    <block wx:if="{{profileStatus === 'empty'}}">
+      <view class="hint-wrapper">
+          <view class="upper">
+            <image src="/images/contact-hl.png"></image>
           </view>
-        </view>
-      </block>
-
-      
+          <view class="hint">
+            <text>资料暂时为空\n请点击右上角编辑按钮填写\n认证审核通过后方可填写</text>
+          </view>
+      </view>
+    </block>
   </view>
   
 </view>

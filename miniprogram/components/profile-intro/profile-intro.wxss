@@ -1,0 +1,88 @@
+/* components/profile-intro/profile-intro.wxss */
+.intro-wrapper {
+  margin-top: 25rpx;
+}
+
+.intro-wrapper .add-hint {
+  padding-top: 27%;
+  text-align: center;
+  font-size: 35rpx;
+  margin-bottom: 20rpx;
+}
+
+.intro-wrapper .add-btn,
+.intro-wrapper .edit-btn {
+  font-size: 35rpx;
+  width: 40%;
+}
+
+
+.edit-btn {
+  margin-bottom: 100rpx;
+}
+
+.float-wrap {
+  margin-top: 60rpx;
+  margin-left: auto;
+  margin-right: auto;
+  /* position: fixed; */
+  /* top: 590rpx; */
+  border: 1rpx solid #ccc;
+  width: 80%;
+  height: 400rpx;
+  background: #fff;
+  border-radius: 20rpx;
+}
+
+.float-wrap .intro-input {
+  width: 88%;
+  height: 60%;
+  color: rgb(60, 60, 60);
+  margin: 20rpx auto 30rpx;
+  font-size: 35rpx;
+}
+
+.float-wrap .btn-wrap {
+  width: 95;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.submit-btn,
+.cancel-btn {
+  font-size: 35rpx;
+  width: 40%;
+  border: 0;
+  background: #fff;
+}
+
+.intro-wrapper .intro{
+  margin-bottom: 20rpx;
+  font-size: 40rpx;
+  text-indent: 2em;
+  margin-left: 10rpx;
+  margin-right: 10rpx;
+}
+
+.intro-content {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  width: 80%;
+}
+
+.quote {
+  font-size: 80rpx;
+  margin-bottom: -60rpx;
+  margin-right: -17rpx;
+}
+
+.quote-left {
+  text-align: left
+}
+
+.quote-right {
+  text-align: right;
+}

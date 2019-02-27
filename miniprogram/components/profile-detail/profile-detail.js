@@ -4,14 +4,20 @@ Component({
    * 组件的属性列表
    */
   properties: {
-
+    profileData: {
+      type: Object,
+      default: {}
+    }
   },
 
   /**
    * 组件的初始数据
    */
   data: {
-
+    userInfo: [],
+    degreeArray: [],
+    contactArray: [],
+    jobArray: [],
   },
 
   /**
@@ -19,5 +25,10 @@ Component({
    */
   methods: {
 
+  },
+
+  attached: function() {
+    let prop = this.properties;
+    this.setData(prop.profileData);
   }
 })

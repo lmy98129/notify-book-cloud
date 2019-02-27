@@ -1,0 +1,39 @@
+<!--pages/profile/profile.wxml-->
+<view class="root {{introStatus}}">
+  <view class="container {{fixVeryTop ? 'fixed':''}}">
+    <block wx:if="{{mode === 'normal' || mode === 'profileManageDataTmp'}}">
+      <top-widget avatarUrl="{{avatarUrl}}" bgImgUrl="{{bgImgUrl}}" nickname="{{nickName}}" fixTop="{{fixTop}}" fixVeryTop="{{fixVeryTop}}" class="top-widget-wrapper" mode="center">
+        <nav-btn slot="custom-style" btnType="custom-style" iconType="icon-gexinghua" bind:tapBtn="customBgImg"/>
+        <nav-btn slot="edit" btnType="edit" iconType="icon-bianji" bind:tapBtn="editProfile"/>
+      </top-widget>
+    </block>
+    <block wx:elif="{{mode !== 'normal' }}">
+      <top-widget avatarUrl="{{avatarUrl}}" bgImgUrl="{{bgImgUrl}}" nickname="{{nickName}}" fixVeryTop="{{fixVeryTop}}" fixTop="{{fixTop}}" class="top-widget-wrapper" isBack="{{true}}" mode="center">
+      </top-widget>
+    </block>
+
+    <block wx:if="{{profileStatus === 1}}">
+      <view class="main {{mode !== 'normal' && mode !== 'profileManageDataTmp' ? 'no-highest' : ''}}" id="global">
+        <tab-bar class="tabbar-custom" tab-content="{{tabContent}}" tab-index="{{tabIndex}}" bind:change="tabHandler"/>
+        <block wx:if="{{tabIndex === 0}}">
+          <profile-detail class="profile-wrapper main" profile-data="{{profileData}}"/>
+        </block>
+        <block wx:if="{{tabIndex === 1}}">
+          <profile-intro intro="{{intro}}" mode="{{mode}}"/>
+        </block>
+      </view> 
+    </block>
+
+    <block wx:if="{{profileStatus === -1}}">
+      <view class="hint-wrapper">
+          <view class="upper">
+            <image src="/images/contact-hl.png"></image>
+          </view>
+          <view class="hint">
+            <text>资料暂时为空\n请点击右上角编辑按钮填写\n认证审核通过后方可填写</text>
+          </view>
+      </view>
+    </block>
+  </view>
+  
+</view>

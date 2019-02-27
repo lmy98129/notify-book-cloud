@@ -1,0 +1,38 @@
+<!--components/profile-intro/profile-intro.wxml-->
+<view class="intro-wrapper">
+  <block wx:if="{{(intro === undefined || intro === '') && mode !== 'normal'}}">
+    <view class="add-hint"><text>该用户暂无自我介绍</text></view>
+  </block>
+  <block wx:if="{{(intro === undefined || intro === '') && introStatus === 'default' && mode === 'normal'}}">
+    <view class="add-hint"><text>介绍自己\n让校友们更好地认识您</text></view>
+    <button class="add-btn" type="default" bindtap="addIntro">
+      添加自我介绍
+    </button>
+  </block>
+  <block wx:elif="{{(intro !== undefined && intro !== '') && introStatus === 'default'}}">
+    <view class="intro-content">
+      <text class="quote quote-left">“</text>
+        <view class="intro">
+          {{intro}}
+        </view>
+      <text class="quote quote-right">”</text>
+    </view>
+    <block wx:if="{{mode === 'normal' || mode === 'profileManageDataTmp'}}">
+      <button class="edit-btn" type="default" bindtap="addIntro"> 修改自我介绍</button>
+    </block>
+  </block>
+</view>
+
+<block wx:if="{{introStatus === 'editing'}}">
+  <view class="float-wrap">
+    <textarea placeholder="请输入自我介绍" maxlength="-1" fixed="{{true}}" class="intro-input" bindinput="introInput" auto-focus="{{true}}" value="{{tmpIntro}}" focus="{{true}}"></textarea>
+    <view class="btn-wrap">
+      <button class="cancel-btn" type="default" bindtap="cancelIntro">
+        取消
+      </button>
+      <button class="submit-btn" type="default" bindtap="submitIntro">
+        提交
+      </button>
+    </view>
+  </view>
+</block>

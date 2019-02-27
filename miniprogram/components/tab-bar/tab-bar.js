@@ -1,6 +1,5 @@
 // components/tab-bar/tab-bar.js
 Component({
-  externalClasses: ['tabbar-custom'],
   /**
    * 组件的设置
    */
