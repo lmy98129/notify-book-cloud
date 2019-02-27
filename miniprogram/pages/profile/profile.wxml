@@ -2,7 +2,7 @@
 <view class="root {{introStatus}}">
   <view class="container {{fixVeryTop ? 'fixed':''}}">
     <block wx:if="{{mode === 'normal' || mode === 'profileManageDataTmp'}}">
-      <top-widget avatarUrl="{{avatarUrl}}" bgImgUrl="{{bgImgUrl}}" nickname="{{nickName}}" fixTop="{{fixTop}}" fixVeryTop="{{fixVeryTop}}" class="top-widget-wrapper" isBack="{{true}}" mode="center">
+      <top-widget avatarUrl="{{avatarUrl}}" bgImgUrl="{{bgImgUrl}}" nickname="{{nickName}}" fixTop="{{fixTop}}" fixVeryTop="{{fixVeryTop}}" class="top-widget-wrapper" mode="center">
         <nav-btn slot="custom-style" btnType="custom-style" iconType="icon-gexinghua" bind:tapBtn="customBgImg"/>
         <nav-btn slot="edit" btnType="edit" iconType="icon-bianji" bind:tapBtn="editProfile"/>
       </top-widget>
@@ -12,11 +12,11 @@
       </top-widget>
     </block>
 
-    <block wx:if="{{mode !== 'normal' && mode !== 'profileManageDataTmp'}}">
+    <!-- <block wx:if="{{mode !== 'normal' && mode !== 'profileManageDataTmp'}}">
       <button class="add-friend" type="default" loading="{{isLoading}}" bindtap="addFriend">
         {{addFriend}}
       </button>
-    </block>
+    </block> -->
 
       <block wx:if="{{profileStatus === 1}}">
         <view class="main {{mode !== 'normal' && mode !== 'profileManageDataTmp' ? 'no-highest' : ''}}" id="global">

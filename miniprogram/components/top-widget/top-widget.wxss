@@ -134,7 +134,7 @@
 }
 
 .top-widget.center .user-info .user-nickname {
-  margin-top: 6rpx;
+  margin-top: 0rpx;
   margin-right: auto;
   margin-left: auto;
   color: #000;

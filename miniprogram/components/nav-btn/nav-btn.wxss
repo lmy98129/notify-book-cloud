@@ -43,6 +43,10 @@
   font-size: 45rpx;
 }
 
+.message .icon {
+  font-size: 57rpx;
+}
+
 .custom-style .icon {
   font-size: 50rpx;
   transform: rotate(30deg);

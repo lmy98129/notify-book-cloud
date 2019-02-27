@@ -122,6 +122,10 @@
   border-top: .5rpx solid #ddd;
 }
 
+.notify-outer-wrap.last {
+  margin-bottom: 150rpx;
+}
+
 .icon-fanhui1.icon {
   font-size: 45rpx;
   transform: rotate(180deg) scale(1.3, 1);

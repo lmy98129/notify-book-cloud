@@ -2,7 +2,7 @@
 <view class="root {{sideBar ? 'left' : ''}}">
   <view class="container {{sideBar ? 'left' : ''}}  {{fixVeryTop ? 'fixed':''}}">
     <top-widget avatarUrl="{{avatarUrl}}" bgImgUrl="{{bgImgUrl}}" nickname="{{nickName}}" fixTop="{{fixTop}}" class="top-widget-wrapper" isNavigateToProfile="true">
-      <nav-btn slot="add" btnType="add" iconType="icon-tianjiahaoyou" bind:tapBtn="goSearch"/>
+      <nav-btn slot="message" btnType="message" iconType="icon-youjian2" bind:tapBtn="goNotification" isRedDot="{{isNotifyRedDot}}"/>
       <nav-btn slot="settings" btnType="settings" iconType="icon-option2" bind:tapBtn="switchSideBar" isRedDot="{{isRedDot}}"/>
     </top-widget>
     
@@ -119,20 +119,21 @@
   <view class="side-bar">
     <view class="content">
       <view class="btn-wrap">
-        <navigator url="../profile/profile?isOtherUser=false">
+        <navigator url="../profile/profile" open-type="switchTab">
           <view class="btn">个人资料</view>
         </navigator>
         <navigator url="../auth/auth">
           <view class="btn">校友认证</view>
           <view class="red-dot" wx:if="{{isAuthRedDot}}"></view>
         </navigator>
-        <navigator url="../notification/notification">
+        <!-- <navigator url="../notification/notification">
           <view class="btn">消息</view>
           <view class="red-dot" wx:if="{{isNotifyRedDot}}"></view>
-        </navigator>
+        </navigator> -->
         <navigator url="../settings/settings">
           <view class="btn">设置</view>
         </navigator>
+        <button class="btn none-navigator" open-type="feedback" hover-class="none-navigator-hover">反馈</button>
         <view class="btn">关于</view>
       </view>
       <view class="close"  bindtap="switchSideBar">

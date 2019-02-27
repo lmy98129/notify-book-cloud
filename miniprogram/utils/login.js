@@ -149,13 +149,25 @@ const getUserInfo = async (that) => {
           isProfileEmpty
         });
 
-        if (that.data.isAuthRedDot || that.data.isNotifyRedDot) {
+        if (that.data.isAuthRedDot 
+          // || that.data.isNotifyRedDot
+          ) {
           that.setData({
             isRedDot: true
           })
         } else {
           that.setData({
             isRedDot: false
+          })
+        }
+
+        if (that.data.isAuthRedDot || that.data.isNotifyRedDot) {
+          wx.showTabBarRedDot({
+            index: 0
+          });
+        } else {
+          wx.hideTabBarRedDot({
+            index: 0
           })
         }
 

@@ -27,7 +27,7 @@
               <block wx:for="{{unReadArray}}" wx:key="{{index}}">
                 <form bindsubmit="getFormid" report-submit='true'>
                   <button class="submit-no-style" form-type='submit'>
-                    <view class="notify-outer-wrap {{index==0 ? 'first' : ''}}">
+                    <view class="notify-outer-wrap {{index==0 ? 'first' : ''}}  {{index==unReadArray.length-1 ? 'last' : ''}}">
                       <navigator url="../notification-detail/notification-detail?index={{index}}&mode=unReadArray" class="notify-navigator  {{isEdit ? 'editing': ''}}">
                         <view class="notify-wrap">
                           <view class="right">
@@ -68,7 +68,7 @@
               <block wx:for="{{hasReadArray}}" wx:key="{{index}}">
                 <form bindsubmit="getFormid" report-submit='true'>
                   <button class="submit-no-style" form-type='submit'>
-                    <view class="notify-outer-wrap {{index==0 ? 'first' : ''}}">
+                    <view class="notify-outer-wrap {{index==0 ? 'first' : ''}} {{index==hasReadArray.length-1 ? 'last' : ''}}">
                       <navigator url="../notification-detail/notification-detail?index={{index}}&mode=hasReadArray" class="notify-navigator  {{isEdit ? 'editing': ''}}">
                         <view class="notify-wrap">
                           <view class="right">

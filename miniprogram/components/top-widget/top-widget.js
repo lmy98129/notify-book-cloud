@@ -82,8 +82,8 @@ Component({
     goProfile() {
       let prop = this.properties;
       if (prop.isNavigateToProfile) {
-        wx.navigateTo({
-          url: '../profile/profile?isOtherUser=false',
+        wx.switchTab({
+          url: '../profile/profile',
         })
       }
     },

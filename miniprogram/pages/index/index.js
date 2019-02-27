@@ -82,16 +82,22 @@ Page({
     }
   },
 
-  goSearch() {
-    if (wx.getStorageSync("curUserProfile").authStatus !== "authorized") {
-      wx.navigateTo({
-        url: "../auth/auth"
-      })
-    } else {
-      wx.navigateTo({
-        url: "../search/search"
-      })
-    }
+  // goSearch() {
+  //   if (wx.getStorageSync("curUserProfile").authStatus !== "authorized") {
+  //     wx.navigateTo({
+  //       url: "../auth/auth"
+  //     })
+  //   } else {
+  //     wx.navigateTo({
+  //       url: "../search/search"
+  //     })
+  //   }
+  // },
+
+  goNotification() {
+    wx.navigateTo({
+      url: "../notification/notification"
+    });
   },
 
   changePossibleKnow: async function() {

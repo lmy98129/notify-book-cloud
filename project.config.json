@@ -13,7 +13,7 @@
 		"uglifyFileName": false
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.5.0",
+	"libVersion": "2.6.1",
 	"appid": "wxe9b916dde775d246",
 	"projectname": "notify-book-cloud",
 	"miniprogramRoot": "miniprogram/",
