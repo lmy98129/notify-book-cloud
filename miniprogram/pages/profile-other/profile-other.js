@@ -102,9 +102,12 @@ Page({
       })
     } else {
       let decodeRes = profile.decode(curUserProfile, this);
-      let { intro, tmpIntro, profileStatus, ...profileData } = decodeRes;
+      let { intro, profileStatus, ...profileData } = decodeRes;
+      if (intro !== undefined) {
+        this.setData({ intro });
+      }
       this.setData({
-        intro, tmpIntro, profileStatus, profileData
+        profileStatus, profileData
       });
     }
 
@@ -221,60 +224,5 @@ Page({
       })
     }
   },
-
-  addFriend: async function() {
-    try {
-      let openid;
-      if (mode === "searchResult") {
-        openid = wx.getStorageSync("searchResult")[index]._openid;
-      } else if (mode === "contactResult") {
-        openid = wx.getStorageSync("contactResult")[index]._openid;
-      }
-      this.setData({
-        isLoading: true,
-        addFriend: "数据上传中"
-      })
-      if(!isFriend) {
-        let res = await contact.add(openid);
-        if (res.code === 0) {
-          console.log("数据上传成功", res);
-          this.setData({
-            isLoading: false,
-            addFriend: "取消关注",
-          })
-          isFriend = true;
-        } else if (res.code === -1) {
-          this.setData({
-            isLoading: false,
-            addFriend: "添加到通讯录",
-          })
-          toast("数据上传出错", "none");
-          console.log("数据上传出错", res.error);
-        }
-      } else {
-        let tmpArray = [];
-        tmpArray.push(openid);
-        let res = await contact.del(tmpArray);
-        if (res.code === 0) {
-          console.log("数据上传成功", res);
-          this.setData({
-            isLoading: false,
-            addFriend: "添加到通讯录",
-          })
-          isFriend = false;
-        } else if (res.code === -1) {
-          this.setData({
-            isLoading: false,
-            addFriend: "取消关注",
-          })
-          toast("数据上传出错", "none");
-          console.log("数据上传出错", res.error);
-        }
-      }
-    } catch (error) {
-      toast("数据上传出错", "none");
-      console.log("数据上传出错", error);
-    }
-  }
 
 })

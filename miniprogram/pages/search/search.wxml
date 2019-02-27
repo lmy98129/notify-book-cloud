@@ -28,7 +28,7 @@
     <block wx:for="{{searchRes}}" wx:key="{{index}}">
     <form bindsubmit="getFormid" report-submit='true'>
       <button class="submit-no-style" form-type='submit'>
-        <navigator url="../profile/profile?mode=searchResult&index={{index}}">
+        <navigator url="../profile-other/profile-other?mode=searchResult&index={{index}}">
           <view class="result-wrap">
               <image src="{{(item.avatarUrl === '' || item.avatarUrl === undefined) ? '/images/user-unlogin.png' : item.avatarUrl}}" class="avatar" />
               <view class="right">

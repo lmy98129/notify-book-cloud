@@ -20,7 +20,8 @@ Page({
     hasReadArray: [],
     unReadArray: [],
     isEdit: false,
-    selectedList: []
+    selectedList: [],
+    tabContent: ["未读消息", "已读消息"]
   },
 
   /**
@@ -81,7 +82,7 @@ Page({
   },
 
   tabHandler(e) {
-    let index = parseInt(e.target.dataset.index), that = this;
+    let index = parseInt(e.detail.index);
     this.setData({
       tabIndex: index
     })
@@ -90,7 +91,6 @@ Page({
         isEdit: false,
         selectedList: []
       })
-
     }
   },
 

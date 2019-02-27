@@ -31,7 +31,7 @@
                     </view>
                 </block>
                 <block wx:else>
-                  <navigator url="../profile/profile?mode=possibleKnowList&index={{index}}">
+                  <navigator url="../profile-other/profile-other?mode=possibleKnowList&index={{index}}">
                     <view class="people">
                       <image src="{{(item.avatarUrl === '' || item.avatarUrl === undefined) ? '/images/user-unlogin.png' : item.avatarUrl}}"></image>
                       <block wx:if="{{index === 0}}">
@@ -58,7 +58,7 @@
             <swiper display-multiple-items="3" class="swiper-wrap" autoplay="true">
               <block wx:for="{{sameYearRecList}}" wx:key="{{index}}">
                 <swiper-item>
-                <navigator url="../profile/profile?mode=sameYearRecList&index={{index}}">
+                <navigator url="../profile-other/profile-other?mode=sameYearRecList&index={{index}}">
                     <view class="people">
                       <image src="{{(item.avatarUrl === '' || item.avatarUrl === undefined) ? '/images/user-unlogin.png' : item.avatarUrl}}" class="avatar"></image>
                       <view class="name">{{item.realName}}</view>
@@ -82,7 +82,7 @@
             <swiper display-multiple-items="3" class="swiper-wrap" autoplay="true">
               <block wx:for="{{sameMajorRecList}}" wx:key="{{index}}">
                 <swiper-item>
-                  <navigator url="../profile/profile?mode=sameMajorRecList&index={{index}}">
+                  <navigator url="../profile-other/profile-other?mode=sameMajorRecList&index={{index}}">
                     <view class="people">
                       <image src="{{(item.avatarUrl === '' || item.avatarUrl === undefined) ? '/images/user-unlogin.png' : item.avatarUrl}}" class="avatar"></image>
                       <view class="name">{{item.realName}}</view>
@@ -119,7 +119,7 @@
   <view class="side-bar">
     <view class="content">
       <view class="btn-wrap">
-        <navigator url="../profile/profile" open-type="switchTab">
+        <navigator url="../profile-other/profile-other" open-type="switchTab">
           <view class="btn">个人资料</view>
         </navigator>
         <navigator url="../auth/auth">

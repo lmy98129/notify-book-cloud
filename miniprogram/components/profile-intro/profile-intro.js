@@ -14,6 +14,10 @@ Component({
     mode: {
       type: String,
       value: ""
+    },
+    index: {
+      type: String,
+      value: ""
     }
   },
 
@@ -48,7 +52,7 @@ Component({
     },
     
     submitIntro() {
-      let { tmpIntro, mode, index } = this.data
+      let { tmpIntro, mode, index } = this.data;
       if (mode === "profileManageDataTmp") {
         profile.introUploadForManage(this, tmpIntro, mode, index);
       } else {
@@ -58,8 +62,10 @@ Component({
   },
   attached() {
     let props = this.properties;
-    this.setData({
-      tmpIntro: props.intro
-    })
+    if (props.intro !== undefined && props.intro !== "") {
+      this.setData({
+        tmpIntro: props.intro
+      })
+    }
   }
 })

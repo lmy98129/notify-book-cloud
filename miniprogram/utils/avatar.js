@@ -166,14 +166,16 @@ const uploadForManage = async (that, mode, index) => {
                 $url: "uploadAvatar",
                 avatarUrl,
                 _id,
-                collection: "profile-test",
+                collection: "profile-new",
                 isAvatarCustomed: true,
               }
             });
 
-            wx.cloud.deleteFile({
-              fileList: [curAvatarUrl]
-            })
+            if (curAvatarUrl !== undefined) {
+              wx.cloud.deleteFile({
+                fileList: [curAvatarUrl]
+              })
+            }
 
             wx.hideLoading();
             console.log("更新自定义头像成功：", updateRes);
@@ -206,7 +208,7 @@ const defaultForManage = async (that, mode, index) => {
   let profiles = wx.getStorageSync(mode);
   let { _id, avatarUrl } = profiles[index];
 
-  if (avatarUrl === app.globalData.DEFAULT_AVATARURL || avatarUrl === "") {
+  if (avatarUrl === undefined || avatarUrl === "" || avatarUrl === app.globalData.DEFAULT_AVATARURL) {
     toast("当前正在使用默认头像", "none");
     return;
   } else {
@@ -223,7 +225,7 @@ const defaultForManage = async (that, mode, index) => {
           $url: "uploadAvatar",
           avatarUrl: defaultAvatarUrl,
           _id,
-          collection: "profile-test",
+          collection: "profile-new",
           isAvatarCustomed: false,
         }
       });

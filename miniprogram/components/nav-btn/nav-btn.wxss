@@ -44,7 +44,7 @@
 }
 
 .message .icon {
-  font-size: 57rpx;
+  font-size: 60rpx;
 }
 
 .custom-style .icon {

@@ -39,7 +39,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 14,
+			"current": -1,
 			"list": [
 				{
 					"id": -1,
@@ -92,12 +92,6 @@
 				},
 				{
 					"id": -1,
-					"name": "其他用户资料",
-					"pathName": "pages/profile/profile",
-					"query": "mode=searchResult&index=0"
-				},
-				{
-					"id": -1,
 					"name": "消息管理",
 					"pathName": "pages/notification/notification",
 					"query": ""
@@ -130,6 +124,7 @@
 					"id": -1,
 					"name": "导入信息",
 					"pathName": "pages/profile-import/profile-import",
+					"query": "",
 					"scene": null
 				}
 			]

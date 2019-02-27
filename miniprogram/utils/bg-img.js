@@ -147,7 +147,7 @@ const defaultForManage = async (that, mode, index) =>{
           $url: "uploadBgImg",
           bgImgUrl: defaultImgUrl,
           _id,
-          collection: "profile-test",
+          collection: "profile-new",
           isBgImgCustomed: false
         }
       });
@@ -210,12 +210,12 @@ const uploadForManage = async (that, mode, index) => {
                 $url: "uploadBgImg",
                 bgImgUrl,
                 _id,
-                collection: "profile-test",
+                collection: "profile-new",
                 isBgImgCustomed: true
               }
             });
     
-            if (curBgImgUrl !== defaultImgUrl) {
+            if (curBgImgUrl !== undefined && curBgImgUrl !== defaultImgUrl) {
               wx.cloud.deleteFile({
                 fileList: [curBgImgUrl]
               })

@@ -231,7 +231,7 @@ Page({
 
   prevProfile(e) {
     wx.navigateTo({
-      url: "../profile/profile?mode=profileManageDataTmp&index="+e.target.dataset.index
+      url: "../profile-other/profile-other?mode=profileManageDataTmp&index="+e.target.dataset.index
     })
   },
 

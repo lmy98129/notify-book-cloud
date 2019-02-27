@@ -1,9 +1,9 @@
 <!--components/profile-intro/profile-intro.wxml-->
 <view class="intro-wrapper">
-  <block wx:if="{{(intro === undefined || intro === '') && mode !== 'normal'}}">
+  <block wx:if="{{(intro === undefined || intro === '') && !(mode === 'normal' || mode === 'profileManageDataTmp')}}">
     <view class="add-hint"><text>该用户暂无自我介绍</text></view>
   </block>
-  <block wx:if="{{(intro === undefined || intro === '') && introStatus === 'default' && mode === 'normal'}}">
+  <block wx:if="{{(intro === undefined || intro === '') && introStatus === 'default' && (mode === 'normal' || mode === 'profileManageDataTmp')}}">
     <view class="add-hint"><text>介绍自己\n让校友们更好地认识您</text></view>
     <button class="add-btn" type="default" bindtap="addIntro">
       添加自我介绍

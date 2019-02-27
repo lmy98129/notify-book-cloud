@@ -137,10 +137,10 @@ const download = async (that, callback) => {
           app.globalData.isIndexPageFirstLoad = false;
         }
 
-        console.log("获取用户资料成功：" + msg);
+        console.log("获取用户资料成功：", msg);
       } catch (e) {
         msg = e.message;
-        console.log("获取用户资料出错：" + msg);
+        console.log("获取用户资料出错：", msg);
         toast("获取用户资料出错", "none");
       }
     }
@@ -163,7 +163,7 @@ const uploadForManage = async (userInfo, mode, index, that) => {
       data: {
         $url: "uploadProfile",
         profile: userInfo,
-        collection: "profile-test",
+        collection: "profile-new",
         _id: profiles[index]._id
       }
     })
@@ -206,10 +206,10 @@ const upload = async (userInfo) => {
 
     wx.hideLoading();
     toast("资料上传成功", "success");
-    console.log("更新用户资料成功：" + updateRes.errMsg);
+    console.log("更新用户资料成功：", updateRes.errMsg);
   } catch (error) {
     wx.hideLoading();
-    console.log("更新用户资料出错：" + error.message);
+    console.log("更新用户资料出错：", error.message);
     toast("更新资料出错", "none");
   }
 }
@@ -227,7 +227,7 @@ const introUpload = async (that, intro) => {
     wx.setStorage({ key: "curUserProfile", data: curUserProfile });
 
     wx.hideLoading();
-    console.log("更新用户资料成功：" + updateRes.errMsg);
+    console.log("更新用户资料成功：", updateRes.errMsg);
 
     that.setData({
       introStatus: "default",
@@ -235,7 +235,7 @@ const introUpload = async (that, intro) => {
     })
   } catch (error) {
     wx.hideLoading();
-    console.log("更新用户资料出错：" + error.message);
+    console.log("更新用户资料出错：", error.message);
     toast("更新资料出错", "none");
   }
 }
@@ -421,7 +421,6 @@ const decode = (tmpUserInfo) => {
         break;
       case "intro":
         result[item] = tmpUserInfo[item];
-        result.tmpIntro = tmpUserInfo[item];
         delete tmpUserInfo[item];
         break;
     }
@@ -457,7 +456,7 @@ const introUploadForManage = async (that, intro, mode, index) => {
       name: "profile-manage",
       data: {
         $url: "uploadIntro",
-        collection: "profile-test",
+        collection: "profile-new",
         _id,
         intro
       }
@@ -472,10 +471,10 @@ const introUploadForManage = async (that, intro, mode, index) => {
       introStatus: "default",
       intro
     })
-    console.log("更新用户资料成功：" + updateRes);
+    console.log("更新用户资料成功：", updateRes);
   } catch (error) {
     wx.hideLoading();
-    console.log("更新用户资料出错：" + error.message);
+    console.log("更新用户资料出错：", error.message);
     toast("更新资料出错", "none");
   }
 }
@@ -491,7 +490,7 @@ const uploadForAddProflieManage = async (profile) => {
       data: {
         $url: "addProfile",
         profile,
-        collection: "profile-test",
+        collection: "profile-new",
       }
     })
 
