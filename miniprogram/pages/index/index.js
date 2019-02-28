@@ -52,13 +52,6 @@ Page({
   },
 
   onShow: async function() {
-    if (app.globalData.isProfileUpdated) {
-      app.globalData.isProfileUpdated = false;
-      that.setData({
-        sameYearSwiperCurrent: 0,
-        sameMajorSwiperCurrent: 0,
-      })
-    }
     await login.getUserInfo(this);
   },
 

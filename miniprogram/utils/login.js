@@ -50,6 +50,7 @@ const sameRecList = async (that, key, name, start, pageLength) => {
       ["same" + name + "FixList"]: fixList,
       ["same" + name + "total"]: total,
       ["same" + name + "realLength"]: realLength,
+      ["same" + name + "SwiperCurrent"]: 0,
     })
   } catch (error) {
     console.log(error.message);
