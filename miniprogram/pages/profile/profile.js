@@ -71,9 +71,9 @@ Page({
       })
     } else {
       let decodeRes = profile.decode(curUserProfile, this);
-      let { intro, tmpIntro, profileStatus, ...profileData } = decodeRes;
+      let { intro, profileStatus, ...profileData } = decodeRes;
       this.setData({
-        intro, tmpIntro, profileStatus, profileData
+        intro, profileStatus, profileData
       });
     }
   },

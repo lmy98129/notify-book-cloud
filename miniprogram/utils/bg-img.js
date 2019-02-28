@@ -35,7 +35,7 @@ const defaultImg = async (that) => {
 
       wx.hideLoading();
       console.log("更新背景图片成功：", deleteRes);
-      toast("更新背景成功");
+      toast("更新背景成功", "success");
 
       // 更新本地存储的userInfo
       curUserProfile.bgImgUrl = defaultImgUrl;
@@ -159,7 +159,7 @@ const defaultForManage = async (that, mode, index) =>{
 
       wx.hideLoading();
       console.log("更新背景图片成功：", deleteRes);
-      toast("更新背景成功");
+      toast("更新背景成功", "success");
 
       // 更新本地存储的userInfo
       profiles[index].bgImgUrl = defaultImgUrl;

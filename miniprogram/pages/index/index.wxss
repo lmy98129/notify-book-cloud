@@ -137,6 +137,11 @@
   border: .5rpx solid #fff;
 }
 
+.main .recommend .list .people-hover {
+  background-color: rgba(0, 0, 0, 0.1); 
+  opacity: 0.7;
+}
+
 .main .recommend .list .people:nth-child(1) {
   float: left;
   height: 240rpx;

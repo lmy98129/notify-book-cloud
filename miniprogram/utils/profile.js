@@ -204,6 +204,8 @@ const upload = async (userInfo) => {
 
     wx.setStorage({ key: "curUserProfile", data: curUserProfile });
 
+    app.globalData.isProfileUpdated = true;
+
     wx.hideLoading();
     toast("资料上传成功", "success");
     console.log("更新用户资料成功：", updateRes.errMsg);

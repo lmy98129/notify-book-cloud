@@ -1,0 +1,2 @@
+<!--miniprogram/pages/recommend/recommend.wxml-->
+<top-widget mode="contact" bgImgUrl="{{bgImgUrl}}" nickname="{{nickname}}" title="{{title}}" contactFixTitle="的消息" fixTop="{{fixTop}}" class="top-widget-wrapper" isNavigateToProfile="true" isBack="true" fixVeryTop="{{fixVeryTop}}" />

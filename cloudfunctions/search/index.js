@@ -205,8 +205,8 @@ exports.main = async (event, context) => {
   
       // 这个是用来分页用的
       if (pageLength !== undefined && start != undefined && total > pageLength ) {
-        searchRes = searchRes.slice(start, start + pageLength);
-        start += pageLength;
+        searchRes = searchRes.slice(start, start + (pageLength + 1));
+        start += pageLength + 1;
       }
   
       // limit是用来选取前n个的

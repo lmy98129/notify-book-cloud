@@ -13,7 +13,7 @@ const downloadList = async () => {
     }).get();
 
     wx.hideLoading();
-    toast("列表加载成功");
+    toast("列表加载成功", "success");
     console.log("审核列表加载成功：", cloudRes.data);
     return cloudRes.data;
 
@@ -40,7 +40,7 @@ const allowAuditing = async (openidList) => {
   wx.hideLoading();
 
   if (res.result.code === 0) {
-    toast("数据提交成功");
+    toast("数据提交成功", "success");
     console.log("审核通过操作成功：", res.result);
   } else {
     toast("数据提交失败", "none");
@@ -66,7 +66,7 @@ const disallowAuditing = async (openidList) => {
   wx.hideLoading();
 
   if (res.result.code === 0) {
-    toast("数据提交成功");
+    toast("数据提交成功", "success");
     console.log("审核驳回操作成功：", res.result);
   } else {
     toast("数据提交失败", "none");

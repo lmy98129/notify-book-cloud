@@ -13,6 +13,8 @@ const toast = (title, icon, duration) => {
   };
   if (icon != undefined) {
     obj.icon = icon;
+  } else {
+    obj.icon = "none";
   }
   if (duration != undefined) {
     obj.duration = duration;

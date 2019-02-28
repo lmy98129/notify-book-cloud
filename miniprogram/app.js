@@ -29,6 +29,7 @@ App({
       DEFAULT_AVATARURL,
       DEFAULT_PROFILE,
       forcedRefresh: true,
+      isProfileUpdated: false,
     }
   }
 })

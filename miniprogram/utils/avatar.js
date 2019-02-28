@@ -49,7 +49,7 @@ const upload = (that) => {
 
             wx.hideLoading();
             console.log("更新自定义头像成功：", updateRes);
-            toast("上传图片成功");
+            toast("上传图片成功", "success");
 
             curUserProfile.avatarUrl = avatarUrl;
             wx.setStorage({ key: "curUserProfile", data: curUserProfile });
@@ -114,7 +114,7 @@ const wechat = (that) => {
 
           wx.hideLoading();
           console.log("更新头像成功：", deleteRes);
-          toast("更新头像成功");
+          toast("更新头像成功", "success");
   
           curUserProfile.avatarUrl = wechatAvatarUrl;
           wx.setStorage({ key: "curUserProfile", data: curUserProfile});
@@ -179,7 +179,7 @@ const uploadForManage = async (that, mode, index) => {
 
             wx.hideLoading();
             console.log("更新自定义头像成功：", updateRes);
-            toast("上传图片成功");
+            toast("上传图片成功", "success");
 
             profiles[index].avatarUrl = avatarUrl;
             profiles[index].isAvatarCustomed = true;
@@ -236,7 +236,7 @@ const defaultForManage = async (that, mode, index) => {
 
       wx.hideLoading();
       console.log("更新头像成功：", deleteRes);
-      toast("上传图片成功");
+      toast("上传图片成功", "success");
 
       profiles[index].avatarUrl = defaultAvatarUrl;
       profiles[index].isAvatarCustomed = false;

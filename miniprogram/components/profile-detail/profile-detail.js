@@ -27,8 +27,10 @@ Component({
 
   },
 
-  attached: function() {
-    let prop = this.properties;
-    this.setData(prop.profileData);
-  }
+  observers: {
+    "profileData": function(profileData) {
+      this.setData(profileData);
+    }
+  },
+
 })

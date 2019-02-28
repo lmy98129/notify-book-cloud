@@ -4,10 +4,10 @@ import regeneratorRuntime, { async } from "./regenerator-runtime/runtime";
 const profile = require("./profile");
 
 module.exports = {
-  possibleKnow: async () => {
+  possibleKnow: async (start, pageLength) => {
     try {
       let curUserProfile = await profile.check();
-      let requestArray = [], recList = [],
+      let requestArray = [], recList = [], total = 0,
         arrayNames = ["jobArray", "contactArray", "degreeArray"];
       for (let item in curUserProfile) {
         let text, value;
@@ -88,14 +88,15 @@ module.exports = {
         name: "search",
         data: {
           $url: "search",
-          start: 0,
-          pageLength: 9,
+          start,
+          pageLength,
           requestArray,
           collection: "profile-new"
         }
       });
       if (res.result.code === 1) {
         recList = res.result.searchRes;
+        total = res.result.total;
         let openid = app.globalData.openid;
         for (let i=0; i<recList.length; i++) {
           if (recList[i]._openid === openid) {
@@ -103,17 +104,17 @@ module.exports = {
           }
         }
       } 
-      return recList;
+      return { recList, total };
       
     } catch (error) {
       console.log(error);
-      return recList;
+      return { recList, total };
     }
   },
-  same: async (sameKey) => {
+  same: async (sameKey, start, pageLength) => {
     try {
       let curUserProfile = await profile.check();
-      let recList = [], requestArray = [];
+      let recList = [], requestArray = [], total = 0;
       for (let degree of curUserProfile.degreeArray) {
         let text, value;
         if (sameKey == "degreeStartTime") {
@@ -132,14 +133,15 @@ module.exports = {
         name: "search",
         data: {
           $url: "search",
-          start: 0,
-          pageLength: 10,
+          start,
+          pageLength,
           requestArray,
           collection: "profile-new"
         }
       });
       if (res.result.code === 1) {
         recList = res.result.searchRes;
+        total = res.result.total;
         let openid = app.globalData.openid;
         for (let i=0; i<recList.length; i++) {
           if (recList[i]._openid === openid) {
@@ -147,10 +149,10 @@ module.exports = {
           }
         }
       } 
-      return recList;
+      return { recList, total };
     } catch (error) {
       console.log(error);
-      return recList;
+      return { recList, total };
     }
   }
 }

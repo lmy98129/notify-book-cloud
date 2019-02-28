@@ -48,7 +48,7 @@ const uploadAuth = async (authImgArray, remark, that) => {
     if (res.code === 1) {
       wx.hideLoading();
       console.log("授权码检测成功：", res.msg);
-      toast("数据上传成功");
+      toast("数据上传成功", "success");
       that.setData({
         authStatus: "authorized"
       });
@@ -96,7 +96,7 @@ const uploadAuth = async (authImgArray, remark, that) => {
 
     wx.hideLoading();
     console.log("认证数据上传成功：", uploadRes);
-    toast("数据上传成功");
+    toast("数据上传成功", "success");
 
     curUserProfile.authStatus = "auditing";
     wx.setStorage({ key:"curUserProfile", data: curUserProfile });

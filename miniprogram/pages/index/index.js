@@ -1,8 +1,9 @@
 //index.js
-const app = getApp()
 const sys = require("../../utils/system");
 const login = require("../../utils/login");
-const formid = require("../../utils/formid");
+const toast = require("../../utils/message").toast;
+
+const app = getApp();
 import regeneratorRuntime, { async } from "../../utils/regenerator-runtime/runtime";
 
 
@@ -22,7 +23,10 @@ Page({
     sameYearFixList: [],
     sameMajorRecList: [],
     sameMajorFixList: [],
-    possibleKnowListLength: 0,
+    sameYearSwiperCurrent: 0,
+    sameMajorSwiperCurrent: 0,
+    possibleKnowListTotal: 0,
+    possibleKnowListStart: 0,
     fixTop: false,
     fixVeryTop: false,
     specialPhone: '',
@@ -48,6 +52,13 @@ Page({
   },
 
   onShow: async function() {
+    if (app.globalData.isProfileUpdated) {
+      app.globalData.isProfileUpdated = false;
+      that.setData({
+        sameYearSwiperCurrent: 0,
+        sameMajorSwiperCurrent: 0,
+      })
+    }
     await login.getUserInfo(this);
   },
 
@@ -82,18 +93,6 @@ Page({
     }
   },
 
-  // goSearch() {
-  //   if (wx.getStorageSync("curUserProfile").authStatus !== "authorized") {
-  //     wx.navigateTo({
-  //       url: "../auth/auth"
-  //     })
-  //   } else {
-  //     wx.navigateTo({
-  //       url: "../search/search"
-  //     })
-  //   }
-  // },
-
   goNotification() {
     wx.navigateTo({
       url: "../notification/notification"
@@ -101,15 +100,39 @@ Page({
   },
 
   changePossibleKnow: async function() {
-    this.setData({
-      isChangePossibleKnowLoading: true,
-      changeBtnWord: ""
-    })
-    await login.possibleKnow(this);
-    this.setData({
-      isChangePossibleKnowLoading: false,
-      changeBtnWord: "换一批"
+    try {
+      this.setData({
+        isChangePossibleKnowLoading: true,
+        changeBtnWord: ""
+      })
+      let { possibleKnowListTotal, possibleKnowListStart } = this.data;
+      let start = possibleKnowListStart + 9;
+      if (start > possibleKnowListTotal) {
+        start = 0;
+        this.setData({
+          possibleKnowListStart: 0
+        })
+      }
+      await login.possibleKnow(this, start, 9);
+      this.setData({
+        isChangePossibleKnowLoading: false,
+        changeBtnWord: "换一批"
+      })
+      toast("推荐列表刷新成功", "none");
+    } catch (error) {
+      this.setData({
+        isChangePossibleKnowLoading: false,
+        changeBtnWord: "换一批"
+      })
+      toast("推荐列表加载失败", "none");
+      console.log(error.message);
+    }
+  },
+
+  goPossibleKnowProfile(e) {
+    let { index } = e.currentTarget.dataset;
+    wx.navigateTo({
+      url: `../profile-other/profile-other?mode=possibleKnowList&index=${index}`
     })
   }
-
 })

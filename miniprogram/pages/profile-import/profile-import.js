@@ -251,7 +251,7 @@ Page({
           
           wx.hideLoading();
           console.log('上传文档成功：', uploadFileRes.result);
-          toast("上传文档成功");
+          toast("上传文档成功", "success");
         } catch (error) {
           wx.hideLoading();
           console.log(error);          
@@ -627,6 +627,11 @@ Page({
       wx.showLoading({
         title: "上传中",
       })
+
+      for (let data of importData) {
+        data.isProfileEmpty = false;
+        data.authStatus = "authorized";
+      }
 
       let importRes = await wx.cloud.callFunction({
         name: "profile-manage",

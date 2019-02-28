@@ -96,7 +96,7 @@ module.exports = {
   
       wx.hideLoading();
       if (res.result.code === 1) {
-        toast("数据提交成功");
+        toast("数据提交成功", "success");
         console.log("更改消息状态操作成功：", res.result);
       } else {
         toast("数据提交失败", "none");
@@ -125,7 +125,7 @@ module.exports = {
       
       wx.hideLoading();
       if (res.result.code === 1) {
-        toast("数据提交成功");
+        toast("数据提交成功", "success");
         console.log("删除消息操作成功：", res.result);
       } else {
         toast("数据提交失败", "none");
@@ -153,7 +153,7 @@ module.exports = {
       wx.hideLoading();
   
       if (res.result.code === 1) {
-        toast("列表加载成功");
+        toast("列表加载成功", "success");
         console.log("推送消息管理列表加载成功：", res.result.notification);
         wx.setStorageSync("adminNotification", res.result.notification);
       } else {
@@ -184,7 +184,7 @@ module.exports = {
       wx.hideLoading();
   
       if (res.result.code === 1) {
-        toast("数据提交成功");
+        toast("数据提交成功", "success");
         console.log("推送消息更新成功：", res.result);
       } else {
         toast("数据提交失败", "none");
@@ -212,7 +212,7 @@ module.exports = {
       wx.hideLoading();
   
       if (res.result.code === 1) {
-        toast("数据提交成功");
+        toast("数据提交成功", "success");
         console.log("删除消息操作成功：", res.result);
       } else {
         toast("数据提交失败", "none");
@@ -242,7 +242,7 @@ module.exports = {
       wx.hideLoading();
   
       if (res.result.code === 1) {
-        toast("数据提交成功");
+        toast("数据提交成功", "success");
         console.log("新建消息操作成功：", res.result);
       } else {
         toast("数据提交失败", "none");

@@ -7,7 +7,7 @@ const contact = require("../../utils/contact");
 const app = getApp()
 import regeneratorRuntime, { async } from "../../utils/regenerator-runtime/runtime";
 
-let mode = "normal", index, isFriend;
+let mode = "normal", index;
 
 Page({
 
@@ -81,6 +81,11 @@ Page({
     } else {
       curUserProfile = await profile.check();
     }
+    if (curUserProfile === undefined) {
+      wx.switchTab({
+        url: "../index/index"
+      });
+    }
     let { avatarUrl, nickName, bgImgUrl } = curUserProfile;
     if (avatarUrl !== undefined) {
       this.setData({ avatarUrl });
@@ -126,7 +131,6 @@ Page({
   onUnload: function () {
     index = undefined;
     mode = "normal";
-    isFriend = undefined;
   },
 
   /**
