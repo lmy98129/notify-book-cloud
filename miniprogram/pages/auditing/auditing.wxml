@@ -14,26 +14,26 @@
         <view class="hint">暂无待审核项目</view>
       </block>
       <block wx:for="{{auditingList}}" wx:key="{{index}}">
-          <view class="auditing-wrap">
-            <image src="{{item.avatarUrl === '' ? '/images/user-unlogin.png' : item.avatarUrl}}" class="avatar" />
-            <view class="right">
-              <view class="profile">
-                <view class="nickname">{{item.nickName}}</view>
-                <view class="remark">状态: 
-                  <block wx:if="{{item.authStatus === 'auditing'}}">
-                    待审核
-                  </block>
-                  <block wx:if="{{item.authStatus === 'authorized'}}">
-                    已通过
-                  </block>
-                </view>
+        <view class="auditing-wrap {{index === auditingList.length-1 ? 'last': ''}}">
+          <image src="{{(item.avatarUrl === '' || item.avatarUrl === undefined) ? '/images/user-unlogin.png' : item.avatarUrl}}" class="avatar" />
+          <view class="right">
+            <view class="profile">
+              <view class="nickname">{{item.nickName}}</view>
+              <view class="remark">状态: 
+                <block wx:if="{{item.authStatus === 'auditing'}}">
+                  待审核
+                </block>
+                <block wx:if="{{item.authStatus === 'authorized'}}">
+                  已通过
+                </block>
               </view>
             </view>
-            <button class="detail-btn" data-index="{{index}}" bindtap="goDetail">详情</button>
-            <view class="check-box">
-              <checkbox value="{{item._openid}}"/>
-            </view>
           </view>
+          <button class="detail-btn" data-index="{{index}}" bindtap="goDetail">详情</button>
+          <view class="check-box">
+            <checkbox value="{{item._openid}}"/>
+          </view>
+        </view>
       </block>
     </checkbox-group>
     <view class="bottom-wrap">

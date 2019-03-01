@@ -342,5 +342,108 @@ exports.main = async (event, context) => {
     }
   })
 
+  app.router("classInfoDownload", async (ctx) => {
+    try {
+      ctx.body = {
+        code: 1,
+      }
+
+      let downloadRes = [];
+
+      let countRes = await db.collection("class-info").count();
+
+      let { total } = countRes;
+
+      if (total > 100) {
+        let skip = 0;
+        while(skip <= total) {
+          let cloudRes = await db.collection("class-info").skip(skip).limit(100).get();
+          if (cloudRes.data !== undefined) {
+            downloadRes = downloadRes.concat(cloudRes.data);
+            skip += 100;
+          }
+        }
+      } else {
+        let cloudRes = await db.collection("class-info").get();
+        if (cloudRes.data !== undefined) {
+          downloadRes = cloudRes.data;
+        }
+      }
+
+      ctx.body.data = downloadRes;
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        code: -1,
+        err: error.message
+      }
+    }
+  })
+
+  app.router("classInfoAdd", async (ctx) => {
+    try {
+      let { newClassInfo } = event;
+
+      let addRes = await db.collection("class-info").add({ data: newClassInfo });
+
+      ctx.body = {
+        code: 1,
+        addRes
+      }
+
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        code: -1,
+        err: error.message
+      }
+    }
+  })
+
+  app.router("classInfoUpdate", async (ctx) => {
+    try {
+      let { newClassInfo, _id } = event;
+
+      let updateRes = await db.collection("class-info").doc(_id).update({ data: newClassInfo });
+
+      ctx.body = {
+        code: 1,
+        updateRes
+      }
+
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        code: -1,
+        err: error.message
+      }
+    }
+  })
+
+  app.router("classInfoDelete", async (ctx) => {
+    try {
+      let { selected } = event;
+
+      let deleteRes = [];
+
+      for (id of selected) {
+        console.log(id);
+        deleteRes.push(await db.collection("class-info").doc(id).remove())
+      }
+
+      ctx.body = {
+        code: 1,
+        deleteRes
+      }
+
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        code: -1,
+        err: error.message
+      }
+    }
+  })
+
   return app.serve();
 }

@@ -11,6 +11,54 @@ const _ = db.command;
 exports.main = async (event, context) => {
   const app = new TcbRouter({ event });
 
+  app.router("download", async (ctx) => {
+    try {
+      ctx.body = {
+        code: 1,
+      }
+
+      let downloadRes = [];
+
+      let countRes = await db.collection("profile-new").where({
+        authStatus: _.eq("auditing").or(_.eq("authorized")),
+        _openid: { $exists: true },
+      }).count();
+
+      let { total } = countRes;
+
+      if (total > 100) {
+        let skip = 0;
+        while(skip <= total) {
+          let cloudRes = await db.collection("profile-new").where({
+            authStatus: _.eq("auditing").or(_.eq("authorized")),
+            _openid: { $exists: true },
+          }).skip(skip).limit(100).get();
+          if (cloudRes.data !== undefined) {
+            downloadRes = downloadRes.concat(cloudRes.data);
+            skip += 100;
+          }
+        }
+      } else {
+        let cloudRes = await db.collection("profile-new").where({
+          authStatus: _.eq("auditing").or(_.eq("authorized")),
+          _openid: { $exists: true },
+        }).get();
+        if (cloudRes.data !== undefined) {
+          downloadRes = cloudRes.data;
+        }
+      }
+
+      ctx.body.data = downloadRes;
+
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        code: -1,
+        err: error.message
+      }
+    }
+  })
+
   app.router("allow", async (ctx) => {
     try {
       let openidList = event.openidList;

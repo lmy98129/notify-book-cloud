@@ -1,0 +1,106 @@
+/* miniprogram/pages/class-manage/class-manage.wxss */
+.main {
+  margin-top: 0;
+}
+
+.hint-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 100%;
+  padding-bottom: 180rpx;
+  padding-top: 40%;
+}
+
+.upper {
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 35rpx;
+}
+
+.upper image{
+  margin: 40rpx auto;
+  width: 100rpx;
+  height: 100rpx;
+}
+
+.hint {
+  font-size: 35rpx;
+  text-align: center;
+}
+
+.class-manage-wrap {
+  padding: 40rpx 20rpx;
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  text-align: left;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.class-manage-wrap .left {
+  -webkit-box-flex:1;
+  -webkit-flex:1;
+  flex:1;
+  min-width:0;  
+  margin-top: -12rpx;
+  margin-left: 15rpx;
+  margin-right: 5rpx;
+}
+
+.class-manage-wrap .left .top {
+  font-size: 47rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 10rpx;
+  line-height: 85rpx;
+  display: flex;
+}
+
+.class-manage-wrap .left .top .class-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.class-manage-wrap .left .content {
+  font-size: 32rpx;
+  line-height: 150%;
+  max-width: 100%;
+  margin-bottom: 10rpx;
+}
+
+.class-manage-wrap .right {
+  display: flex;
+  align-items: center;
+  width: 40%;
+}
+
+.class-manage-outer-wrap {
+  display: flex;
+  border-bottom: .5rpx solid #ddd;
+  align-items: center;
+}
+
+.class-manage-outer-wrap.first {
+  border-top: .5rpx solid #ddd;
+}
+
+.class-manage-outer-wrap.last {
+  margin-bottom: 150rpx;
+}
+
+.auditing-wrap .detail-btn {
+  float: right;
+  position: relative;
+  top: 60rpx;
+}

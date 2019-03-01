@@ -16,7 +16,8 @@
     "pages/notification-manage-edit/notification-manage-edit",
     "pages/profile-manage/profile-manage",
     "pages/profile-import/profile-import",
-    "pages/recommend/recommend"
+    "pages/recommend/recommend",
+    "pages/class-manage/class-manage"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",

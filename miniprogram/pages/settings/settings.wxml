@@ -7,11 +7,11 @@
       <settings-item url="/pages/auditing/auditing" title="校友认证审核" hint="仅管理员可见"></settings-item>
       <settings-item url="/pages/profile-manage/profile-manage" title="校友资料管理" hint="仅管理员可见"></settings-item>      
       <settings-item url="/pages/notification-manage/notification-manage" title="推送消息管理" hint="仅管理员可见"></settings-item>      
+      <settings-item url="/pages/class-manage/class-manage" title="班级信息管理" hint="仅管理员可见"></settings-item>      
     </view>
     </block>
     <view class="settings-wrapper">
+      <settings-item url="" title="资料展示设置" hint="功能开发中，敬请期待"></settings-item>
       <settings-item url="" title="个性化中心" hint="功能开发中，敬请期待"></settings-item>
     </view>
-  
-  
 </view>

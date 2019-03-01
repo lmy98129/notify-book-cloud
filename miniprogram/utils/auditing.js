@@ -8,14 +8,18 @@ const downloadList = async () => {
     title: "加载审核列表"
   })
   try {
-    let cloudRes = await db.collection("profile-new").where({
-      authStatus: _.eq("auditing").or(_.eq("authorized"))
-    }).get();
+
+    let cloudRes = await wx.cloud.callFunction({
+      name: "auditing",
+      data: {
+        $url: "download",
+      }
+    })
 
     wx.hideLoading();
     toast("列表加载成功", "success");
-    console.log("审核列表加载成功：", cloudRes.data);
-    return cloudRes.data;
+    console.log("审核列表加载成功：", cloudRes.result.data);
+    return cloudRes.result.data;
 
   } catch (error) {
     wx.hideLoading();

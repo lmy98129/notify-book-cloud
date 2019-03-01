@@ -3,7 +3,7 @@
 </top-widget>
 <view class="main">
     <view class="user">
-      <image src="{{content.avatarUrl === '' ? '/images/user-unlogin.png' : content.avatarUrl}}"></image>
+      <image src="{{(content.avatarUrl === '' || content.avatarUrl === undefined) ? '/images/user-unlogin.png' : content.avatarUrl}}"></image>
       <view class="nickname">{{content.nickName}} 状态: 
         <block wx:if="{{content.authStatus === 'auditing'}}">
           待审核

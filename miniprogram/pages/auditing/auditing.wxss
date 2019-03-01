@@ -18,6 +18,10 @@
           align-items: center;
 }
 
+.auditing-wrap.last {
+  margin-bottom: 150rpx;
+}
+
 .auditing-wrap .avatar {
   width: 170rpx;
   height: 170rpx;

@@ -37,6 +37,10 @@
   width: 80%;
 }
 
+.item.modal .input {
+  width: 75%;
+}
+
 .item .input input {
   width: auto;
   margin-left: 30rpx;

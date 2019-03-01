@@ -253,7 +253,7 @@ exports.main = async (event, context) => {
                   }
                 }
               } else {
-                cloudRes = await db.collection(collection).skip(start).limit(pageLength).field(field).get();
+                let cloudRes = await db.collection(collection).skip(start).limit(pageLength).field(field).get();
                 if (cloudRes.data !== undefined) {
                   searchRes = cloudRes.data;
                 }

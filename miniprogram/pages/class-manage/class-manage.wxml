@@ -1,0 +1,61 @@
+<!--miniprogram/pages/class-manage/class-manage.wxml-->
+<top-widget mode="title" title="班级信息管理">
+</top-widget>
+
+<view class="main">
+  <block wx:if="{{classArray.length === 0}}">
+    <view class="hint-wrapper">
+      <view class="upper">
+        <image src="/images/contact-hl.png"></image>
+      </view>
+      <view class="hint">
+        <text>班级信息暂时为空</text>
+      </view>
+    </view>
+  </block>
+  <block wx:else>
+    <checkbox-group bindchange="bindSelected">
+      <block wx:for="{{classArray}}" wx:key="{{index}}">
+        <view class="class-manage-outer-wrap {{index==0 ? 'first' : ''}}  {{index==classArray.length-1 ? 'last' : ''}}">
+          <view class="class-manage-wrap">
+            <view class="left">
+              <view class="top">
+                <view class="class-name">{{item.className}} {{item.headTeacher}}</view>
+              </view>
+              <view class="content">
+                <view class="line">
+                  {{item.degree}} {{item.school}} {{item.major}}\n
+                </view>
+                <block wx:if="{{item.degreeStartTime !== '' || item.degreeEndTime !== ''}}">
+                  <view class="line">
+                    {{item.degreeStartTime}} ~ {{item.degreeEndTime}}
+                  </view>
+                </block>
+              </view>
+            </view>
+            <view class="right">
+              <button class="detail-btn" data-index="{{index}}" bindtap="showEditModal">编辑</button>
+              <checkbox value="{{item._id}}"/>
+            </view>
+          </view>
+        </view>
+      </block>
+    </checkbox-group>
+  </block>
+</view>
+
+<view class="bottom-wrap">
+  <view class="btn" bindtap="showEditModal">新建</view>
+  <view class="btn" bindtap="delete">删除</view>
+</view>
+
+<modal hidden="{{isEditModalHidden}}" title="填写班级信息" bindconfirm="edit" bindcancel="hideEditModal" catchtouchmove="modalTouchMove">
+  <profile-input title="班级名称" mode="modal-input" bind:input="inputHandler" value="{{className}}" place-holder="例如“10电编”" input-type="className"></profile-input>
+  <profile-input title="对应专业" mode="modal-input" bind:input="inputHandler" value="{{major}}" place-holder="例如“电编”" input-type="major"></profile-input>  
+  <profile-input title="学院" mode="modal-input" bind:input="inputHandler" value="{{school}}" place-holder="请输入学院名称" input-type="school"></profile-input>
+  <profile-input title="班主任" mode="modal-input" bind:input="inputHandler" value="{{headTeacher}}" place-holder="请输入班主任姓名" input-type="headTeacher"></profile-input>
+  <profile-input title="学历" mode="modal-picker" bind:input="inputHandler" picker-mode="selector" picker-range="{{degreeTypeArray}}" value="{{degreeForm}}" input-type="degree" bind:del="pickerDel"/>
+  <profile-input title="入学时间" asterisk="{{false}}" mode="modal-picker" picker-fields="month" value="{{degreeStartTimeForm}}" input-type="degreeStartTime" bind:input="inputHandler" bind:del="pickerDel" />
+  <profile-input title="毕业时间" asterisk="{{false}}" mode="modal-picker" picker-fields="month" value="{{degreeEndTimeForm}}" input-type="degreeEndTime" bind:input="inputHandler" bind:del="pickerDel" />
+  <view class="modal-hint">注：带<text style="color: #e30">*</text>的为必填项，若为选项则长按选中的值即可清除选择的值</view>
+</modal>
