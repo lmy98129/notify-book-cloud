@@ -18,6 +18,10 @@ Component({
     degreeArray: [],
     contactArray: [],
     jobArray: [],
+    isShowUserInfo: [],
+    isShowJobArray: true,
+    isShowContactArray: true,
+    isShowDegreeArray: true,
   },
 
   /**

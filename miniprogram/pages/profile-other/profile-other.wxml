@@ -30,7 +30,7 @@
             <image src="/images/contact-hl.png"></image>
           </view>
           <view class="hint">
-            <text>资料暂时为空\n请点击右上角编辑按钮填写\n认证审核通过后方可填写</text>
+            <text>资料暂时为空</text>
           </view>
       </view>
     </block>

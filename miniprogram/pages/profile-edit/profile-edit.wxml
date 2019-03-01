@@ -24,22 +24,27 @@
       <view class="item-wrapper">
         <view class="item-title">学历信息 {{index + 1}}</view>
 
+        <profile-input title="班级" mode="picker" picker-mode="selector" picker-range="{{classNameArray}}" value="{{item.className}}" bind:input="setClass" input-type="className" index="{{index}}" array-type="degreeArray" bind:del="pickerDel"/>
+
+        <block wx:if="{{item.className === '其他'}}">
+          <profile-input title="班级" place-holder="请输入班级名称" value="{{item.className}}" bind:input="inputHandler" input-type="className" index="{{index}}" array-type="degreeArray" />         
+        </block>
+
         <profile-input title="学历" mode="picker" picker-mode="selector" picker-range="{{degreeTypeArray}}" value="{{item.degree}}" bind:input="inputHandler" input-type="degree" index="{{index}}" array-type="degreeArray" bind:del="pickerDel"/>
 
         <profile-input title="学院" place-holder="请输入学院名称" value="{{item.school}}" bind:input="inputHandler" input-type="school" index="{{index}}" array-type="degreeArray" />
 
         <profile-input title="专业" place-holder="请输入专业名称" value="{{item.major}}" bind:input="inputHandler" input-type="major" index="{{index}}" array-type="degreeArray" />
         
-        <profile-input title="班级" place-holder="请输入班级名称" value="{{item.className}}" bind:input="inputHandler" input-type="className" index="{{index}}" array-type="degreeArray" />
-
         <profile-input title="班主任" asterisk="{{false}}" place-holder="请输入班主任名字" value="{{item.headteacher}}" bind:input="inputHandler" input-type="headteacher" index="{{index}}" array-type="degreeArray" />
 
         <profile-input title="入学时间" mode="picker" picker-fields="month" value="{{item.degreeStartTime}}" bind:input="inputHandler" input-type="degreeStartTime" index="{{index}}" array-type="degreeArray" bind:del="pickerDel"/>
 
         <profile-input title="毕业时间" asterisk="{{false}}" mode="picker" picker-fields="month" value="{{item.degreeEndTime}}" bind:input="inputHandler" input-type="degreeEndTime" index="{{index}}" array-type="degreeArray" bind:del="pickerDel"/>
-          <form bindsubmit="getFormid" report-submit="true">
-            <button wx:if="{{index !== 0 || degreeArray.length !== 1 || mode === 'addProfileManage'}}" class="del-btn submit-no-style" data-type="degreeArray" bindtap="delBtn" data-index="{{index}}" form-type="submit">删除</button>
-          </form>
+
+        <form bindsubmit="getFormid" report-submit="true">
+          <button wx:if="{{index !== 0 || degreeArray.length !== 1 || mode === 'addProfileManage'}}" class="del-btn submit-no-style" data-type="degreeArray" bindtap="delBtn" data-index="{{index}}" form-type="submit">删除</button>
+        </form>
       </view>
     </block>
 
@@ -58,9 +63,10 @@
         <profile-input title="入职时间" mode="picker" picker-fields="month" value="{{item.jobStartTime}}" bind:input="inputHandler" input-type="jobStartTime" index="{{index}}" array-type="jobArray" bind:del="pickerDel"/>
 
         <profile-input title="离职时间" asterisk="{{false}}" mode="picker" picker-fields="month" value="{{item.jobEndTime}}" bind:input="inputHandler" input-type="jobEndTime" index="{{index}}" array-type="jobArray" bind:del="pickerDel"/>
-          <form bindsubmit="getFormid" report-submit="true">
-            <button wx:if="{{index !== 0 || jobArray.length !== 1 || mode === 'addProfileManage'}}" class="del-btn submit-no-style" data-type="jobArray" bindtap="delBtn" data-index="{{index}}" form-type="submit">删除</button>
-          </form>
+
+        <form bindsubmit="getFormid" report-submit="true">
+          <button wx:if="{{index !== 0 || jobArray.length !== 1 || mode === 'addProfileManage'}}" class="del-btn submit-no-style" data-type="jobArray" bindtap="delBtn" data-index="{{index}}" form-type="submit">删除</button>
+        </form>
       </view>
     </block>
 
@@ -100,3 +106,38 @@
   </form>
 
 </view>
+
+<modal hidden="{{isChooseInitTypeModalHidden}}" title="初始化您的资料" no-cancel="{{true}}" confirm-text="返回" bindconfirm="goBack" catchtouchmove="modalTouchMove">
+  <block wx:if="{{!isChooseProfile}}">
+    <view class="choose-wrap">
+      <view class="choose left" bind:tap="editBySelf">
+        <view class="text">自行填写资料</view>
+      </view>
+      <view class="choose right" bind:tap="chooseProfile">
+        <view class="text">使用现有资料<view class="recommend-hint">推荐✓</view></view>
+      </view>
+    </view>
+  </block>
+  <block wx:else>
+    <view class="modal-hint step">STEP 1: 查找资料</view>
+    <view class="find">
+      <profile-input class="real-name-init" mode="modal-input" title="真实姓名" asterisk="{{false}}" place-holder="请输入您的真实姓名" value="{{realNameForInitProfile}}" bind:input="setRealNameForInitProfile"/>
+      <button class="find-btn" bind:tap="findProfile">点击查找资料</button>
+    </view>
+    <block wx:if="{{tmpInitProfile.length > 0}}">
+      <view class="modal-hint">STEP 2: 预览并选取资料</view>
+      <view class="find-result">
+        <radio-group bindchange="selectInitProfile">
+          <block wx:for="{{tmpInitProfile}}" wx:key="{{index}}">
+            <view class="result-wrap">
+              <settings-item class="result-item" url="../profile-other/profile-other?mode=tmpInitProfile&index={{index}}" title="{{item.realName}}" hint="预览" />
+              <radio value="{{item._id}}" />
+            </view>
+          </block>
+        </radio-group>
+        <button class="select-btn" bind:tap="selectedProfile">使用所选资料</button>
+      </view>
+    </block>
+    <view class="modal-hint">注：若无法查找到可供您使用的现有资料，请点击下方返回键退出，在再次进入本界面并选择“自行填写资料”，感谢您的配合</view>
+  </block>
+</modal>

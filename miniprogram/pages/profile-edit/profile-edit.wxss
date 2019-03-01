@@ -1,7 +1,9 @@
 /* pages/profile-edit/profile-edit.wxss */
+
 page {
-  background: rgb(203,203,203);
+  background: rgb(203, 203, 203);
 }
+
 .main {
   margin: 20rpx;
   background: #fff;
@@ -76,8 +78,7 @@ page {
   line-height: 50rpx;
 }
 
-.submit:active,
-.item.add-wrap.add-btn:active {
+.submit:active, .item.add-wrap.add-btn:active {
   color: #fff;
   background: rgb(160, 160, 160);
 }
@@ -88,7 +89,7 @@ page {
 }
 
 .item-wrapper {
-  background: rgb(240,240,240);
+  background: rgb(240, 240, 240);
   width: 95%;
   margin: 25rpx auto;
   padding-bottom: 10rpx;
@@ -109,9 +110,9 @@ page {
 .item-wrapper .del-btn {
   color: #c00;
   font-size: 34rpx;
-  position:absolute;
-  top:5rpx;
-  right:32rpx;
+  position: absolute;
+  top: 5rpx;
+  right: 32rpx;
 }
 
 .asterisk {
@@ -120,8 +121,86 @@ page {
 
 .hint {
   font-size: 28rpx;
-  color: rgb(110,110,110);
+  color: rgb(110, 110, 110);
   width: 90%;
   margin: 10rpx auto;
   text-align: left;
+}
+
+.choose-wrap {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-top: 30rpx;
+  margin-bottom: 30rpx;
+}
+
+.choose-wrap .choose {
+  padding-top: 120rpx;
+  padding-left: 10rpx;
+  padding-right: 30rpx;
+  padding-bottom: 20rpx;
+  color: #fff;
+}
+
+.choose-wrap .choose .text {
+  width: 70%;
+}
+
+.choose-wrap .choose.left {
+  background-color: #605BA9;
+}
+
+.choose-wrap .choose.right {
+  background-color: #00C3FA;
+}
+
+.choose-wrap .choose.right .recommend-hint {
+  position: absolute;
+  right: 89rpx;
+  top: 156rpx;
+  font-size: 40rpx;
+}
+
+.find {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20rpx;
+}
+
+.find-btn {
+  width: 100%;
+  margin: 0 auto 20rpx;
+}
+
+.find-result {
+  /* border-bottom: 1px solid rgba(0, 0, 0, 0.1); */
+  margin-bottom: 30rpx;
+}
+
+.find-result .result-wrap {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10rpx;
+}
+
+.find-result .result-wrap .result-item {
+  width: 100%;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.real-name-init {
+  margin-top: -20rpx;
+  margin-bottom: -20rpx;
+}
+
+.modal-hint.step {
+  margin-top: 20rpx;
+}
+
+.select-btn {
+  width: 100%;
+  margin: 20rpx auto 0;
 }

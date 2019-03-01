@@ -445,5 +445,52 @@ exports.main = async (event, context) => {
     }
   })
 
+  app.router("findProfile", async (ctx) => {
+    try {
+      ctx.body = {
+        code: 1,
+      }
+
+      let { realName, collection } = event;
+
+      let cloudRes = await db.collection(collection).where({
+        realName,
+        _openid: { $exists: false }
+      }).get();
+
+      if (cloudRes.data) {
+        ctx.body.data = cloudRes.data;
+      }
+
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        code: -1,
+        err: error.message
+      }
+    }
+  })
+
+  app.router("deleteProfile", async (ctx) => {
+    try {
+      ctx.body = {
+        code: 1,
+      }
+
+      let { _id, collection } = event;
+
+      let removeRes = await db.collection(collection).doc(_id).remove();
+
+      ctx.body.removeRes = removeRes;
+
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        code: -1,
+        err: error.message
+      }
+    }
+  })
+
   return app.serve();
 }

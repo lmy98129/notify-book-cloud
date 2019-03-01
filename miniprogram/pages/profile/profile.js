@@ -70,7 +70,7 @@ Page({
         profileStatus: "empty"
       })
     } else {
-      let decodeRes = profile.decode(curUserProfile, this);
+      let decodeRes = profile.decode(curUserProfile);
       let { intro, profileStatus, ...profileData } = decodeRes;
       this.setData({
         intro, profileStatus, profileData

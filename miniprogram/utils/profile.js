@@ -306,8 +306,9 @@ const decodeForEdit = (tmpUserInfo, initValue, that) => {
   return tmpUserInfo;
 }
 
-const decode = (tmpUserInfo) => {
+const decode = (tmpUserInfo, tmpIsShowUserInfo) => {
   let tmpDate, tmpArray, newTmpArray, tmpObj, result = {};
+  let isShowUserInfo = [];
   delete tmpUserInfo._openid;
   delete tmpUserInfo._id;
   for (let item in tmpUserInfo) {
@@ -426,19 +427,35 @@ const decode = (tmpUserInfo) => {
     }
   }
 
+  
   tmpArray = [];
-  for (let subItem in profModel.userInfo) {
-    for (let item in tmpUserInfo) {
-      if (subItem === item) 
-        tmpArray.push({
-          title: profModel.initValue[item].name,
-          content: tmpUserInfo[item]
-        });
+  for (let item in tmpUserInfo) {
+    if (profModel.userInfo.hasOwnProperty(item)) {
+      tmpArray.push({
+        title: profModel.initValue[item].name,
+        content: tmpUserInfo[item],
+        source: item
+      });
+    }
+  }
+
+  if (tmpIsShowUserInfo instanceof Array && tmpIsShowUserInfo.length > 0) {
+    for (let item of tmpArray) {
+      if (tmpIsShowUserInfo.findIndex(x => x === item.source) >= 0) {
+        isShowUserInfo.push(true);
+      } else {
+        isShowUserInfo.push(false);
+      }
+    }
+  } else {
+    for (let i=0; i<tmpArray.length; i++) {
+      isShowUserInfo.push(true);
     }
   }
 
   result.userInfo = tmpArray;
   result.profileStatus = "normal";
+  result.isShowUserInfo = isShowUserInfo;
 
   return result;
 
@@ -505,6 +522,22 @@ const uploadForAddProflieManage = async (profile) => {
 
 }
 
+const deleteOldProfile = async (_id) => {
+  try {
+    let cloudRes = await wx.cloud.callFunction({
+      name: "profile-manange",
+      data: {
+        $url: "deleteProfile",
+        collection: "profile-new",
+        _id,
+      }
+    })
+    console.log("删除原资料成功");
+  } catch (error) {
+    console.log("删除原资料失败", error.message);
+  }
+}
+
 module.exports = {
   upload,
   uploadForManage,
@@ -515,4 +548,5 @@ module.exports = {
   decode,
   decodeForEdit,
   check: checkLocal,
+  deleteOldProfile,
 }

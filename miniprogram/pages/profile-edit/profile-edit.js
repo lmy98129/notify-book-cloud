@@ -53,7 +53,12 @@ Page({
     pagePos: "请向上滑动页面继续填写",
     canSubmit: false,
     mode: "",
-    index: 0
+    index: 0,
+    isChooseInitTypeModalHidden: true,
+    isChooseProfile: false,
+    realNameForInitProfile: "",
+    tmpInitProfile: [],
+    selectedInitProfile: "",
   },
 
   /**
@@ -62,10 +67,12 @@ Page({
   onLoad: async function (options) {
     let { mode, index } = options;
     let curUserProfile;
+    // 来源为本地存储值
     if (mode !== undefined && mode !== "" && mode !== "addProfileManage") {
       this.setData({ mode, index });
       curUserProfile = wx.getStorageSync(mode)[index];
       newUserInfo = profile.decodeForEdit(curUserProfile, initValue, this);
+    // 管理员自行添加
     } else if (mode === "addProfileManage") {
       let gender = 1;
       newUserInfo.gender = gender;
@@ -76,13 +83,13 @@ Page({
         jobArray: [], degreeArray: []
       });
       return;
+    // 默认资料
     } else {
       curUserProfile = await profile.check();
-  
       if (curUserProfile.isProfileEmpty) {
         let { avatarUrl, nickName, gender } = curUserProfile;
         if (gender <= 0) gender = 1;
-        this.setData({ avatarUrl, nickName, gender })
+        this.setData({ avatarUrl, nickName, gender, isChooseInitTypeModalHidden: false });
         newUserInfo = { ...newUserInfo, avatarUrl, nickName, gender };
       } else {
         newUserInfo = profile.decodeForEdit(curUserProfile, initValue, this);
@@ -332,7 +339,7 @@ Page({
 
   submit() {
     formid.upload()
-    let { canSubmit, mode, index } = this.data;
+    let { canSubmit, mode, index, isChooseProfile, selectedInitProfile } = this.data;
     if (!canSubmit) return;
     let tmpJobArray, tmpContentArray, tmpDegreeArray;
     if (mode === undefined || mode === "") {
@@ -441,5 +448,112 @@ Page({
     } else {
       profile.upload(newUserInfo);
     }
+    if (isChooseProfile) {
+      profile.deleteOldProfile(selectedInitProfile);
+    }
+  },
+
+  modalTouchMove(e) {
+
+  },
+
+  goBack() {
+    if (getCurrentPages().length === 1) {
+      wx.switchTab({
+        url: "/pages/index/index"
+      })
+    } else {
+      wx.navigateBack({
+        delta: 1
+      })
+    }
+  },
+
+  editBySelf() {
+    this.setData({
+      isChooseInitTypeModalHidden: true,
+    })
+  },
+
+  chooseProfile() {
+    this.setData({
+      isChooseProfile: true,
+    })
+  },
+
+  setRealNameForInitProfile(e) {
+    let { value } = e.detail;
+    this.setData({
+      realNameForInitProfile: value,
+    })
+  },
+
+  findProfile: async function() {
+    try {
+      let { realNameForInitProfile } = this.data;
+      let realName = realNameForInitProfile;
+
+      wx.showLoading({
+        title: "请求数据中"
+      });
+
+      let cloudRes = await wx.cloud.callFunction({
+        name: "profile-manage",
+        data: {
+          $url: "findProfile",
+          realName,
+          collection: "profile-new"
+        }
+      })
+
+      wx.hideLoading();
+
+      if (cloudRes.result) {
+        switch(cloudRes.result.code) {
+          case 1:
+            if (cloudRes.result.data.length <= 0) {
+              toast("暂无匹配资料", "none");
+              return;
+            }
+            let tmpInitProfile = cloudRes.result.data;
+            this.setData({
+              tmpInitProfile
+            })
+            wx.setStorage({ key: "tmpInitProfile", data: tmpInitProfile });
+            break;
+          case -1:
+            toast("请求数据出错", "none");
+            break;
+        }
+      }
+
+    } catch (error) {
+      toast("请求数据出错", "none");
+      wx.hideLoading();
+      console.log(error.message);
+    }
+  },
+
+  selectInitProfile(e) {
+    let { value } = e.detail;
+    this.setData({
+      selectedInitProfile: value,
+    })
+  },
+
+  selectedProfile() {
+    let { selectedInitProfile, tmpInitProfile } = this.data;
+    if (selectedInitProfile == undefined || selectedInitProfile == "") {
+      toast("请至少选择一个选项", "none");
+      return;
+    }
+    let curUserProfile = tmpInitProfile[tmpInitProfile.findIndex(x => x._id === selectedInitProfile)];
+    newUserInfo = profile.decodeForEdit(curUserProfile, initValue, this);
+    this.setData({
+      realNameForInitProfile: "",
+      tmpInitProfile: [],
+      isChooseInitTypeModalHidden: true,
+    })
   }
+
 })

@@ -92,11 +92,25 @@ Page({
     this.setData({ avatarUrl, bgImgUrl, nickName });
     if (curUserProfile.isProfileEmpty) {
       this.setData({
-        profileStatus: -1
+        profileStatus: "empty"
       })
     } else {
-      let decodeRes = profile.decode(curUserProfile, this);
+      let isShowUserInfo = ["phoneNumber", "wechatId", "realName"], 
+        isShowContactArray = false, isShowJobArray = false, isShowDegreeArray = false;
+      if (mode === "tmpInitProfile" || mode === "profileManageDataTmp") {
+        isShowUserInfo = undefined;
+        isShowContactArray = true;
+        isShowJobArray = true;
+        isShowDegreeArray = true;
+      }
+      let decodeRes = profile.decode(curUserProfile, isShowUserInfo);
       let { intro, profileStatus, ...profileData } = decodeRes;
+      profileData = {
+        ...profileData,
+        isShowJobArray,
+        isShowContactArray,
+        isShowDegreeArray,
+      }
       if (intro !== undefined) {
         this.setData({ intro });
       }
