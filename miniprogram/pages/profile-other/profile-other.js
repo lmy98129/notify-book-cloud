@@ -85,22 +85,11 @@ Page({
       wx.switchTab({
         url: "../index/index"
       });
+      return;
     }
-    let { avatarUrl, nickName, bgImgUrl } = curUserProfile;
-    if (avatarUrl !== undefined) {
-      this.setData({ avatarUrl });
-    }
-    if (bgImgUrl !== undefined) {
-      this.setData({ bgImgUrl })
-    }
-    if (nickName !== undefined) {
-      this.setData({ nickName })
-    }
-    if (bgImgUrl === "" || bgImgUrl === undefined) {
-      this.setData({
-        bgImgUrl: app.globalData.DEFAULT_BGIMGURL
-      })
-    }
+    let { avatarUrl = app.globalData.DEFAULT_AVATARURL, 
+      nickName = "", bgImgUrl = app.globalData.DEFAULT_BGIMGURL } = curUserProfile;
+    this.setData({ avatarUrl, bgImgUrl, nickName });
     if (curUserProfile.isProfileEmpty) {
       this.setData({
         profileStatus: -1

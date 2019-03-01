@@ -1,34 +1,35 @@
 <!--miniprogram/pages/recommend/recommend.wxml-->
-<top-widget mode="contact" bgImgUrl="{{bgImgUrl}}" nickname="{{nickname}}" title="{{title}}" contactFixTitle="的同届校友" fixTop="{{fixTop}}" class="top-widget-wrapper" isNavigateToProfile="true" isBack="true" fixVeryTop="{{fixVeryTop}}" />
+<top-widget mode="contact" bgImgUrl="{{bgImgUrl}}" nickname="{{nickname}}" title="{{title}}" contactFixTitle="{{'的'+title}}" fixTop="{{fixTop}}" class="top-widget-wrapper" isNavigateToProfile="true" isBack="true" fixVeryTop="{{fixVeryTop}}" />
 
 <view class="main">
   <view class="recommend-list">
-    <block wx:for="{{recList}}" wx:key="{{index}}">
+    <block wx:for="{{recommendList}}" wx:key="{{index}}">
       <navigator url="../profile-other/profile-other?mode={{mode}}&index={{index}}">
         <view class="recommend-wrap">
-            <image src="{{(item.avatarUrl === '' || item.avatarUrl === undefined) ? '/images/user-unlogin.png' : item.avatarUrl}}" class="avatar" />
-            <view class="right">
-              <view class="profile">
-                <view class="realname">{{item.realName}}</view>
-                <view class="remark">
-                  <block wx:if="{{item.gender !== undefined && item.gender !== ''}}">
-                    <text>{{(item.gender === 1 || item.gender === '1') ? '男' : '女'}} </text>
-                  </block>
-                  <block wx:if="{{item.degreeArray[item.degreeArray.length - 1].degreeStartTime !== undefined && item.degreeArray[item.degreeArray.length - 1].degreeStartTime !== ''}}">
-                    <text>{{item.degreeArray[item.degreeArray.length - 1].degreeStartTime[0]}}{{item.degreeArray[item.degreeArray.length - 1].degreeStartTime[1]}}{{item.degreeArray[item.degreeArray.length - 1].degreeStartTime[2]}}{{item.degreeArray[item.degreeArray.length - 1].degreeStartTime[3]}}级 </text>
-                  </block>
-                  <block wx:if="{{item.degreeArray[item.degreeArray.length - 1].degree !== undefined && item.degreeArray[item.degreeArray.length - 1].degree !== ''}}">
-                    <text>{{item.degreeArray[item.degreeArray.length - 1].degree}} </text>
-                  </block>  
-                  <block wx:if="{{item.degreeArray[item.degreeArray.length - 1].major !== undefined && item.degreeArray[item.degreeArray.length - 1].major !== ''}}">
-                    <text>{{item.degreeArray[item.degreeArray.length - 1].major}}</text>
-                  </block>
-                </view>
+          <image src="{{(item.avatarUrl === '' || item.avatarUrl === undefined) ? '/images/user-unlogin.png' : item.avatarUrl}}" class="avatar" />
+          <view class="right">
+            <view class="profile">
+              <view class="realname">{{item.realName}}</view>
+              <view class="remark">
+                <block wx:if="{{item.gender !== undefined && item.gender !== ''}}">
+                  <text>{{(item.gender === 1 || item.gender === '1') ? '男' : '女'}} </text>
+                </block>
+                <block wx:if="{{item.degreeArray[item.degreeArray.length - 1].degreeStartTime !== undefined && item.degreeArray[item.degreeArray.length - 1].degreeStartTime !== ''}}">
+                  <text>{{item.degreeArray[item.degreeArray.length - 1].degreeStartTime[0]}}{{item.degreeArray[item.degreeArray.length - 1].degreeStartTime[1]}}{{item.degreeArray[item.degreeArray.length - 1].degreeStartTime[2]}}{{item.degreeArray[item.degreeArray.length - 1].degreeStartTime[3]}}级 </text>
+                </block>
+                <block wx:if="{{item.degreeArray[item.degreeArray.length - 1].degree !== undefined && item.degreeArray[item.degreeArray.length - 1].degree !== ''}}">
+                  <text>{{item.degreeArray[item.degreeArray.length - 1].degree}} </text>
+                </block>  
+                <block wx:if="{{item.degreeArray[item.degreeArray.length - 1].major !== undefined && item.degreeArray[item.degreeArray.length - 1].major !== ''}}">
+                  <text>{{item.degreeArray[item.degreeArray.length - 1].major}}</text>
+                </block>
               </view>
             </view>
-            <view class="iconfont icon-fanhui1 icon"></view>
+          </view>
+          <view class="iconfont icon-fanhui1 icon"></view>
         </view>
       </navigator>
     </block>
   </view>
+  <view class="bottom-hint" wx:if="{{isAllDownloaded}}">已经到底了~</view>
 </view>
