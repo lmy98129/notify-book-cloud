@@ -3,11 +3,9 @@
   "pages": [
     "pages/index/index",
     "pages/chooseLib/chooseLib",
-    "pages/contact/contact",
     "pages/profile/profile",
     "pages/login/login",
     "pages/profile-edit/profile-edit",
-    "pages/search/search",
     "pages/auth/auth",
     "pages/settings/settings",
     "pages/auditing/auditing",
