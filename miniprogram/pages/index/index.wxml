@@ -53,50 +53,58 @@
 
         <view class="recommend">
           <view class="title">同届校友</view>
-            <swiper display-multiple-items="3" class="swiper-wrap" autoplay="true" current="{{sameYearSwiperCurrent}}">
-              <block wx:for="{{sameYearRecList}}" wx:key="{{index}}">
-                <swiper-item>
-                  <navigator url="../profile-other/profile-other?mode=sameYearRecList&index={{index}}">
-                    <view class="people">
-                      <image src="{{(item.avatarUrl === '' || item.avatarUrl === undefined) ? '/images/user-unlogin.png' : item.avatarUrl}}" class="avatar"></image>
-                      <view class="name">{{item.realName}}</view>
-                    </view>
-                  </navigator>
-                </swiper-item>
-              </block>
-              <block wx:for="{{sameYearFixList}}" wx:key="{{index}}">
-                <swiper-item>
-                  <view class="more">暂无</view>
-                </swiper-item>
-              </block>
-              <!-- <swiper-item>
-                <view class="more">更多</view>
-              </swiper-item> -->
-            </swiper>
+          <swiper display-multiple-items="3" class="swiper-wrap" autoplay="true" current="{{sameYearSwiperCurrent}}">
+            <block wx:for="{{sameYearRecList}}" wx:key="{{index}}">
+              <swiper-item>
+                <navigator url="../profile-other/profile-other?mode=sameYearRecList&index={{index}}">
+                  <view class="people">
+                    <image src="{{(item.avatarUrl === '' || item.avatarUrl === undefined) ? '/images/user-unlogin.png' : item.avatarUrl}}" class="avatar"></image>
+                    <view class="name">{{item.realName}}</view>
+                  </view>
+                </navigator>
+              </swiper-item>
+            </block>
+            <block wx:for="{{sameYearFixList}}" wx:key="{{index}}">
+              <swiper-item>
+                <view class="more">暂无</view>
+              </swiper-item>
+            </block>
+            <block wx:if="{{sameYearTotal >= 9}}">
+              <swiper-item>
+                <navigator url="../recommend/recommend?mode=sameYearRecList">
+                  <view class="more">更多</view>
+                </navigator>
+              </swiper-item>
+            </block>
+          </swiper>
         </view>
 
         <view class="recommend">
           <view class="title">同系同学</view>
-            <swiper display-multiple-items="3" class="swiper-wrap" autoplay="true" current="{{sameMajorSwiperCurrent}}">
-              <block wx:for="{{sameMajorRecList}}" wx:key="{{index}}">
-                <swiper-item>
-                  <navigator url="../profile-other/profile-other?mode=sameMajorRecList&index={{index}}">
-                    <view class="people">
-                      <image src="{{(item.avatarUrl === '' || item.avatarUrl === undefined) ? '/images/user-unlogin.png' : item.avatarUrl}}" class="avatar"></image>
-                      <view class="name">{{item.realName}}</view>
-                    </view>
-                  </navigator>
-                </swiper-item>
-              </block>
-              <block wx:for="{{sameMajorFixList}}" wx:key="{{index}}">
-                <swiper-item>
-                  <view class="more">暂无</view>
-                </swiper-item>
-              </block>
-              <!-- <swiper-item>
-                <view class="more">更多</view>
-              </swiper-item> -->
-            </swiper>
+          <swiper display-multiple-items="3" class="swiper-wrap" autoplay="true" current="{{sameMajorSwiperCurrent}}">
+            <block wx:for="{{sameMajorRecList}}" wx:key="{{index}}">
+              <swiper-item>
+                <navigator url="../profile-other/profile-other?mode=sameMajorRecList&index={{index}}">
+                  <view class="people">
+                    <image src="{{(item.avatarUrl === '' || item.avatarUrl === undefined) ? '/images/user-unlogin.png' : item.avatarUrl}}" class="avatar"></image>
+                    <view class="name">{{item.realName}}</view>
+                  </view>
+                </navigator>
+              </swiper-item>
+            </block>
+            <block wx:for="{{sameMajorFixList}}" wx:key="{{index}}">
+              <swiper-item>
+                <view class="more">暂无</view>
+              </swiper-item>
+            </block>
+            <block wx:if="{{sameMajorTotal >= 9}}">
+              <swiper-item>
+                <navigator url="../recommend/recommend?mode=sameMajorRecList">
+                  <view class="more">更多</view>
+                </navigator>
+              </swiper-item>
+            </block>
+          </swiper>
         </view>
       
       </block>
@@ -124,10 +132,6 @@
           <view class="btn">校友认证</view>
           <view class="red-dot" wx:if="{{isAuthRedDot}}"></view>
         </navigator>
-        <!-- <navigator url="../notification/notification">
-          <view class="btn">消息</view>
-          <view class="red-dot" wx:if="{{isNotifyRedDot}}"></view>
-        </navigator> -->
         <navigator url="../settings/settings">
           <view class="btn">设置</view>
         </navigator>

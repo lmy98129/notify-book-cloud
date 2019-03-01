@@ -31,9 +31,6 @@
   text-align: center;
 }
 
-.contact-list {
-}
-
 .contact-wrap {
   padding: 20rpx 20rpx;
   position: relative;
@@ -91,7 +88,7 @@
   line-height: 50rpx;
 }
 
-.contact-wrap right .btn-wrap {
+.contact-wrap .right .btn-wrap {
   float: right;
   position: relative;
   top: 60rpx;

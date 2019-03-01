@@ -69,6 +69,7 @@ Component({
 
   attached: function() {
     sys.checkPhone(this);
+    
   },
 
   /**

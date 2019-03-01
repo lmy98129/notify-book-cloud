@@ -1,1 +1,75 @@
 /* miniprogram/pages/recommend/recommend.wxss */
+.main {
+  margin-top: 0;
+}
+
+.recommend-wrap {
+  padding: 20rpx 20rpx;
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  border-bottom: .5rpx solid #ddd;
+}
+
+.recommend-wrap .avatar {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 100%;
+  margin-right: 20rpx;
+  border:.5rpx solid #ccc;
+}
+
+.recommend-wrap .right {
+  -webkit-box-flex:1;
+  -webkit-flex:1;
+  flex:1;
+  min-width:0;  
+  margin-top: -12rpx;
+}
+
+.recommend-wrap .right .profile .realname {
+  font-size: 47rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 280rpx;
+  margin-bottom: 10rpx;
+}
+
+.recommend-wrap .right .profile .remark {
+  font-size: 35rpx;
+  line-height: 55rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 400rpx;
+  margin-bottom: 10rpx;
+}
+
+.recommend-wrap .right .profile .keyfound .key {
+  padding: 0rpx 7rpx;
+  background: #bbb;
+  color: #fff;
+  font-size: 29rpx;
+  border-radius: 6rpx;
+  margin-left: 10rpx;
+  line-height: 50rpx;
+}
+
+.recommend-wrap .right .btn-wrap {
+  float: right;
+  position: relative;
+  top: 60rpx;
+}
+
+.icon-fanhui1.icon {
+  font-size: 45rpx;
+  transform: rotate(180deg) scale(1.3, 1);
+  margin-top: 10rpx;
+  margin-bottom: 10rpx;
+  color: #666;  
+}

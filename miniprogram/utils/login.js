@@ -48,7 +48,7 @@ const sameRecList = async (that, key, name, start, pageLength) => {
     that.setData({
       ["same" + name + "RecList"]: recList,
       ["same" + name + "FixList"]: fixList,
-      ["same" + name + "total"]: total,
+      ["same" + name + "Total"]: total,
       ["same" + name + "realLength"]: realLength,
       ["same" + name + "SwiperCurrent"]: 0,
     })

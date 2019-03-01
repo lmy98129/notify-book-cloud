@@ -2,7 +2,7 @@
 const sys = require("../../utils/system");
 const login = require("../../utils/login");
 const toast = require("../../utils/message").toast;
-
+const formid = require("../../utils/formid");
 const app = getApp();
 import regeneratorRuntime, { async } from "../../utils/regenerator-runtime/runtime";
 
@@ -66,6 +66,7 @@ Page({
     this.setData({
       sideBar: sideBar
     })
+    formid.upload();
   },
   
   onPageScroll: function(e) {

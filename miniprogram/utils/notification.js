@@ -8,13 +8,6 @@ module.exports = {
     wx.showLoading({
       title: "加载中"
     })
-    let tmpUserInfo = wx.getStorageSync("curUserProfile");
-    let bgImgUrl = tmpUserInfo.bgImgUrl,
-    nickname = tmpUserInfo.nickName;
-    that.setData({
-      bgImgUrl,
-      nickname
-    });
     try {
       let res = await wx.cloud.callFunction({
         name: "notification",
