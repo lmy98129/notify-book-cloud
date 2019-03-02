@@ -465,9 +465,6 @@ exports.main = async (event, context) => {
         _openid: { $exists: false }
       }).get();
 
-      console.log(realName);
-      console.log(cloudRes);
-
       if (cloudRes.data) {
         ctx.body.data = cloudRes.data;
       }
