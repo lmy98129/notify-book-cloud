@@ -16,6 +16,7 @@
     "pages/notification-manage-edit/notification-manage-edit",
     "pages/profile-manage/profile-manage",
     "pages/profile-import/profile-import",
+    "pages/profile-other/profile-other",
     "pages/recommend/recommend",
     "pages/class-manage/class-manage",
     "pages/about/about"

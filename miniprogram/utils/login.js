@@ -107,7 +107,9 @@ const getUserInfo = async (that) => {
           console.log("获取用户权限成功：用户为普通用户");
         }
 
-        Promise.all([possibleKnow(that, 0, 9), sameRecList(that, "degreeStartTime", "Year", 0, 10), sameRecList(that, "major", "Major", 0, 10)]);
+        if (!curUserProfile.isProfileEmpty) {
+          Promise.all([possibleKnow(that, 0, 9), sameRecList(that, "degreeStartTime", "Year", 0, 10), sameRecList(that, "major", "Major", 0, 10)]);
+        }
 
         let code = await notify.checkDownload();
         if (code == 2) {

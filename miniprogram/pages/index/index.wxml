@@ -125,7 +125,7 @@
   <view class="side-bar">
     <view class="content">
       <view class="btn-wrap">
-        <navigator url="../profile-other/profile-other" open-type="switchTab">
+        <navigator url="../profile/profile" open-type="switchTab">
           <view class="btn">个人资料</view>
         </navigator>
         <navigator url="../auth/auth">

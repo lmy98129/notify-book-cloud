@@ -461,9 +461,12 @@ exports.main = async (event, context) => {
       let { realName, collection } = event;
 
       let cloudRes = await db.collection(collection).where({
-        realName,
+        realName: { $regex: realName },
         _openid: { $exists: false }
       }).get();
+
+      console.log(realName);
+      console.log(cloudRes);
 
       if (cloudRes.data) {
         ctx.body.data = cloudRes.data;

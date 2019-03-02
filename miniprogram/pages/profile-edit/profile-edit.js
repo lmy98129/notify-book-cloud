@@ -58,7 +58,7 @@ Page({
       degree: "请选择学历",
       school: "",
       major: "",
-      className: "",
+      className: "请选择班级",
       headteacher: "",
       degreeStartTime: "请选择入学时间",
       degreeEndTime: "请选择毕业时间",
@@ -127,6 +127,7 @@ Page({
           if (gender <= 0) gender = 1;
           this.setData({ avatarUrl, nickName, gender, isChooseInitTypeModalHidden: false });
           newUserInfo = { ...newUserInfo, avatarUrl, nickName, gender };
+          newUserInfo.contactArray = [];
         } else {
           newUserInfo = profile.decodeForEdit(curUserProfile, initValue, initUserInfo, tmpClassNameArray, this);
         }
@@ -250,7 +251,6 @@ Page({
     this.setData({
       gender: parseInt(gender)
     })
-    // console.log(newUserInfo);
   },
 
   inputHandler(e) {
@@ -373,7 +373,6 @@ Page({
           [inputType]: tmpValue
         })
     }
-    // console.log("current userInfo: ", newUserInfo);
   },
 
   getFormid(e) {
@@ -383,7 +382,6 @@ Page({
   submit() {
     formid.upload()
     let { canSubmit, mode, index, isChooseProfile, selectedInitProfile } = this.data;
-    console.log(newUserInfo);
     if (!canSubmit) return;
     let tmpJobArray, tmpContentArray, tmpDegreeArray;
     if (mode === undefined || mode === "") {

@@ -65,7 +65,7 @@
         <profile-input title="离职时间" asterisk="{{false}}" mode="picker" picker-fields="month" value="{{item.jobEndTime}}" bind:input="inputHandler" input-type="jobEndTime" index="{{index}}" array-type="jobArray" bind:del="pickerDel"/>
 
         <form bindsubmit="getFormid" report-submit="true">
-          <button wx:if="{{index !== 0 || jobArray.length !== 1 || mode === 'addProfileManage'}}" class="del-btn submit-no-style" data-type="jobArray" bindtap="delBtn" data-index="{{index}}" form-type="submit">删除</button>
+          <button class="del-btn submit-no-style" data-type="jobArray" bindtap="delBtn" data-index="{{index}}" form-type="submit">删除</button>
         </form>
       </view>
     </block>
