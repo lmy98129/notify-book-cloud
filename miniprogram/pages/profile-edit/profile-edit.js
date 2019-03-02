@@ -383,6 +383,7 @@ Page({
   submit() {
     formid.upload()
     let { canSubmit, mode, index, isChooseProfile, selectedInitProfile } = this.data;
+    console.log(newUserInfo);
     if (!canSubmit) return;
     let tmpJobArray, tmpContentArray, tmpDegreeArray;
     if (mode === undefined || mode === "") {
@@ -450,9 +451,14 @@ Page({
             for (let i=0; i<tmpDegreeArray.length; i++) {
               for (let subItem in tmpDegreeArray[i]) {
                 switch(subItem) {
+                  case "className":
+                    if (tmpDegreeArray[i][subItem] === undefined || tmpDegreeArray[i][subItem] === "" || tmpDegreeArray[i][subItem] === initUserInfo[item][0][subItem]) {
+                      confirmOnly("“学历信息" + (i + 1) + "”的" + initValue[subItem].name + "为空，此项为必填项");
+                      return;
+                    }
+                    break;
                   case "school":
                   case "major":
-                  case "className":
                     if (tmpDegreeArray[i][subItem] === undefined || tmpDegreeArray[i][subItem] === "") {
                       confirmOnly("“学历信息" + (i + 1) + "”的" + initValue[subItem].name + "为空，此项为必填项");
                       return;
@@ -584,14 +590,18 @@ Page({
     })
   },
 
-  selectedProfile() {
+  selectedProfile: async function() {
     let { selectedInitProfile, tmpInitProfile, classNameArray } = this.data;
     if (selectedInitProfile == undefined || selectedInitProfile == "") {
       toast("请至少选择一个选项", "none");
       return;
     }
-    let curUserProfile = tmpInitProfile[tmpInitProfile.findIndex(x => x._id === selectedInitProfile)];
-    newUserInfo = profile.decodeForEdit(curUserProfile, initValue, initUserInfo, classNameArray, this);
+    let tmpUserProfile = tmpInitProfile[tmpInitProfile.findIndex(x => x._id === selectedInitProfile)];
+    newUserInfo = profile.decodeForEdit(tmpUserProfile, initValue, initUserInfo, classNameArray, this);
+
+    let curUserProfile = await profile.check();
+    let { avatarUrl = app.globalData.DEFAULT_AVATARURL, nickName = "", gender = 1 } = curUserProfile;
+    newUserInfo = { ...newUserInfo, avatarUrl, nickName, gender };
     this.setData({
       realNameForInitProfile: "",
       tmpInitProfile: [],
@@ -606,19 +616,31 @@ Page({
     newUserInfo[arrayType][index].className = classNameArray[value];
     tmpArray[index].className = classNameArray[value];
     if (classNameArray[value] === "其他班级") {
-      newUserInfo[arrayType][index].classNameExtra = "";
+      newUserInfo[arrayType][index].className = "";
       tmpArray[index].classNameExtra = "";
     } else {
       // 删除之前的extra内容，并且填写上该班级的所有信息
-      if (newUserInfo[arrayType][index].classNameExtra) {
-        delete newUserInfo[arrayType][index].classNameExtra;
-      }
-      if (tmpArray[index.classNameExtra]) {
-        delete tmpArray[index.classNameExtra]
+      if (tmpArray[index].classNameExtra) {
+        delete tmpArray[index].classNameExtra
       }
       let tmpIndex = classInfoArray.findIndex(x => x.className === classNameArray[value]);
       let { _id, ...tmpClassInfo} = classInfoArray[tmpIndex];
-      newUserInfo[arrayType][index] = tmpClassInfo;
+      let tmpClassInfoNew = JSON.parse(JSON.stringify(tmpClassInfo));
+      if (tmpClassInfo.degreeStartTime === undefined || tmpClassInfo.degreeStartTime === "") {
+        tmpClassInfo.degreeStartTime = initUserInfo[arrayType][0].degreeStartTime;
+        tmpClassInfoNew.degreeStartTime = initUserInfo[arrayType][0].degreeStartTime;
+      } else {
+        let formated = tmpClassInfo.degreeStartTime.split("-");
+        tmpClassInfo.degreeStartTime = parseInt(formated[0]) + "年" + parseInt(formated[1]) + "月";
+      }
+      if (tmpClassInfo.degreeEndTime === undefined || tmpClassInfo.degreeEndTime === "") {
+        tmpClassInfo.degreeEndTime = initUserInfo[arrayType][0].degreeEndTime;
+        tmpClassInfoNew.degreeEndTime = initUserInfo[arrayType][0].degreeEndTime;
+      } else {
+        let formated = tmpClassInfo.degreeEndTime.split("-");
+        tmpClassInfo.degreeEndTime = parseInt(formated[0]) + "年" + parseInt(formated[1]) + "月";
+      }
+      newUserInfo[arrayType][index] = tmpClassInfoNew;
       tmpArray[index] = tmpClassInfo;
     }
     this.setData({
@@ -632,8 +654,8 @@ Page({
     if (newUserInfo[arrayType][index].classNameExtra) {
       delete newUserInfo[arrayType][index].classNameExtra;
     }
-    if (tmpArray[index.classNameExtra]) {
-      delete tmpArray[index.classNameExtra]
+    if (tmpArray[index].classNameExtra) {
+      delete tmpArray[index].classNameExtra
     }
     newUserInfo[arrayType][index].className = initUserInfo[arrayType][0].className;
     tmpArray[index].className = initUserInfo[arrayType][0].className;
@@ -641,5 +663,15 @@ Page({
       [arrayType]: tmpArray
     })
   },
+
+  setClassNameExtra(e) {
+    let { index, arrayType, value } = e.detail;
+    let tmpArray = JSON.parse(JSON.stringify(this.data[arrayType]));
+    newUserInfo[arrayType][index].className = value;
+    tmpArray[index].classNameExtra = value;
+    this.setData({
+      [arrayType]: tmpArray
+    })   
+  }
 
 })

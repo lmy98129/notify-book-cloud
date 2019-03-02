@@ -259,13 +259,13 @@ const decodeForEdit = (tmpUserInfo, initValue, initUserInfo, classNameArray, tha
         break;
       case "jobArray":
         tmpArray = JSON.parse(JSON.stringify(tmpUserInfo[item]));
-        for(let i=0; i<tmpArray.length; i++) {
-          for (let subItem in tmpArray[i]) {
-            if (tmpArray[i][subItem] === undefined || tmpArray[i][subItem] === "") {
-              tmpArray[i][subItem] = initValue[subItem].default;
-            } else if (subItem === "jobStartTime" || subItem === "jobEndTime") {
-              tmpDate = tmpArray[i][subItem].split("-");
-              tmpArray[i][subItem] = parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月";
+        for (let key in initUserInfo[item][0]) {
+          for (let tmpItem of tmpArray) {
+            if (tmpItem[key] === undefined || tmpItem[key] === "") {
+              tmpItem[key] = initUserInfo[item][0][key];
+            } else if (key === "jobStartTime" || key === "jobEndTime") {
+              tmpDate = tmpItem[key].split("-");
+              tmpItem[key] = parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月";
             }
           }
         }
@@ -281,16 +281,6 @@ const decodeForEdit = (tmpUserInfo, initValue, initUserInfo, classNameArray, tha
         break;
       case "degreeArray":
         tmpArray = JSON.parse(JSON.stringify(tmpUserInfo[item]));
-        // for(let i=0; i<tmpArray.length; i++) {
-        //   for (let subItem in tmpArray[i]) {
-        //     if (tmpArray[i][subItem] === undefined || tmpArray[i][subItem] === "") {
-        //       tmpArray[i][subItem] = initValue[subItem].default;
-        //     } else if (subItem === "degreeStartTime" || subItem === "degreeEndTime") {
-        //       tmpDate = tmpArray[i][subItem].split("-");
-        //       tmpArray[i][subItem] = parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月";
-        //     }
-        //   }
-        // }
         for (let key in initUserInfo[item][0]) {
           for (let tmpItem of tmpArray) {
             if (tmpItem[key] === undefined || tmpItem[key] === "") {
@@ -318,7 +308,21 @@ const decodeForEdit = (tmpUserInfo, initValue, initUserInfo, classNameArray, tha
     }
   }
 
-  console.log(tmpUserInfo);
+  // 填补可能出现的空缺
+  for (let key in initUserInfo) {
+    if (tmpUserInfo[key] === undefined || (typeof tmpUserInfo[key] === "string" && tmpUserInfo[key] === "")) {
+      tmpUserInfo[key] = initUserInfo[key];
+    } else if (tmpUserInfo[key] instanceof Array) {
+      for (let subKey in initUserInfo[key][0]) {
+        for (let item of tmpUserInfo[key]) {
+          if (item[subKey] === undefined || item[subKey] === "") {
+            item[subKey] = initUserInfo[key][0][subKey];
+          }
+        }
+      }
+    }
+  }
+
   return tmpUserInfo;
 }
 
@@ -541,7 +545,7 @@ const uploadForAddProflieManage = async (profile) => {
 const deleteOldProfile = async (_id) => {
   try {
     let cloudRes = await wx.cloud.callFunction({
-      name: "profile-manange",
+      name: "profile-manage",
       data: {
         $url: "deleteProfile",
         collection: "profile-new",
