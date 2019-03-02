@@ -12,6 +12,19 @@ const initValue = profModel.initValue;
 const initUserInfo = JSON.parse(JSON.stringify(profModel.userInfo));
 let newUserInfo = JSON.parse(JSON.stringify(profModel.userInfo));
 
+const sortByNum = (x, y) => {
+  let xNum = x.match(/[0-9]+/ig);
+  let yNum = y.match(/[0-9]+/ig);
+  if (xNum !== null && yNum !== null) {
+    return parseInt(xNum[0]) - parseFloat(yNum[0]);
+  } else if (xNum === null && xNum === null ) {
+    return 0;
+  } else {
+    console.log(x, y);
+    return xNum == null ? -1 : 1; 
+  }
+}
+
 import regeneratorRuntime, { async } from "../../utils/regenerator-runtime/runtime";
 
 Page({
@@ -73,7 +86,7 @@ Page({
         title: "数据加载中"
       })
       let { mode, index } = options;
-      let curUserProfile;
+      let curUserProfile, tmpClassNameArray;
   
       let classInfoRes = await wx.cloud.callFunction({
         name: "profile-manage",
@@ -84,7 +97,9 @@ Page({
   
       if (classInfoRes.result) {
         let { classNameArray, data } = classInfoRes.result;
-        classNameArray.splice(0, 0, "其他");
+        classNameArray.sort(sortByNum).reverse();
+        classNameArray.splice(0, 0, "其他班级");
+        tmpClassNameArray = classNameArray;
         this.setData({ classNameArray, classInfoArray: data });
       }
   
@@ -92,7 +107,7 @@ Page({
       if (mode !== undefined && mode !== "" && mode !== "addProfileManage") {
         this.setData({ mode, index });
         curUserProfile = wx.getStorageSync(mode)[index];
-        newUserInfo = profile.decodeForEdit(curUserProfile, initValue, initUserInfo, this);
+        newUserInfo = profile.decodeForEdit(curUserProfile, initValue, initUserInfo, tmpClassNameArray, this);
       // 管理员自行添加
       } else if (mode === "addProfileManage") {
         let gender = 1;
@@ -113,7 +128,7 @@ Page({
           this.setData({ avatarUrl, nickName, gender, isChooseInitTypeModalHidden: false });
           newUserInfo = { ...newUserInfo, avatarUrl, nickName, gender };
         } else {
-          newUserInfo = profile.decodeForEdit(curUserProfile, initValue, initUserInfo, this);
+          newUserInfo = profile.decodeForEdit(curUserProfile, initValue, initUserInfo, tmpClassNameArray, this);
         }
       } 
       
@@ -570,18 +585,61 @@ Page({
   },
 
   selectedProfile() {
-    let { selectedInitProfile, tmpInitProfile } = this.data;
+    let { selectedInitProfile, tmpInitProfile, classNameArray } = this.data;
     if (selectedInitProfile == undefined || selectedInitProfile == "") {
       toast("请至少选择一个选项", "none");
       return;
     }
     let curUserProfile = tmpInitProfile[tmpInitProfile.findIndex(x => x._id === selectedInitProfile)];
-    newUserInfo = profile.decodeForEdit(curUserProfile, initValue, initUserInfo, this);
+    newUserInfo = profile.decodeForEdit(curUserProfile, initValue, initUserInfo, classNameArray, this);
     this.setData({
       realNameForInitProfile: "",
       tmpInitProfile: [],
       isChooseInitTypeModalHidden: true,
     })
-  }
+  },
+
+  setClassName(e) {
+    let { value, index, arrayType } = e.detail;
+    let { classNameArray, classInfoArray } = this.data;
+    let tmpArray = JSON.parse(JSON.stringify(this.data[arrayType]));
+    newUserInfo[arrayType][index].className = classNameArray[value];
+    tmpArray[index].className = classNameArray[value];
+    if (classNameArray[value] === "其他班级") {
+      newUserInfo[arrayType][index].classNameExtra = "";
+      tmpArray[index].classNameExtra = "";
+    } else {
+      // 删除之前的extra内容，并且填写上该班级的所有信息
+      if (newUserInfo[arrayType][index].classNameExtra) {
+        delete newUserInfo[arrayType][index].classNameExtra;
+      }
+      if (tmpArray[index.classNameExtra]) {
+        delete tmpArray[index.classNameExtra]
+      }
+      let tmpIndex = classInfoArray.findIndex(x => x.className === classNameArray[value]);
+      let { _id, ...tmpClassInfo} = classInfoArray[tmpIndex];
+      newUserInfo[arrayType][index] = tmpClassInfo;
+      tmpArray[index] = tmpClassInfo;
+    }
+    this.setData({
+      [arrayType]: tmpArray
+    });
+  },
+
+  classNamePickerDel(e) {
+    let { index, arrayType } = e.detail;
+    let tmpArray = JSON.parse(JSON.stringify(this.data[arrayType]));
+    if (newUserInfo[arrayType][index].classNameExtra) {
+      delete newUserInfo[arrayType][index].classNameExtra;
+    }
+    if (tmpArray[index.classNameExtra]) {
+      delete tmpArray[index.classNameExtra]
+    }
+    newUserInfo[arrayType][index].className = initUserInfo[arrayType][0].className;
+    tmpArray[index].className = initUserInfo[arrayType][0].className;
+    this.setData({
+      [arrayType]: tmpArray
+    })
+  },
 
 })

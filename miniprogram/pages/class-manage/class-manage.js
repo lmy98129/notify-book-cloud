@@ -18,7 +18,7 @@ Page({
     school: "",
     className: "",
     major: "",
-    headTeacher: "",
+    headteacher: "",
     degreeStartTime: "",
     degreeEndTime: "",
     degreeTypeArray: ["本科", "硕士", "博士", "博士后", "专科", "其他"],
@@ -140,7 +140,7 @@ Page({
         degree: "",
         className: "",
         major: "",
-        headTeacher: "",
+        headteacher: "",
         degreeStartTime: "",
         degreeEndTime: "",
         isEditModalHidden: false,
@@ -157,7 +157,7 @@ Page({
       degree: "",
       className: "",
       major: "",
-      headTeacher: "",
+      headteacher: "",
       degreeStartTime: "",
       degreeEndTime: "",
       isEditModalHidden: true,
@@ -193,7 +193,7 @@ Page({
     switch(inputType) {
       case "className":
       case "major":
-      case "headTeacher":
+      case "headteacher":
       case "school":
         this.setData({
           [inputType]: value
@@ -218,7 +218,7 @@ Page({
   },
 
   edit: async function() {
-    let { className, major, headTeacher, school, degree, 
+    let { className, major, headteacher, school, degree, 
         degreeStartTime, degreeEndTime, editingIndex, classArray } = this.data;
     let cloudRes;
     if (className === undefined || className === "") {
@@ -233,7 +233,7 @@ Page({
       toast("请输入学院名称", "none");
       return;
     }
-    if (headTeacher === undefined || headTeacher === "") {
+    if (headteacher === undefined || headteacher === "") {
       toast("请输入班级对应的班主任姓名", "none");
       return;
     }
@@ -241,7 +241,7 @@ Page({
       toast("请选择学历", "none");
       return;
     }
-    let newClassInfo = { className, major, headTeacher, degree, school, degreeStartTime, degreeEndTime };
+    let newClassInfo = { className, major, headteacher, degree, school, degreeStartTime, degreeEndTime };
 
     try {
       wx.showLoading({

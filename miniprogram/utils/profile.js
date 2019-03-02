@@ -240,7 +240,7 @@ const introUpload = async (that, intro) => {
   }
 }
 
-const decodeForEdit = (tmpUserInfo, initValue, initUserInfo, that) => {
+const decodeForEdit = (tmpUserInfo, initValue, initUserInfo, classNameArray, that) => {
   let tmpArray, tmpDate;
   delete tmpUserInfo._id;
   delete tmpUserInfo._openid;
@@ -298,6 +298,11 @@ const decodeForEdit = (tmpUserInfo, initValue, initUserInfo, that) => {
             } else if (key === "degreeStartTime" || key === "degreeEndTime") {
               tmpDate = tmpItem[key].split("-");
               tmpItem[key] = parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月";
+            } else if (key === "className") {
+              if (classNameArray.indexOf(tmpItem[key]) < 0) {
+                tmpItem[key + "Extra"] = tmpItem[key];
+                tmpItem[key] = "其他班级";
+              }
             }
           }
         }

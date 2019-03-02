@@ -20,7 +20,7 @@
           <view class="class-manage-wrap">
             <view class="left">
               <view class="top">
-                <view class="class-name">{{item.className}} {{item.headTeacher}}</view>
+                <view class="class-name">{{item.className}} {{item.headteacher}}</view>
               </view>
               <view class="content">
                 <view class="line">
@@ -53,7 +53,7 @@
   <profile-input title="班级名称" mode="modal-input" bind:input="inputHandler" value="{{className}}" place-holder="例如“10电编”" input-type="className"></profile-input>
   <profile-input title="对应专业" mode="modal-input" bind:input="inputHandler" value="{{major}}" place-holder="例如“电编”" input-type="major"></profile-input>  
   <profile-input title="学院" mode="modal-input" bind:input="inputHandler" value="{{school}}" place-holder="请输入学院名称" input-type="school"></profile-input>
-  <profile-input title="班主任" mode="modal-input" bind:input="inputHandler" value="{{headTeacher}}" place-holder="请输入班主任姓名" input-type="headTeacher"></profile-input>
+  <profile-input title="班主任" mode="modal-input" bind:input="inputHandler" value="{{headteacher}}" place-holder="请输入班主任姓名" input-type="headteacher"></profile-input>
   <profile-input title="学历" mode="modal-picker" bind:input="inputHandler" picker-mode="selector" picker-range="{{degreeTypeArray}}" value="{{degreeForm}}" input-type="degree" bind:del="pickerDel"/>
   <profile-input title="入学时间" asterisk="{{false}}" mode="modal-picker" picker-fields="month" value="{{degreeStartTimeForm}}" input-type="degreeStartTime" bind:input="inputHandler" bind:del="pickerDel" />
   <profile-input title="毕业时间" asterisk="{{false}}" mode="modal-picker" picker-fields="month" value="{{degreeEndTimeForm}}" input-type="degreeEndTime" bind:input="inputHandler" bind:del="pickerDel" />
