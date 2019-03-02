@@ -26,7 +26,7 @@ const download = async () => {
       let result = [], openidArray = res.data[0].friendList, id = res.data[0]._id,
         friendList = JSON.stringify(openidArray);
       for (let i=0; i<openidArray.length; i++ ) {
-        res = await db.collection("profile-new").where({
+        res = await db.collection("profile").where({
           _openid: openidArray[i],
           isProfileEmpty: false,
           authStatus: "authorized",

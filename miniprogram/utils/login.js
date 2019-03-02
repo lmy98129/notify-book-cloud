@@ -95,7 +95,7 @@ const getUserInfo = async (that) => {
         if (curUserProfile.isAdmin) {
           if (curUserProfile.authStatus !== "authorized") {
             curUserProfile.authStatus = "authorized";
-            db.collection("profile-new").doc(curUserProfile._id).update({
+            db.collection("profile").doc(curUserProfile._id).update({
               data: {
                 authStatus: "authorized"
               }

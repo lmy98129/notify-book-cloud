@@ -24,7 +24,7 @@ const codeCheck = async (remark) => {
         authIsCode: true,
       }
 
-      await db.collection("profile-new")
+      await db.collection("profile")
         .doc(curUserProfile._id).update({ data });
   
       curUserProfile.authIsCode = data.authIsCode;
@@ -86,7 +86,7 @@ const uploadAuth = async (authImgArray, remark, that) => {
 
     let curUserProfile = await profile.check();
     
-    let uploadRes = await db.collection("profile-new").doc(curUserProfile._id).update({
+    let uploadRes = await db.collection("profile").doc(curUserProfile._id).update({
       data: {
         authImgUrl: tmpAuthImgArray,
         authRemark: remark,

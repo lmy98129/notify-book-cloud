@@ -91,7 +91,7 @@ module.exports = {
           start,
           pageLength,
           requestArray,
-          collection: "profile-new"
+          collection: "profile"
         }
       });
       if (res.result.code === 1) {
@@ -136,7 +136,7 @@ module.exports = {
           start,
           pageLength,
           requestArray,
-          collection: "profile-new"
+          collection: "profile"
         }
       });
       if (res.result.code === 1) {

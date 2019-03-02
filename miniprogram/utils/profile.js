@@ -17,7 +17,7 @@ const checkLocal = async () => {
 }
 
 const checkCloud = async () => {
-  let getRes = await db.collection("profile-new").where({
+  let getRes = await db.collection("profile").where({
     _openid: app.globalData.openid
   }).get();
   if (getRes.data.length === 0) {
@@ -67,7 +67,7 @@ const download = async (that, callback) => {
         wx.setStorage({ key: "openid", data: loginRes.result.openid });
         
         // 查询用户资料信息
-        let profileRes = await db.collection("profile-new").where({
+        let profileRes = await db.collection("profile").where({
           _openid: app.globalData.openid
         }).get();
 
@@ -77,7 +77,7 @@ const download = async (that, callback) => {
           let data = curUserProfile;
 
           // 自动添加认证相关的记录以及当前获取到的信息
-          db.collection("profile-new").add({ data })
+          db.collection("profile").add({ data })
           msg = "首次登陆，自动添加认证相关记录";
 
         // 云端存在用户资料，取第一个
@@ -102,7 +102,7 @@ const download = async (that, callback) => {
               curUserProfile[attrArray[index]] = cloudProfile[attrArray[index]];
             // 若该标志属性为false，且云端资料与本地的不同，则按照本地获取的内容，以保证数据出现变动时及时更新数据库  
             } else if (curUserProfile[attrArray[index]] !== cloudProfile[attrArray[index]]) {
-              let updateRes = await db.collection("profile-new").doc(cloudProfile._id).update({data: {
+              let updateRes = await db.collection("profile").doc(cloudProfile._id).update({data: {
                 [attrArray[index]]: curUserProfile[attrArray[index]]
               }});
               console.log("更新用户资料成功："+ attr +" "+ updateRes);
@@ -163,7 +163,7 @@ const uploadForManage = async (userInfo, mode, index, that) => {
       data: {
         $url: "uploadProfile",
         profile: userInfo,
-        collection: "profile-new",
+        collection: "profile",
         _id: profiles[index]._id
       }
     })
@@ -194,7 +194,7 @@ const upload = async (userInfo) => {
   
     userInfo.isProfileEmpty = false;
 
-    let updateRes = await db.collection("profile-new").doc(curUserProfile._id).update({
+    let updateRes = await db.collection("profile").doc(curUserProfile._id).update({
       data: userInfo
     });
 
@@ -220,7 +220,7 @@ const introUpload = async (that, intro) => {
       title: "资料上传中"
     });
     let curUserProfile = await checkCloud();
-    let updateRes = await db.collection("profile-new").doc(curUserProfile._id).update({
+    let updateRes = await db.collection("profile").doc(curUserProfile._id).update({
       data: { intro }
     });
     curUserProfile.intro = intro;
@@ -493,7 +493,7 @@ const introUploadForManage = async (that, intro, mode, index) => {
       name: "profile-manage",
       data: {
         $url: "uploadIntro",
-        collection: "profile-new",
+        collection: "profile",
         _id,
         intro
       }
@@ -527,7 +527,7 @@ const uploadForAddProflieManage = async (profile) => {
       data: {
         $url: "addProfile",
         profile,
-        collection: "profile-new",
+        collection: "profile",
       }
     })
 
@@ -548,7 +548,7 @@ const deleteOldProfile = async (_id) => {
       name: "profile-manage",
       data: {
         $url: "deleteProfile",
-        collection: "profile-new",
+        collection: "profile",
         _id,
       }
     })

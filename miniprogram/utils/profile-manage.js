@@ -142,7 +142,7 @@ const download = async (start, pageLength, searchFieldArray) => {
       name: "search",
       data: {
         $url: "manage",
-        collection: "profile-new",
+        collection: "profile",
         query,
         start,
         pageLength,
@@ -198,7 +198,7 @@ const deleteProfile = async (mode, index) => {
       data: {
         $url: "deleteProfile",
         _id,
-        collection: "profile-new",
+        collection: "profile",
       }
     })
 

@@ -638,7 +638,7 @@ Page({
         data: {
           $url: "importData",
           importData,
-          collection: "profile-new"
+          collection: "profile"
         }
       });
 

@@ -22,7 +22,7 @@ const defaultImg = async (that) => {
 
     try {
   
-      await db.collection("profile-new").doc(curUserProfile._id).update({
+      await db.collection("profile").doc(curUserProfile._id).update({
         data: {
           bgImgUrl: defaultImgUrl,
           isBgImgCustomed: false
@@ -83,7 +83,7 @@ const upload = (that) => {
             console.log("上传自定义背景图成功：", res);
             bgImgUrl = res.fileID;
             
-            let updateRes = await db.collection("profile-new").doc(curUserProfile._id).update({
+            let updateRes = await db.collection("profile").doc(curUserProfile._id).update({
               data: { 
                 bgImgUrl,
                 isBgImgCustomed: true
@@ -147,7 +147,7 @@ const defaultForManage = async (that, mode, index) =>{
           $url: "uploadBgImg",
           bgImgUrl: defaultImgUrl,
           _id,
-          collection: "profile-new",
+          collection: "profile",
           isBgImgCustomed: false
         }
       });
@@ -210,7 +210,7 @@ const uploadForManage = async (that, mode, index) => {
                 $url: "uploadBgImg",
                 bgImgUrl,
                 _id,
-                collection: "profile-new",
+                collection: "profile",
                 isBgImgCustomed: true
               }
             });

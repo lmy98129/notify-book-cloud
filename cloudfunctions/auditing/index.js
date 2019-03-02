@@ -19,7 +19,7 @@ exports.main = async (event, context) => {
 
       let downloadRes = [];
 
-      let countRes = await db.collection("profile-new").where({
+      let countRes = await db.collection("profile").where({
         authStatus: _.eq("auditing").or(_.eq("authorized")),
         _openid: { $exists: true },
       }).count();
@@ -29,7 +29,7 @@ exports.main = async (event, context) => {
       if (total > 100) {
         let skip = 0;
         while(skip <= total) {
-          let cloudRes = await db.collection("profile-new").where({
+          let cloudRes = await db.collection("profile").where({
             authStatus: _.eq("auditing").or(_.eq("authorized")),
             _openid: { $exists: true },
           }).skip(skip).limit(100).get();
@@ -39,7 +39,7 @@ exports.main = async (event, context) => {
           }
         }
       } else {
-        let cloudRes = await db.collection("profile-new").where({
+        let cloudRes = await db.collection("profile").where({
           authStatus: _.eq("auditing").or(_.eq("authorized")),
           _openid: { $exists: true },
         }).get();
@@ -63,7 +63,7 @@ exports.main = async (event, context) => {
     try {
       let openidList = event.openidList;
       let res = await Promise.all(openidList.map(item => {
-        return db.collection("profile-new").where({
+        return db.collection("profile").where({
           _openid: item
         }).get()
       }))
@@ -81,7 +81,7 @@ exports.main = async (event, context) => {
       })
   
       await Promise.all(newIdList.map(item => {
-        return db.collection("profile-new").doc(item).update({
+        return db.collection("profile").doc(item).update({
           data: {
             authStatus: "authorized"
           }
@@ -143,7 +143,7 @@ exports.main = async (event, context) => {
     try {
       let openidList = event.openidList, idList = [], imgUrlList = [];
       let res = await Promise.all(openidList.map(item => {
-        return db.collection("profile-new").where({
+        return db.collection("profile").where({
           _openid: item
         }).get()
       }))
@@ -154,7 +154,7 @@ exports.main = async (event, context) => {
       });
   
       await Promise.all(idList.map(item => {
-        return db.collection("profile-new").doc(item).update({
+        return db.collection("profile").doc(item).update({
           data: {
             authStatus: "unauthorized",
             authImgUrl: [],

@@ -346,11 +346,11 @@ exports.main = async (event, context) => {
       }
       if (event.notifyDetail.userList !== "0") {
         for(let item of event.notifyDetail.userList) {
-          res = await db.collection("profile-new").where({
+          res = await db.collection("profile").where({
             realName: item
           }).get();
           if(res.data.length === 0) {
-            res = await db.collection("profile-new").where({
+            res = await db.collection("profile").where({
               nickName: item
             }).get();
             if (res.data.length === 0) continue;
@@ -366,10 +366,10 @@ exports.main = async (event, context) => {
           });
         }
       } else {
-        res = await db.collection("profile-new").count();
+        res = await db.collection("profile").count();
         let total = res.total, allProfile = [], skip = 0;
         while(skip <= total) {
-          res = await db.collection("profile-new").skip(skip).limit(100).get();
+          res = await db.collection("profile").skip(skip).limit(100).get();
           allProfile = allProfile.concat(res.data);
           skip += 100;
         }

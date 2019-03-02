@@ -37,7 +37,7 @@ const upload = (that) => {
           avatarUrl = res.fileID;
 
           try {
-            let updateRes = await db.collection("profile-new").doc(curUserProfile._id).update({
+            let updateRes = await db.collection("profile").doc(curUserProfile._id).update({
                 data: {
                   avatarUrl,
                   isAvatarCustomed: true
@@ -101,7 +101,7 @@ const wechat = (that) => {
 
         try {
 
-          await db.collection("profile-new").doc(curUserProfile._id).update({
+          await db.collection("profile").doc(curUserProfile._id).update({
             data: {
               avatarUrl: wechatAvatarUrl,
               isAvatarCustomed: false
@@ -166,7 +166,7 @@ const uploadForManage = async (that, mode, index) => {
                 $url: "uploadAvatar",
                 avatarUrl,
                 _id,
-                collection: "profile-new",
+                collection: "profile",
                 isAvatarCustomed: true,
               }
             });
@@ -225,7 +225,7 @@ const defaultForManage = async (that, mode, index) => {
           $url: "uploadAvatar",
           avatarUrl: defaultAvatarUrl,
           _id,
-          collection: "profile-new",
+          collection: "profile",
           isAvatarCustomed: false,
         }
       });

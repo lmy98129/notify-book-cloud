@@ -551,7 +551,7 @@ Page({
         data: {
           $url: "findProfile",
           realName,
-          collection: "profile-new"
+          collection: "profile"
         }
       })
 
