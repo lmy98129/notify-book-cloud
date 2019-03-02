@@ -122,6 +122,19 @@ const normalizeJson = (json, normalize) => {
   return newJson;
 }
 
+const sortByNum = (x, y) => {
+  let xNum = x.match(/[0-9]+/ig);
+  let yNum = y.match(/[0-9]+/ig);
+  if (xNum !== null && yNum !== null) {
+    return parseInt(xNum[0]) - parseFloat(yNum[0]);
+  } else if (xNum === null && xNum === null ) {
+    return 0;
+  } else {
+    console.log(x, y);
+    return xNum == null ? -1 : 1; 
+  }
+}
+
 Page({
 
   /**
@@ -131,6 +144,10 @@ Page({
     isSelectDocumentModalHidden: true,
     isExtraKeyModalHidden: true,
     isDocumentUploaded: false,
+    isSelectClassInfoModalHidden: true,
+    isSelectedClassInfo: false,
+    selectedClassInfo: {},
+    selectedClassInfoForm: {},
     columnData: [],
     importDocuments: [],
     selectedDocument: "",
@@ -141,20 +158,43 @@ Page({
     normalize: [],
     keysRange: [],
     extraKey: "请选择额外键值",
+    selectedClassName: "请选择班级名称",
     extraKeyContent: "",
     extraKeys: [],
     preview: "",
-    importData: []
+    importData: [],
+    classNameArray: [],
+    classInfoArray: [],
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
-    let { keysRange, accordingRange } = initKeysRange();
-    this.setData({
-      keysRange, accordingRange
-    })
+  onLoad: async function (options) {
+    try {
+
+      let { keysRange, accordingRange } = initKeysRange();
+      this.setData({
+        keysRange, accordingRange
+      })
+  
+      let classInfoRes = await wx.cloud.callFunction({
+        name: "profile-manage",
+        data: {
+          $url: "classInfoDownload"
+        }
+      })
+  
+      if (classInfoRes.result) {
+        let { classNameArray, data } = classInfoRes.result;
+        classNameArray.sort(sortByNum).reverse();
+        this.setData({ classNameArray, classInfoArray: data });
+      }
+
+    } catch (error) {
+      console.log(error.message);
+    }
+    
   },
 
   /**
@@ -182,27 +222,6 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
 
   },
 
@@ -513,7 +532,49 @@ Page({
     })
   },
 
+  showSelectClassInfoModal() {
+    this.setData({
+      isSelectClassInfoModalHidden: false,
+      selectedClassName: "请选择班级名称"
+    })
+  },
 
+  hideSelectClassInfoModal() {
+    this.setData({
+      isSelectClassInfoModalHidden: true,
+      selectedClassName: "请选择班级名称"
+    })
+  },
+
+  setClassInfo(e) {
+    let { value } = e.detail;
+    let { classNameArray, classInfoArray } = this.data;
+    let selectedClassName = classNameArray[value];
+    let tmpIndex = classInfoArray.findIndex(x => x.className === selectedClassName);
+    let selectedClassInfo = classInfoArray[tmpIndex];
+    delete selectedClassInfo._id;
+    let selectedClassInfoForm = {}
+    for (let subItem in selectedClassInfo) {
+      selectedClassInfoForm[subItem] = {};
+      selectedClassInfoForm[subItem].title = profModel.initValue[subItem].name;
+      selectedClassInfoForm[subItem].content = selectedClassInfo[subItem];
+    }
+    this.setData({
+      selectedClassName,
+      selectedClassInfo,
+      selectedClassInfoForm,
+      isSelectedClassInfo: true,
+    })
+  },
+
+  cancelSelectClassInfo() {
+    this.setData({
+      selectedClassName: "请选择班级名称",
+      selectedClassInfo: {},
+      selectedClassInfoForm: {},
+      isSelectedClassInfo: false,
+    })
+  },
 
   addExtraKeys() {
     let { keysRange, accordingRange, extraKeys, extraKey, extraKeyContent, normalize } = this.data;
@@ -580,7 +641,8 @@ Page({
       wx.showLoading({
         title: "转换格式中",
       })
-      let { normalize, extraKeys, range, selectedSheets, selectedDocument } = this.data;
+      let { normalize, extraKeys, range, 
+        selectedSheets, selectedDocument, isSelectedClassInfo, selectedClassInfo } = this.data;
       concatNormArray(normalize, extraKeys);
       let jsonRes = await wx.cloud.callFunction({
         name: "profile-manage",
@@ -600,6 +662,12 @@ Page({
             data.gender = 1;
           } else if (data.gender === "女"){
             data.gender = 2;
+          }
+          if (isSelectedClassInfo) {
+            if (data.degreeArray === undefined) {
+              data.degreeArray = [];
+            }
+            data.degreeArray[0] = selectedClassInfo;
           }
         }
         let importData = preview;
@@ -655,7 +723,7 @@ Page({
       toast("导入数据失败", "none");
       console.log(error);
     }
-  }
+  },
 
 
 })

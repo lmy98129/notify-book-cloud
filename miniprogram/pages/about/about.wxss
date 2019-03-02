@@ -1,0 +1,17 @@
+/* miniprogram/pages/about/about.wxss */
+
+.logo {
+  width: 80%;
+  margin: 40rpx auto;
+  height: 200rpx;
+}
+
+.about {
+  margin: 0 auto;
+  width: 90%;
+}
+
+.settings-wrapper {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  margin-top: 40rpx;
+}

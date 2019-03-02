@@ -39,7 +39,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": -1,
+			"current": 13,
 			"list": [
 				{
 					"id": -1,
@@ -119,6 +119,13 @@
 					"id": -1,
 					"name": "班级信息管理",
 					"pathName": "pages/class-manage/class-manage",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "关于",
+					"pathName": "pages/about/about",
 					"query": "",
 					"scene": null
 				}

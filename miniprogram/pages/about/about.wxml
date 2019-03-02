@@ -1,0 +1,16 @@
+<!--miniprogram/pages/about/about.wxml-->
+<top-widget mode="title" title="关于我们">
+</top-widget>
+
+<view class="main">
+  <image src="cloud://test-5c133c.7465-test-5c133c/tvs-logo.jpg" class="logo"/>
+  <view class="about">
+    <text decode="{{true}}">
+      &emsp;&emsp;TVS家谱小程序是中国传媒大学电视学院出品的一款系友通讯录。
+    </text>
+  </view>
+  <view class="settings-wrapper">
+    <settings-item title="开发者" hint="@Eason Wong @lmy98129" />
+    <settings-item title="版本号" hint="v1.0.0"/>
+  </view>
+</view>  

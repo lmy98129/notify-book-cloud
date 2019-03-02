@@ -96,16 +96,29 @@
   margin-bottom: 10rpx;
 }
 
+.profile-item-wrapper.class-info {
+  width: 100%;
+  margin-left: 0;
+}
+
 .item-wrapper {
   width: 95%;
   display: flex;
   justify-content: space-between;
   margin: 0 auto;
+  align-items: center;
+}
+
+.item-wrapper:first-child {
+  margin-top: 10rpx;
+}
+
+.item-wrapper:last-child {
+  margin-bottom: 10rpx;
 }
 
 .item-wrapper .del {
   color: #e30;
-  margin-top: 40rpx;
   margin-right: 20rpx;
 }
 

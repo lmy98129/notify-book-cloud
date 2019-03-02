@@ -136,7 +136,9 @@
           <view class="btn">设置</view>
         </navigator>
         <button class="btn none-navigator" open-type="feedback" hover-class="none-navigator-hover">反馈</button>
-        <view class="btn">关于</view>
+        <navigator url="../about/about">
+          <view class="btn">关于</view>
+        </navigator>
       </view>
       <view class="close"  bindtap="switchSideBar">
         <view class="iconfont .icon-fanhui1 icon"></view>
