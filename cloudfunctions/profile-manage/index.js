@@ -348,7 +348,7 @@ exports.main = async (event, context) => {
         code: 1,
       }
 
-      let downloadRes = [];
+      let downloadRes = [], classNameArray = [];
 
       let countRes = await db.collection("class-info").count();
 
@@ -371,6 +371,13 @@ exports.main = async (event, context) => {
       }
 
       ctx.body.data = downloadRes;
+
+      for (item of downloadRes){
+        classNameArray.push(item.className);
+      }
+
+      ctx.body.classNameArray = classNameArray;
+
     } catch (error) {
       console.log(error);
       ctx.body = {
@@ -461,27 +468,6 @@ exports.main = async (event, context) => {
       if (cloudRes.data) {
         ctx.body.data = cloudRes.data;
       }
-
-    } catch (error) {
-      console.log(error);
-      ctx.body = {
-        code: -1,
-        err: error.message
-      }
-    }
-  })
-
-  app.router("deleteProfile", async (ctx) => {
-    try {
-      ctx.body = {
-        code: 1,
-      }
-
-      let { _id, collection } = event;
-
-      let removeRes = await db.collection(collection).doc(_id).remove();
-
-      ctx.body.removeRes = removeRes;
 
     } catch (error) {
       console.log(error);

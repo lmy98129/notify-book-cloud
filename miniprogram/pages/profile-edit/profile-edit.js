@@ -9,6 +9,7 @@ const getFormid = require("../../utils/formid").getFormid;
 const formid = require("../../utils/formid");
 
 const initValue = profModel.initValue;
+const initUserInfo = JSON.parse(JSON.stringify(profModel.userInfo));
 let newUserInfo = JSON.parse(JSON.stringify(profModel.userInfo));
 
 import regeneratorRuntime, { async } from "../../utils/regenerator-runtime/runtime";
@@ -59,42 +60,69 @@ Page({
     realNameForInitProfile: "",
     tmpInitProfile: [],
     selectedInitProfile: "",
+    classNameArray: [],
+    classInfoArray: [],
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: async function (options) {
-    let { mode, index } = options;
-    let curUserProfile;
-    // 来源为本地存储值
-    if (mode !== undefined && mode !== "" && mode !== "addProfileManage") {
-      this.setData({ mode, index });
-      curUserProfile = wx.getStorageSync(mode)[index];
-      newUserInfo = profile.decodeForEdit(curUserProfile, initValue, this);
-    // 管理员自行添加
-    } else if (mode === "addProfileManage") {
-      let gender = 1;
-      newUserInfo.gender = gender;
-      newUserInfo.jobArray = [];
-      newUserInfo.degreeArray = [];
-      newUserInfo.contactArray = [];
-      this.setData({ mode, gender,
-        jobArray: [], degreeArray: []
-      });
-      return;
-    // 默认资料
-    } else {
-      curUserProfile = await profile.check();
-      if (curUserProfile.isProfileEmpty) {
-        let { avatarUrl, nickName, gender } = curUserProfile;
-        if (gender <= 0) gender = 1;
-        this.setData({ avatarUrl, nickName, gender, isChooseInitTypeModalHidden: false });
-        newUserInfo = { ...newUserInfo, avatarUrl, nickName, gender };
-      } else {
-        newUserInfo = profile.decodeForEdit(curUserProfile, initValue, this);
+    try {
+      wx.showLoading({
+        title: "数据加载中"
+      })
+      let { mode, index } = options;
+      let curUserProfile;
+  
+      let classInfoRes = await wx.cloud.callFunction({
+        name: "profile-manage",
+        data: {
+          $url: "classInfoDownload"
+        }
+      })
+  
+      if (classInfoRes.result) {
+        let { classNameArray, data } = classInfoRes.result;
+        classNameArray.splice(0, 0, "其他");
+        this.setData({ classNameArray, classInfoArray: data });
       }
-    } 
+  
+      // 来源为本地存储值
+      if (mode !== undefined && mode !== "" && mode !== "addProfileManage") {
+        this.setData({ mode, index });
+        curUserProfile = wx.getStorageSync(mode)[index];
+        newUserInfo = profile.decodeForEdit(curUserProfile, initValue, initUserInfo, this);
+      // 管理员自行添加
+      } else if (mode === "addProfileManage") {
+        let gender = 1;
+        newUserInfo.gender = gender;
+        newUserInfo.jobArray = [];
+        newUserInfo.degreeArray = [];
+        newUserInfo.contactArray = [];
+        this.setData({ mode, gender,
+          jobArray: [], degreeArray: []
+        });
+        return;
+      // 默认资料
+      } else {
+        curUserProfile = await profile.check();
+        if (curUserProfile.isProfileEmpty) {
+          let { avatarUrl, nickName, gender } = curUserProfile;
+          if (gender <= 0) gender = 1;
+          this.setData({ avatarUrl, nickName, gender, isChooseInitTypeModalHidden: false });
+          newUserInfo = { ...newUserInfo, avatarUrl, nickName, gender };
+        } else {
+          newUserInfo = profile.decodeForEdit(curUserProfile, initValue, initUserInfo, this);
+        }
+      } 
+      
+      wx.hideLoading();
+    } catch (error) {
+      wx.hideLoading();
+      console.log("数据加载失败", error.message);
+      toast("数据加载失败", "none");
+    }
   },
 
   uploadAvatar() {
@@ -548,7 +576,7 @@ Page({
       return;
     }
     let curUserProfile = tmpInitProfile[tmpInitProfile.findIndex(x => x._id === selectedInitProfile)];
-    newUserInfo = profile.decodeForEdit(curUserProfile, initValue, this);
+    newUserInfo = profile.decodeForEdit(curUserProfile, initValue, initUserInfo, this);
     this.setData({
       realNameForInitProfile: "",
       tmpInitProfile: [],

@@ -97,7 +97,7 @@ const userInfo = {
     degree: "请选择学历",
     school: "",
     major: "",
-    className: "",
+    className: "请选择班级",
     headteacher: "",
     degreeStartTime: "请选择入学时间",
     degreeEndTime: "请选择毕业时间",

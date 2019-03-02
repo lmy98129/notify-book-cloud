@@ -27,7 +27,7 @@
         <profile-input title="班级" mode="picker" picker-mode="selector" picker-range="{{classNameArray}}" value="{{item.className}}" bind:input="setClass" input-type="className" index="{{index}}" array-type="degreeArray" bind:del="pickerDel"/>
 
         <block wx:if="{{item.className === '其他'}}">
-          <profile-input title="班级" place-holder="请输入班级名称" value="{{item.className}}" bind:input="inputHandler" input-type="className" index="{{index}}" array-type="degreeArray" />         
+          <profile-input title="具体班级" place-holder="请输入班级名称" value="{{item.className}}" bind:input="inputHandler" input-type="className" index="{{index}}" array-type="degreeArray" />         
         </block>
 
         <profile-input title="学历" mode="picker" picker-mode="selector" picker-range="{{degreeTypeArray}}" value="{{item.degree}}" bind:input="inputHandler" input-type="degree" index="{{index}}" array-type="degreeArray" bind:del="pickerDel"/>

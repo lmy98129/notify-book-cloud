@@ -240,7 +240,7 @@ const introUpload = async (that, intro) => {
   }
 }
 
-const decodeForEdit = (tmpUserInfo, initValue, that) => {
+const decodeForEdit = (tmpUserInfo, initValue, initUserInfo, that) => {
   let tmpArray, tmpDate;
   delete tmpUserInfo._id;
   delete tmpUserInfo._openid;
@@ -281,13 +281,23 @@ const decodeForEdit = (tmpUserInfo, initValue, that) => {
         break;
       case "degreeArray":
         tmpArray = JSON.parse(JSON.stringify(tmpUserInfo[item]));
-        for(let i=0; i<tmpArray.length; i++) {
-          for (let subItem in tmpArray[i]) {
-            if (tmpArray[i][subItem] === undefined || tmpArray[i][subItem] === "") {
-              tmpArray[i][subItem] = initValue[subItem].default;
-            } else if (subItem === "degreeStartTime" || subItem === "degreeEndTime") {
-              tmpDate = tmpArray[i][subItem].split("-");
-              tmpArray[i][subItem] = parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月";
+        // for(let i=0; i<tmpArray.length; i++) {
+        //   for (let subItem in tmpArray[i]) {
+        //     if (tmpArray[i][subItem] === undefined || tmpArray[i][subItem] === "") {
+        //       tmpArray[i][subItem] = initValue[subItem].default;
+        //     } else if (subItem === "degreeStartTime" || subItem === "degreeEndTime") {
+        //       tmpDate = tmpArray[i][subItem].split("-");
+        //       tmpArray[i][subItem] = parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月";
+        //     }
+        //   }
+        // }
+        for (let key in initUserInfo[item][0]) {
+          for (let tmpItem of tmpArray) {
+            if (tmpItem[key] === undefined || tmpItem[key] === "") {
+              tmpItem[key] = initUserInfo[item][0][key];
+            } else if (key === "degreeStartTime" || key === "degreeEndTime") {
+              tmpDate = tmpItem[key].split("-");
+              tmpItem[key] = parseInt(tmpDate[0]) + "年" + parseInt(tmpDate[1]) + "月";
             }
           }
         }
@@ -303,6 +313,7 @@ const decodeForEdit = (tmpUserInfo, initValue, that) => {
     }
   }
 
+  console.log(tmpUserInfo);
   return tmpUserInfo;
 }
 
@@ -532,7 +543,7 @@ const deleteOldProfile = async (_id) => {
         _id,
       }
     })
-    console.log("删除原资料成功");
+    console.log("删除原资料成功", cloudRes);
   } catch (error) {
     console.log("删除原资料失败", error.message);
   }
