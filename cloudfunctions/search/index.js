@@ -199,6 +199,20 @@ exports.main = async (event, context) => {
     try {
       let { start, limit, requestArray, pageLength, collection } = event;
   
+      // NOTE: 临时解决办法，把学历权重给屏蔽，防止刷出全部人
+
+      let degreeIndex = requestArray.findIndex(x => {
+        if (x.weight && x.weight instanceof Array 
+          && x.weight[0].keyArray instanceof Array 
+          && x.weight[0].keyArray.length === 1 ) {
+            return x.weight[0].keyArray[0] === "degree"
+          } else return false;
+      });
+
+      if (degreeIndex >= 0) {
+        requestArray.splice(degreeIndex, 1);
+      }
+
       let searchRes = await searchMain(collection, requestArray);
   
       total = searchRes.length;
@@ -213,6 +227,21 @@ exports.main = async (event, context) => {
       if (limit != undefined) {
         searchRes = searchRes.slice(0, limit);
       }
+
+      // NOTE: 临时解决办法，把自身的项目删去，这个本来应该做个参数传进来的，用来判定是否需要排除自身，搜索不需要，但是推荐应该还是需要的。
+
+      const { OPENID } = cloud.getWXContext();
+      let selfIndex = searchRes.findIndex(x => {
+        if (x._openid) {
+          return x._openid === OPENID
+        } else return false;
+      })
+      
+      if (selfIndex >= 0) {
+        searchRes.splice(degreeIndex, 1);
+      }
+
+      total -= 1;
   
       ctx.body = {
         code: 1,

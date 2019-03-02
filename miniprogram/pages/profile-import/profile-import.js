@@ -63,7 +63,11 @@ const normalizeGenerator = (accordingRange, normalize, value, normIndex) => {
 const concatNormArray = (normalize, extraArray) => {
   for (let extra of extraArray) {
     if ( extra.according instanceof Array) {
-      let tmpIndex = normalize.findIndex(x => x.according[0] === extra.according[0]);
+      let tmpIndex = normalize.findIndex(x => {
+        if (x.according) {
+          return x.according[0] === extra.according[0]
+        } else return false;
+      });
       normalize.splice(tmpIndex + 1, 0, extra);
     } else {
       normalize.push(extra);

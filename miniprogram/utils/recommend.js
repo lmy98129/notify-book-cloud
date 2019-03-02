@@ -52,6 +52,7 @@ module.exports = {
               for (let subItem in degree) {
                 let text, value;
                 switch(subItem) {
+                  // degree占的权重过高以至于几乎全部人都被推荐了。。。
                   case "degree":
                   case "major":
                   case "school":
