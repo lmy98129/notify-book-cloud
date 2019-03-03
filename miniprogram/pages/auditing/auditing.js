@@ -13,6 +13,10 @@ Page({
     tabIndex: 0,
     selectedList: [],
     tabContent: ["审核列表", "邀请码管理"],
+    authCodeList: [],
+    selectedAuthCodeList: [],
+    isAuthCodeModalHidden: true,
+    newAuthCode: "",
   },
 
   /**
@@ -38,11 +42,16 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: async function () {
-    let res = await auditing.download(this); 
-    wx.setStorageSync("auditingList", res); 
+    let auditingList = await auditing.download(this); 
+    wx.setStorageSync("auditingList", auditingList); 
     this.setData({
-      auditingList: res
+      auditingList
     })
+    let authCodeList = await auditing.downloadAuthCode();
+    wx.setStorageSync("authCodeList", authCodeList);
+    this.setData({
+      authCodeList
+    });
   },
 
   /**
@@ -59,27 +68,6 @@ Page({
 
   },
 
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
-  },
-
   tabHandler(e) {
     let index = parseInt(e.detail.index);
     this.setData({
@@ -90,6 +78,12 @@ Page({
   bindChecked(e) {
     this.setData({
       selectedList: e.detail.value
+    })
+  },
+
+  bindSelectAuthCode(e) {
+    this.setData({
+      selectedAuthCodeList: e.detail.value,
     })
   },
 
@@ -133,5 +127,123 @@ Page({
         auditingList: res
       })
     }
+  }, 
+
+  modalTouchMove(e) {
+
+  },
+
+  showAuthCodeModal() {
+    this.setData({
+      isAuthCodeModalHidden: false,
+      newAuthCode: ""
+    })
+  },
+
+  hideAuthCodeModal() {
+    this.setData({
+      isAuthCodeModalHidden: true,
+      newAuthCode: ""
+    })
+  },
+
+  setNewAuthCode(e) {
+    let { value } = e.detail;
+    this.setData({
+      newAuthCode: value,
+    })
+  },
+
+  addAuthCode: async function(e) {
+    try {
+      let authCodeList = [];
+      let { newAuthCode } = this.data;
+      if (newAuthCode.length <= 0) {
+        toast("新邀请码不能为空", "none");
+        return;
+      }
+      wx.showLoading({
+        title: "上传数据中",
+      });
+      authCodeList.push({
+        code: newAuthCode
+      });
+      let addRes = await wx.cloud.callFunction({
+        name: "auditing",
+        data: {
+          $url: "addAuthCode",
+          authCodeList,
+        }
+      })
+
+      wx.hideLoading();
+      if (addRes.result) {
+        let { code } = addRes.result;
+        switch(code) {
+          case 1:
+            toast("添加成功", "success");
+            authCodeList = await auditing.downloadAuthCode();
+            wx.setStorageSync("authCodeList", authCodeList);
+            this.setData({
+              authCodeList,
+            });
+            this.hideAuthCodeModal()
+            break;
+          case -1:
+            toast("添加新邀请码失败", "none");
+            break;
+        }
+      }
+
+    } catch (error) {
+      wx.hideLoading();
+      toast("添加新邀请码失败", "none");
+      console.log(error.message);
+    }
+  },
+
+  deleteAuthCode: async function() {
+    try {
+      let { selectedAuthCodeList } = this.data;
+      if (selectedAuthCodeList.length <= 0) {
+        toast("请至少选择一项", "none");
+        return;
+      }
+      wx.showLoading({
+        title: "删除数据中",
+      })
+      let idList = selectedAuthCodeList;
+      let deleteRes = await wx.cloud.callFunction({
+        name: "auditing",
+        data: {
+          $url: "deleteAuthCode",
+          idList,
+        }
+      })
+      wx.hideLoading();
+  
+      if (deleteRes.result) {
+        let { code } = deleteRes.result;
+        switch(code) {
+          case 1:
+            toast("删除成功", "success");
+            let authCodeList = await auditing.downloadAuthCode();
+            wx.setStorageSync("authCodeList", authCodeList);
+            this.setData({
+              authCodeList
+            });
+            break;
+          case -1:
+            toast("删除失败", "none");
+            break;
+        }
+      }
+      
+    } catch (error) {
+      wx.hideLoading();
+      toast("删除失败", "none");
+      console.log(error.message);
+    }
   }
+
 })

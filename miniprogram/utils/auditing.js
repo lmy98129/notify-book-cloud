@@ -80,8 +80,23 @@ const disallowAuditing = async (openidList) => {
   return res.result;
 }
 
+const downloadAuthCode = async () => {
+  try {
+    let authCodeList = []
+    let downloadRes = await db.collection("auth-code").get();
+    
+    if (downloadRes.data) authCodeList = downloadRes.data;
+
+    return authCodeList;
+
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
 module.exports = {
   download: downloadList,
   allow: allowAuditing,
   disallow: disallowAuditing,
+  downloadAuthCode,
 }

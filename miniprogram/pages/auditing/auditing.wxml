@@ -43,7 +43,29 @@
   </block>
 
   <block wx:if="{{tabIndex === 1}}">
-    <view class="hint">新功能开发中，敬请期待~</view>    
+    <checkbox-group bindchange="bindSelectAuthCode">
+      <block wx:if="{{authCodeList.length === 0}}">
+        <view class="hint">当前未启用邀请码</view>
+      </block>
+      <block wx:for="{{authCodeList}}" wx:key="{{index}}">
+        <view class="auditing-wrap {{index === authCodeList.length-1 ? 'last': ''}}">
+          <view class="right">
+            <view class="code">{{item.code}}</view>
+          </view>
+          <view class="check-box">
+            <checkbox value="{{item._id}}"/>
+          </view>
+        </view>
+      </block>
+    </checkbox-group>
+    <view class="bottom-wrap">
+      <view class="btn" bindtap="showAuthCodeModal">新建</view>
+      <view class="btn" bindtap="deleteAuthCode">删除</view>
+    </view>
   </block>
 
 </view>
+
+<modal hidden="{{isAuthCodeModalHidden}}" title="添加邀请码" bindconfirm="addAuthCode" bindcancel="hideAuthCodeModal" catchtouchmove="modalTouchMove">
+  <profile-input asterisk="{{false}}" title="输入内容" bind:input="setNewAuthCode" mode="modal-input" place-holder="请输入新邀请码" value="{{newAuthCode}}"></profile-input>  
+</modal>

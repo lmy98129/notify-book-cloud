@@ -63,3 +63,15 @@
   padding-top: 50%;
   font-size: 35rpx;
 }
+
+.auditing-wrap .right .code {
+  font-size:42rpx;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  max-width:80%;
+}
+
+.auditing-wrap:first-child {
+  margin-top: 20rpx;
+}

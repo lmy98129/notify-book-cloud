@@ -274,5 +274,47 @@ exports.main = async (event, context) => {
     }
   })
 
+  app.router("addAuthCode", async (ctx) => {
+    try {
+      let { authCodeList } = event;
+      
+      for (data of authCodeList) {
+        await db.collection("auth-code").add({ data });
+      }
+
+      ctx.body = {
+        code: 1,
+      }
+
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        code: -1,
+        err: error.message
+      }
+    }
+  })
+
+  app.router("deleteAuthCode", async (ctx) => {
+    try {
+      let { idList } = event;
+      
+      for (_id of idList) {
+        await db.collection("auth-code").doc(_id).remove();
+      }
+
+      ctx.body = {
+        code: 1,
+      }
+
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        code: -1,
+        err: error.message
+      }
+    }
+  })
+
   return app.serve();
 }
