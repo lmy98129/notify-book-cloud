@@ -83,7 +83,7 @@ Page({
     }
     if (curUserProfile === undefined) {
       wx.switchTab({
-        url: "../index/index"
+        url: "../profile/profile"
       });
       return;
     }

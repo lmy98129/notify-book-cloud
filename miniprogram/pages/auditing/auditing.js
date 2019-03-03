@@ -26,7 +26,12 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-
+    let curUserProfile = wx.getStorageSync("curUserProfile");
+    if (curUserProfile === undefined || curUserProfile.isAdmin === false) {
+      wx.switchTab({
+        url: "../profile/profile",
+      }); 
+    }
   },
 
   /**

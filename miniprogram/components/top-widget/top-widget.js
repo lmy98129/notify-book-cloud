@@ -96,7 +96,7 @@ Component({
     goBack() {
       if (getCurrentPages().length === 1) {
         wx.switchTab({
-          url: "/pages/index/index"
+          url: "/pages/profile/profile"
         })
       } else {
         wx.navigateBack({

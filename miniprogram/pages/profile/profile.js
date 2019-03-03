@@ -1,9 +1,8 @@
 // pages/profile/profile.js
 const sys = require("../../utils/system");
 const profile = require("../../utils/profile");
-const toast = require("../../utils/message").toast;
 const bgImg = require("../../utils/bg-img");
-const contact = require("../../utils/contact");
+const login = require("../../utils/login");
 const app = getApp()
 import regeneratorRuntime, { async } from "../../utils/regenerator-runtime/runtime";
 
@@ -48,34 +47,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: async function () {
-    let curUserProfile;
-    curUserProfile = await profile.check();
-    let { avatarUrl, nickName, bgImgUrl } = curUserProfile;
-    if (avatarUrl !== undefined) {
-      this.setData({ avatarUrl });
-    }
-    if (bgImgUrl !== undefined) {
-      this.setData({ bgImgUrl })
-    }
-    if (nickName !== undefined) {
-      this.setData({ nickName })
-    }
-    if (bgImgUrl === "" || bgImgUrl === undefined) {
-      this.setData({
-        bgImgUrl: app.globalData.DEFAULT_BGIMGURL
-      })
-    }
-    if (curUserProfile.isProfileEmpty) {
-      this.setData({
-        profileStatus: "empty"
-      })
-    } else {
-      let decodeRes = profile.decode(curUserProfile);
-      let { intro, profileStatus, ...profileData } = decodeRes;
-      this.setData({
-        intro, profileStatus, profileData
-      });
-    }
+    await login.getUserInfoForProfile(this);
   },
 
   tabHandler(e) {

@@ -37,7 +37,7 @@ Page({
       this.setData({ title, key });
     } else {
       wx.switchTab({
-        url: "../index/index"
+        url: "../profile/profile"
       })
     }
   },

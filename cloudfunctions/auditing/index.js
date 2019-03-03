@@ -219,5 +219,60 @@ exports.main = async (event, context) => {
     }
   })
 
+  app.router("notifyAdmin", async (ctx) => {
+    try {
+      let { collection } = event;
+      let openidList = [];
+      let adminListRes = await db.collection(collection).where({
+        isAdmin: true
+      }).field({
+        _openid: true
+      }).get();
+  
+      if (adminListRes.data) {
+        for (item of adminListRes.data) {
+          openidList.push(item._openid);
+        }
+      }
+
+      let data = {
+        "touser": "",
+        "template_id": "dRQUGRibkcdSUP79L-Up6_slYyk2g-yL3uZaYOdKhHU",
+        "form_id": "",
+        "page": "pages/auditing/auditing",
+        "data": {
+          "keyword1": {
+            "value": "审核提醒",
+            "color": "#173177"
+          },
+          "keyword2": {
+            "value": "管理员您好，您有一份新的认证申请需要办理",
+            "color": "#173177"
+          }
+        }
+      }
+
+      let notifyRes = await cloud.callFunction({
+        name: "notification",
+        data: {
+          $url: "sendTemplateMessage",
+          data,
+          openidList
+        }
+      })
+      
+      ctx.body = {
+        code: 1,
+        msg: notifyRes
+      }
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        code: -1,
+        err: error.message
+      }
+    }
+  })
+
   return app.serve();
 }

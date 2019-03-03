@@ -7,7 +7,7 @@ import regeneratorRuntime, { async } from "./regenerator-runtime/runtime";
 const codeCheck = async (remark) => {
   try {
     let authCodeRes = await db.collection("auth-code").where({
-      code: remark
+      code: { $regex: remark },
     }).get();
 
     if (authCodeRes.data === undefined || authCodeRes.data.length === 0) {
@@ -104,6 +104,16 @@ const uploadAuth = async (authImgArray, remark, that) => {
     that.setData({
       authStatus: "auditing"
     });
+
+    let notifyAdminRes = await wx.cloud.callFunction({
+      name: "auditing",
+      data: {
+        $url: "notifyAdmin",
+        collection: "profile",
+      }
+    })
+
+    console.log(notifyAdminRes);
 
   } catch (error) {
     wx.hideLoading();

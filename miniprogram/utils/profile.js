@@ -30,16 +30,6 @@ const download = async (that, callback) => {
   await wx.getUserInfo({
     success: async result => {
 
-      if (app.globalData.isIndexPageFirstLoad === undefined) {
-        app.globalData.isIndexPageFirstLoad = true;
-      }
-
-      if (app.globalData.isIndexPageFirstLoad) {
-        wx.showLoading({
-          title: "加载中"
-        });
-      }
-
       let curUserProfile = wx.getStorageSync("curUserProfile");
       if (curUserProfile === undefined || curUserProfile === "") {
         curUserProfile = app.globalData.DEFAULT_PROFILE;
@@ -128,13 +118,8 @@ const download = async (that, callback) => {
         wx.setStorage({ key: "curUserProfile", data: curUserProfile });
 
         // 回调函数用于不同功能用途
-        if (callback !== undefined) {
+        if (callback !== undefined && that !== undefined) {
           await callback(that, curUserProfile);
-        }
-        
-        if (app.globalData.isIndexPageFirstLoad) {
-          wx.hideLoading();
-          app.globalData.isIndexPageFirstLoad = false;
         }
 
         console.log("获取用户资料成功：", msg);

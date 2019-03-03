@@ -507,7 +507,7 @@ Page({
   goBack() {
     if (getCurrentPages().length === 1) {
       wx.switchTab({
-        url: "/pages/index/index"
+        url: "/pages/profile/profile"
       })
     } else {
       wx.navigateBack({
@@ -540,8 +540,13 @@ Page({
       let { realNameForInitProfile } = this.data;
       let realName = realNameForInitProfile;
 
+      if (realName.length <= 0) {
+        toast("请至少填写一个字符", "none");
+        return;
+      }
+
       wx.showLoading({
-        title: "请求数据中"
+        title: "查找中"
       });
 
       let cloudRes = await wx.cloud.callFunction({

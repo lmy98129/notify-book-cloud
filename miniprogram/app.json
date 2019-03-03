@@ -1,9 +1,9 @@
 {
   "cloud": true,
   "pages": [
+    "pages/profile/profile",
     "pages/index/index",
     "pages/chooseLib/chooseLib",
-    "pages/profile/profile",
     "pages/login/login",
     "pages/profile-edit/profile-edit",
     "pages/auth/auth",
@@ -35,16 +35,16 @@
     "borderStyle": "black",
     "list": [
       {
-        "selectedIconPath": "images/discover-hl.png",
-        "iconPath": "images/discover.png",
-        "pagePath": "pages/index/index",
-        "text": "发现"
-      },
-      {
         "selectedIconPath": "images/contact-hl.png",
         "iconPath": "images/contact.png",
         "pagePath": "pages/profile/profile",
         "text": "我的"
+      },
+      {
+        "selectedIconPath": "images/discover-hl.png",
+        "iconPath": "images/discover.png",
+        "pagePath": "pages/index/index",
+        "text": "发现"
       }
     ]
   },

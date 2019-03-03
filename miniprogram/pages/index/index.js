@@ -36,6 +36,7 @@ Page({
     isNotifyRedDot: false,
     isProfileEmpty: 0,
     isChangePossibleKnowLoading: false,
+    isShowForAuth: false,
     changeBtnWord: "换一批"
   },
 
@@ -52,7 +53,7 @@ Page({
   },
 
   onShow: async function() {
-    await login.getUserInfo(this);
+    await login.getUserInfoForIndex(this);
   },
 
 
@@ -99,15 +100,19 @@ Page({
         isChangePossibleKnowLoading: true,
         changeBtnWord: ""
       })
-      let { possibleKnowListTotal, possibleKnowListStart } = this.data;
-      let start = possibleKnowListStart + 9;
+      let { possibleKnowListTotal, possibleKnowListStart, isShowForAuth } = this.data;
+      let start = possibleKnowListStart + 8;
       if (start > possibleKnowListTotal) {
         start = 0;
         this.setData({
           possibleKnowListStart: 0
         })
       }
-      await login.possibleKnow(this, start, 9);
+      if (isShowForAuth) {
+        await login.possibleKnow(this, start, 8, true);
+      } else {
+        await login.possibleKnow(this, start, 8);        
+      }
       this.setData({
         isChangePossibleKnowLoading: false,
         changeBtnWord: "换一批"
