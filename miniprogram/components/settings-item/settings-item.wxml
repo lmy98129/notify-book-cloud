@@ -1,6 +1,20 @@
 <!--components/settings-item/settings-item.wxml-->
-<navigator url="{{url}}">
-  <view class="settings">
+<block wx:if="{{mode === 'default'}}">
+  <navigator url="{{url}}">
+    <view class="settings">
+      <view class="settings-text">
+        <text>{{title}}</text>
+      </view>
+      <view class="settings-arrow">
+        <view class="hint">{{hint}}</view>
+        <view class="iconfont icon-fanhui1 icon"></view>
+      </view>
+    </view>
+  </navigator>
+</block>
+
+<block wx:elif="{{mode === 'custom'}}">
+  <view class="settings" hover-class="settings-hover" bind:tap="bindTap">
     <view class="settings-text">
       <text>{{title}}</text>
     </view>
@@ -9,4 +23,4 @@
       <view class="iconfont icon-fanhui1 icon"></view>
     </view>
   </view>
-</navigator>
+</block>
