@@ -69,7 +69,18 @@ Component({
 
   attached: function() {
     sys.checkPhone(this);
-    
+    let prop = this.properties;
+    let { mode } = prop;
+    if (mode === "title") {
+      wx.setNavigationBarColor({
+        frontColor: '#ffffff',
+        backgroundColor: '#ff0000',
+        animation: {
+          duration: 400,
+          timingFunc: 'easeIn'
+        }
+      });
+    }
   },
 
   /**

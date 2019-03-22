@@ -33,7 +33,7 @@
       <view class="item {{mode === 'modal-picker' ? 'modal' : ''}}">
         <view class="title">{{title}}<text wx:if="{{asterisk}}" class="asterisk">*</text></view>
         <view class="input">
-          <picker mode="{{pickerMode}}" class="picker" bindchange="bindInput" fields="{{pickerFields}}" range="{{pickerRange}}" bindlongpress="bindDel">
+          <picker mode="{{pickerMode}}" class="picker" bindchange="bindInput" fields="{{pickerFields}}" range="{{pickerRange}}" bindlongpress="bindDel" bindcolumnchange="bindcolumnchange">
             {{value}}
           </picker>
         </view>

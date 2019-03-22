@@ -3,7 +3,7 @@
 }
 
 .fixed.ip6 {
-  padding-top: 60rpx!important;
+  padding-top: 52rpx!important;
 }
 
 .fixed.ip6p {
@@ -11,5 +11,5 @@
 }
 
 .fixed.ipx {
-  padding-top: 105rpx!important;
+  padding-top: 103rpx!important;
 }

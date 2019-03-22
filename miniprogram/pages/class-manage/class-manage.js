@@ -233,10 +233,11 @@ Page({
       toast("请输入学院名称", "none");
       return;
     }
-    if (headteacher === undefined || headteacher === "") {
-      toast("请输入班级对应的班主任姓名", "none");
-      return;
-    }
+    // 由于丢失的班主任信息较多，先不检查这个
+    // if (headteacher === undefined || headteacher === "") {
+    //   toast("请输入班级对应的班主任姓名", "none");
+    //   return;
+    // }
     if (degree === undefined || degree === "") {
       toast("请选择学历", "none");
       return;

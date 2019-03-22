@@ -19,7 +19,9 @@
     "pages/profile-other/profile-other",
     "pages/recommend/recommend",
     "pages/class-manage/class-manage",
-    "pages/about/about"
+    "pages/about/about",
+    "pages/more/more",
+    "pages/start/start"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",
@@ -45,6 +47,12 @@
         "iconPath": "images/discover.png",
         "pagePath": "pages/index/index",
         "text": "发现"
+      },
+      {
+        "selectedIconPath": "images/more-hl.png",
+        "iconPath": "images/more.png",
+        "pagePath": "pages/more/more",
+        "text": "推广"
       }
     ]
   },

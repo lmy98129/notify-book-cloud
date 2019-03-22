@@ -31,5 +31,12 @@ App({
       forcedRefresh: true,
       isProfileUpdated: false,
     }
+
+  },
+  
+  onShow() {
+    wx.navigateTo({
+      url: 'pages/start/start'
+    })
   }
 })

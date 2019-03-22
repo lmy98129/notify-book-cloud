@@ -124,8 +124,9 @@ const download = async (that, callback) => {
 
         console.log("获取用户资料成功：", msg);
       } catch (e) {
-        msg = e.message;
-        console.log("获取用户资料出错：", msg);
+        // msg = e.message;
+        console.log(e);
+        // console.log("获取用户资料出错：", msg);
         toast("获取用户资料出错", "none");
       }
     }
@@ -335,6 +336,8 @@ const decode = (tmpUserInfo, tmpIsShowUserInfo) => {
         break;
       case "wechatId":
       case "phoneNumber":
+      case "eMail":
+      case "address":
         if (tmpUserInfo[item] === undefined || tmpUserInfo[item] === "") {
           delete tmpUserInfo[item];
         }
@@ -401,6 +404,7 @@ const decode = (tmpUserInfo, tmpIsShowUserInfo) => {
             headteacher: {},
             degreeStartTime: {},
             degreeEndTime: {},
+            college: {},
           }
           for (let subItem in tmpArray[i]) {
             switch(subItem) {

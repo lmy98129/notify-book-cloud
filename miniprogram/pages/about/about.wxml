@@ -11,6 +11,6 @@
   </view>
   <view class="settings-wrapper">
     <settings-item title="开发者" hint="@Eason Wong @lmy98129" />
-    <settings-item title="版本号" hint="v1.0.0"/>
+    <settings-item title="版本号" hint="v1.0.2"/>
   </view>
 </view>  

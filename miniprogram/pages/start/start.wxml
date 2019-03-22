@@ -1,0 +1,3 @@
+<view class="start-wrap">
+  <image src="/images/start.jpeg" class="start-img" mode="aspectFit" animation="{{animation}}"/>
+</view>

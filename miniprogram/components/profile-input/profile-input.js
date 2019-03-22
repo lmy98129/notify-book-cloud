@@ -79,6 +79,16 @@ Component({
       });
     },
 
+    bindcolumnchange(e) {
+      let props = this.properties;
+      this.triggerEvent("columnchange", {
+        column: e.detail.column, 
+        value: e.detail.value,
+        inputType: props.inputType,
+        arrayType: props.arrayType
+      });
+    },
+
     getGender(e) {
       let props = this.properties;
       this.triggerEvent("gender", {

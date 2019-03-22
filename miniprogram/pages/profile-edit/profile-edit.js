@@ -25,6 +25,23 @@ const sortByNum = (x, y) => {
   }
 }
 
+const classInfoPickerDestruct = (classNameArray) => {
+  let yearArr = [];
+  let majorArr = {};
+  for (let item of classNameArray) {
+    let year = item.match(/\d*/)[0];
+    if (year && yearArr.indexOf(year) < 0) {
+      yearArr.push(year);
+    }
+    let major = item.match(/[\u4E00-\u9FA5]{1,}/)[0];
+    if (majorArr[year] === undefined) {
+      majorArr[year] = [];
+    }
+    majorArr[year].push(major);
+  }
+  return { yearArr, majorArr };
+}
+
 import regeneratorRuntime, { async } from "../../utils/regenerator-runtime/runtime";
 
 Page({
@@ -56,15 +73,15 @@ Page({
     // intro: "",
     degreeArray: [{
       degree: "请选择学历",
-      school: "",
+      school: "电视学院",
       major: "",
       className: "请选择班级",
       headteacher: "",
       degreeStartTime: "请选择入学时间",
       degreeEndTime: "请选择毕业时间",
+      college: "中国传媒大学",
     }],
     degreeTypeArray: ["本科", "硕士", "博士", "博士后", "专科", "其他"],
-    pagePos: "请向上滑动页面继续填写",
     canSubmit: false,
     mode: "",
     index: 0,
@@ -86,7 +103,7 @@ Page({
         title: "数据加载中"
       })
       let { mode, index } = options;
-      let curUserProfile, tmpClassNameArray;
+      let curUserProfile, tmpClassNameArray, pickerClassNameArray;
   
       let classInfoRes = await wx.cloud.callFunction({
         name: "profile-manage",
@@ -97,10 +114,15 @@ Page({
   
       if (classInfoRes.result) {
         let { classNameArray, data } = classInfoRes.result;
-        classNameArray.sort(sortByNum).reverse();
-        classNameArray.splice(0, 0, "其他班级");
+        classNameArray.sort(sortByNum)
+        // .reverse();
+        let { yearArr, majorArr } = classInfoPickerDestruct(classNameArray);
+        yearArr.splice(0, 0, "其他班级");
         tmpClassNameArray = classNameArray;
-        this.setData({ classNameArray, classInfoArray: data });
+        pickerClassNameArray = [];
+        pickerClassNameArray[0] = yearArr;
+        pickerClassNameArray[1] = [];
+        this.setData({ classNameArray: pickerClassNameArray, majorArr, classInfoArray: data });
       }
   
       // 来源为本地存储值
@@ -229,22 +251,6 @@ Page({
 
   },
 
-  scrollBottom() {
-    this.setData({
-      pagePos: "提交",
-      canSubmit: true
-    })
-  },
-
-  bindScroll(e) {
-    if (e.detail.deltaY > 0) {
-      this.setData({
-        pagePos: "请向上滑动页面继续填写",
-        canSubmit: false
-      })
-    }
-  },
-
   getGender(e) {
     let gender = e.detail.gender, inputType = e.detail.inputType;
     newUserInfo[inputType] = gender;
@@ -288,11 +294,11 @@ Page({
       case "institution":
       case "job":
       case "school":
+      case "college":
       case "major":
       case "headteacher":
       case "contactType":
       case "content":
-      case "className":
         newUserInfo[arrayType][index][inputType] = value;
         // NOTE: 深拷贝中常用的concat和slice对多维数组以及对象数组是无效的，所以只能用JSON来解决问题了，
         tmpArray = JSON.parse(JSON.stringify(this.data[arrayType]));
@@ -381,8 +387,7 @@ Page({
 
   submit() {
     formid.upload()
-    let { canSubmit, mode, index, isChooseProfile, selectedInitProfile } = this.data;
-    if (!canSubmit) return;
+    let { mode, index, isChooseProfile, selectedInitProfile } = this.data;
     let tmpJobArray, tmpContentArray, tmpDegreeArray;
     if (mode === undefined || mode === "") {
       for(let item in newUserInfo) {
@@ -390,7 +395,6 @@ Page({
           // 处理普通input类型的必填项
           case "nickName":
           case "realName":
-          case "address":
           case "phoneNumber":
             if (newUserInfo[item] === undefined || newUserInfo[item] === "") {
               confirmOnly(initValue[item].name + "为空，此项为必填项");
@@ -456,7 +460,9 @@ Page({
                     }
                     break;
                   case "school":
+                  case "college":
                   case "major":
+                  case "className":
                     if (tmpDegreeArray[i][subItem] === undefined || tmpDegreeArray[i][subItem] === "") {
                       confirmOnly("“学历信息" + (i + 1) + "”的" + initValue[subItem].name + "为空，此项为必填项");
                       return;
@@ -615,10 +621,17 @@ Page({
   setClassName(e) {
     let { value, index, arrayType } = e.detail;
     let { classNameArray, classInfoArray } = this.data;
+    let selectedClassName = "";
+    if (value[0] === 0 || value[0] === null) {
+      selectedClassName = "其他班级";
+    } else {
+      let majorIndex = value[1] ? value[1] : 0;
+      selectedClassName = classNameArray[0][value[0]] + classNameArray[1][majorIndex];
+    }
     let tmpArray = JSON.parse(JSON.stringify(this.data[arrayType]));
-    newUserInfo[arrayType][index].className = classNameArray[value];
-    tmpArray[index].className = classNameArray[value];
-    if (classNameArray[value] === "其他班级") {
+    newUserInfo[arrayType][index].className = selectedClassName;
+    tmpArray[index].className = selectedClassName;
+    if (selectedClassName === "其他班级") {
       newUserInfo[arrayType][index].className = "";
       tmpArray[index].classNameExtra = "";
     } else {
@@ -626,7 +639,7 @@ Page({
       if (tmpArray[index].classNameExtra) {
         delete tmpArray[index].classNameExtra
       }
-      let tmpIndex = classInfoArray.findIndex(x => x.className === classNameArray[value]);
+      let tmpIndex = classInfoArray.findIndex(x => x.className === selectedClassName);
       let { _id, ...tmpClassInfo} = classInfoArray[tmpIndex];
       let tmpClassInfoNew = JSON.parse(JSON.stringify(tmpClassInfo));
       if (tmpClassInfo.degreeStartTime === undefined || tmpClassInfo.degreeStartTime === "") {
@@ -675,6 +688,22 @@ Page({
     this.setData({
       [arrayType]: tmpArray
     })   
+  },
+
+  classNameColumnChange(e) {
+    let { column, value } = e.detail;
+    let { majorArr, classNameArray } = this.data;
+    if (column == 0){
+      if (value >= 1) {
+        let year = classNameArray[0][value];
+        classNameArray[1] = majorArr[year];
+      } else {
+        classNameArray[1] = [];
+      }
+    }
+    this.setData({
+      classNameArray,
+    });
   }
 
 })

@@ -10,6 +10,7 @@
     <view class="item-wrapper">
       <view class="item-title">学历信息 {{index + 1}}</view>
       <profile-item title="{{item.degree.title}}" content="{{item.degree.content}}" class="profile-item-wrapper"></profile-item>
+      <profile-item title="{{item.college.title}}" content="{{item.college.content}}" class="profile-item-wrapper"></profile-item>
       <profile-item title="{{item.school.title}}" content="{{item.school.content}}" class="profile-item-wrapper"></profile-item>
       <profile-item title="{{item.major.title}}" content="{{item.major.content}}" class="profile-item-wrapper"></profile-item>
       <profile-item title="{{item.className.title}}" content="{{item.className.content}}" class="profile-item-wrapper"></profile-item>

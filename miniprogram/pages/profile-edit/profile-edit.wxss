@@ -127,6 +127,10 @@ page {
   text-align: left;
 }
 
+.hint-inline {
+  margin: -20rpx auto;
+}
+
 .choose-wrap {
   display: flex;
   flex-direction: row;

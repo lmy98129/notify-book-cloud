@@ -1,109 +1,300 @@
-const initValue = {
-  nickName: {
-    name: "昵称"
+const SCHEMA = {
+  _id: {
+    type: "string",
+    default: "",
+    required: true,
   },
-  realName: {
-    name: "真实姓名"
+  _openid: {
+    type: "string",
+    default: "",
+    required: true,
   },
-  gender: {
-    name: "性别"
+  avatarUrl: {
+    type: "string",
+    default: "",
+    required: true,
+  },
+  bgImgUrl: {
+    type: "string",
+    default: "",
+    required: true,
   },
   address: {
-    name: "现住址"
-  },
-  wechatId: {
-    name: "微信号"
-  },
-  phoneNumber: {
-    name: "手机号"
-  },
-  institution: {
-    name: "工作单位"
-  },
-  job: {
-    name: "职务名称"
-  },
-  contactType: {
-    name: "类型",
-  },
-  content: {
-    name: "内容"
-  },
-  jobStartTime: {
-    name: "入职时间",
-    default: "请选择入职时间"
-  },
-  jobEndTime: {
-    name: "离职时间",
-    default: "请选择离职时间"
+    type: "string",
+    default: "",
+    required: false,
+    name: "现住址",
   },
   birthDate: {
+    type: "string",
+    default: "",
+    required: true,
     name: "生日",
-    default: "请选择日期"
+    placeHolder: "请选择日期",
+  },
+  nickName: {
+    type: "string",
+    default: "",
+    required: true,
+    name: "昵称",
+  },
+  realName: {
+    type: "string",
+    default: "",
+    required: true,
+    name: "真实姓名",
+  },
+  gender: {
+    type: "string",
+    default: "男",
+    required: true,
+    name: "性别"
   },
   homeTown: {
+    type: "string",
+    default: "",
+    required: true,
     name: "籍贯",
-    default: "请选择籍贯"
+    placeHolder: "请输入籍贯",
   },
-  school: {
-    name: "学院",
+  phoneNumber: {
+    type: "string",
+    default: "",
+    required: true,
+    name: "手机号",
   },
-  degree: {
-    name: "学历",
-    default: "请选择学历"
+  eMail: {
+    type: "string",
+    default: "",
+    required: true,
+    name: "邮箱"
   },
-  major: {
-    name: "专业"
-  },
-  className: {
-    name: "班级"
-  },
-  degreeStartTime: {
-    name: "入学时间",
-    default: "请选择入学时间"
-  },
-  degreeEndTime: {
-    name: "毕业时间",
-    default: "请选择毕业时间"
+  wechatId: {
+    type: "string",
+    default: "",
+    required: false,
+    name: "微信号"
   },
   intro: {
-    name: "自我介绍"
+    type: "string",
+    default: "",
+    required: true,
+    name: "自我介绍",
   },
-  headteacher: {
-    name: "班主任"
-  }
+  contactArray: {
+    type: "Array",
+    default: [],
+    required: false,
+    name: "联系方式",
+    itemType: {
+      contactType: {
+        type: "string",
+        default: "",
+        required: true,
+        name: "类型"
+      },
+      content: {
+        type: "string",
+        default: "",
+        required: true,
+        name: "内容"
+      }
+    }
+  },
+  degreeArray: {
+    type: "Array",
+    default: [],
+    required: true,
+    name: "学历信息",
+    itemType: {
+      degree: {
+        type: "string",
+        default: "",
+        required: true,
+        name: "学历",
+        placeHolder: "请选择学历",
+      },
+      school: {
+        type: "string",
+        default: "电视学院",
+        required: true,
+        name: "学院"
+      },
+      college: {
+        type: "string",
+        default: "中国传媒大学",
+        required: true,
+        name: "学校",
+      },
+      headteacher: {
+        type: "string",
+        default: "",
+        required: true,
+        name: "班主任"
+      },
+      className: {
+        type: "string",
+        default: "",
+        required: true,
+        name: "班级",
+        placeHolder: "请选择班级",
+      },
+      major: {
+        type: "string",
+        default: "",
+        required: true,
+        name: "专业",
+      },
+      degreeStartTime: {
+        type: "string",
+        default: "",
+        required: true,
+        name: "入学时间",
+        placeHolder: "请选择入学时间"
+      },
+      degreeEndTime: {
+        type: "string",
+        default: "",
+        required: false,
+        name: "毕业时间",
+        placeHolder: "请选择毕业时间",
+      },
+    }
+  },
+  jobArray: {
+    type: "Array",
+    default: [],
+    required: true,
+    name: "工作职务",
+    itemType: {
+      institution: {
+        type: "string",
+        default: "",
+        required: true,
+        name: "工作单位",
+      },
+      job: {
+        type: "string",
+        default: "",
+        required: true,
+        name: "职务名称",
+      },
+      jobStartTime: {
+        type: "string",
+        default: "",
+        required: true,
+        name: "入职时间",
+        placeHolder: "请选择入职时间",
+      },
+      jobEndTime: {
+        type: "string",
+        default: "",
+        required: true,
+        name: "离职时间",
+        placeHolder: "请选择离职时间",
+      }
+    }
+  },
 }
 
-const userInfo = {
-  nickName: "",
-  realName: "",
-  gender: "",
-  birthDate: "请选择日期",
-  homeTown: "请选择籍贯",
-  address: "",
-  wechatId: "",
-  phoneNumber: "",
-  jobArray: [{
-    institution: "",
-    job: "",
-    jobStartTime: "请选择入职时间",
-    jobEndTime: "请选择离职时间"
-  }],
-  contactArray: [{
-    contactType: "",
-    content: ""
-  }],
-  degreeArray: [{
-    degree: "请选择学历",
-    school: "",
-    major: "",
-    className: "请选择班级",
-    headteacher: "",
-    degreeStartTime: "请选择入学时间",
-    degreeEndTime: "请选择毕业时间",
-  }],
-  intro: ""
+const ignore = ['_id', '_openid', 'avatarUrl', 'bgImgUrl'];
+
+// 生成资料模板
+const profileModelGenerator = (schema, ignore) => {
+  let newObj = {};
+  for (let key in schema) {
+    if (ignore.indexOf(key) >= 0) {
+      continue;
+    } else if (schema[key].type !== "Array") {
+      if (schema[key].placeHolder !== undefined) {
+        newObj[key] = schema[key].placeHolder;
+      } else {
+        newObj[key] = schema[key].default;
+      }
+    } else {
+      let newItemObj = {};
+      for (let subKey in schema[key].itemType) {
+        if (schema[key].itemType[subKey].placeHolder !== undefined) {
+          newItemObj[subKey] = schema[key].itemType[subKey].placeHolder;
+        } else {
+          newItemObj[subKey] = schema[key].itemType[subKey].default;
+        }
+      }
+      newObj[key] = [newItemObj];
+    }
+  }
+  return newObj;
 }
+
+
+const rank = [
+  "degreeArray",
+  "jobArray",
+  "contactArray",
+  "nickName",
+  "realName",
+  "gender",
+  "birthDate",
+  "homeTown",
+  "address",
+  "phoneNumber",
+  "wechatId",
+  "eMail",
+]
+
+// 生成检索用的字段表
+const searchFieldGenerator = (schema, rank) => {
+  let searchField = {};
+  searchField.searchColumn = { searchColumnKey: rank };
+  let searchColumnItem = []
+  for (let key of rank) {
+    if (schema[key] && schema[key].name !== undefined) {
+      searchColumnItem.push(schema[key].name);
+    }
+  }
+  searchField.searchColumn.searchColumnItem = searchColumnItem;
+  for (let key in schema) {
+    if (schema[key].type === "Array") {
+      let itemArray = `${key}Item`, keyArray = `${key}Key`;
+      searchField[key] = {
+        [itemArray]: [],
+        [keyArray]: [],
+      };
+      for (let subKey in schema[key].itemType) {
+        searchField[key][itemArray].push(schema[key].itemType[subKey].name);
+        searchField[key][keyArray].push(subKey);
+      }
+    }
+  }
+  return searchField;
+}
+
+const initValueGenerator = (schema, ignore) => {
+  let initValue = {};
+  for (let key in schema) {
+    if (ignore.indexOf(key) >= 0) {
+      continue;
+    } else if (schema[key].type !== "Array") {
+      let { name } = schema[key];
+      initValue[key] = { name };
+      if (schema[key].placeHolder !== undefined &&
+        schema[key].placeHolder !== "") {
+        initValue[key].default = schema[key].placeHolder;
+      }
+    } else {
+      for (let subKey in schema[key].itemType) {
+        let { name } = schema[key].itemType[subKey];
+        initValue[subKey] = { name };
+        if (schema[key].itemType[subKey].placeHolder !== undefined && 
+          schema[key].itemType[subKey].placeHolder !== "") {
+          initValue[subKey].default = schema[key].itemType[subKey].placeHolder;
+        }
+      }
+    }
+  }
+  return initValue;
+}
+
 
 const columnRank = [
   {
@@ -157,101 +348,9 @@ const columnRank = [
   },
 ]
 
-const searchColumnItem = [
-  "学历信息",
-  "工作职务",
-  "联系方式",
-  "昵称",
-  "真实姓名",
-  "性别",
-  "生日",
-  "籍贯",
-  "现住址",
-  "手机号",
-  "微信号",
-]
-
-const searchColumnKey = [
-  "degreeArray",
-  "jobArray",
-  "contactArray",
-  "nickName",
-  "realName",
-  "gender",
-  "birthDate",
-  "homeTown",
-  "address",
-  "phoneNumber",
-  "wechatId",
-]
-
-const degreeArrayItem = [
-  "学历",
-  "学院",
-  "专业",
-  "班级",
-  "班主任",
-  "入学时间",
-  "毕业时间"
-]
-
-const degreeArrayKey = [
-  "degree",
-  "school",
-  "major",
-  "className",
-  "headteacher",
-  "degreeStartTime",
-  "degreeEndTime",
-]
-
-const contactArrayItem = [
-  "类型",
-  "内容",
-]
-
-const contactArrayKey = [
-  "contactType",
-  "content"
-]
-
-const jobArrayItem = [
-  "工作单位",
-  "职务名称",
-  "入职时间",
-  "离职时间"
-]
-
-const jobArrayKey = [
-  "institution",
-  "job",
-  "jobStartTime",
-  "jobEndTime"
-]
-
-const searchField = {
-  searchColumn: {
-    searchColumnItem,
-    searchColumnKey,
-  },
-  degreeArray: {
-    degreeArrayItem,
-    degreeArrayKey,
-  },
-  contactArray: {
-    contactArrayItem,
-    contactArrayKey
-  },
-  jobArray: {
-    jobArrayItem,
-    jobArrayKey
-  }
-  
-}
-
 module.exports = {
-  initValue,
-  userInfo,
+  initValue: initValueGenerator(SCHEMA, ignore),
+  userInfo: profileModelGenerator(SCHEMA, ignore),
   columnRank,
-  searchField
+  searchField: searchFieldGenerator(SCHEMA, rank),
 }

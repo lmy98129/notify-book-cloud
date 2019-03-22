@@ -1,0 +1,43 @@
+<!--miniprogram/pages/more/more.wxml-->
+<top-widget mode="contact" bgImgUrl="{{bgImgUrl}}" title="平台推广" contactFixTitle="官方平台推广" fixTop="{{fixTop}}" class="top-widget-wrapper" fixVeryTop="{{fixVeryTop}}" />
+
+<swiper 
+  class="more-swiper" 
+  indicator-dots="{{true}}" 
+  circular="{{true}}" 
+  current="0"
+  >
+  <block wx:for="{{imageArray}}" wx:key="{{index}}">
+    <swiper-item>
+      <view class="card-wrap">
+        <view class="card-inner-wrap">
+          <image class="qr-code" src="{{item}}" bind:tap="previewImg" data-img="{{item}}"/>
+          <view class="hint">
+            <text decode="{{true}}">
+              点击二维码，保存图片到手机相册
+              即可微信扫码访问
+            </text>
+          </view>
+          <view class="intro" wx:if="{{index === 0}}">
+            <text decode="{{true}}">
+              官方公众号：
+              中传新闻传播学部
+            </text>
+          </view>
+          <view class="intro" wx:if="{{index === 1}}">
+            <text decode="{{true}}">
+              中国传媒大学电视学院官网
+              http://tvs.cuc.edu.cn
+            </text>
+          </view>
+          <view class="intro" wx:if="{{index === 2}}">
+            <text decode="{{true}}">
+              中国传媒大学官方APP
+              旧学新知
+            </text>
+          </view>
+        </view>
+      </view>
+    </swiper-item>
+  </block>
+</swiper>

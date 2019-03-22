@@ -2,7 +2,7 @@
 <top-widget mode="title" title="资料填写">
 </top-widget>
 <view class="main">
-  <scroll-view scroll-y="true" style="height: 90%" scroll-with-animation="true" bindscrolltolower="scrollBottom" bindscroll="bindScroll" lower-threshold="80">
+  <scroll-view scroll-y="true" style="height: 90%" scroll-with-animation="true">
     <view class="avatar">
       <image src="{{avatarUrl}}"></image>
       <view class="change" bindtap="uploadAvatar">修改头像</view>
@@ -18,19 +18,23 @@
 
     <profile-input title="籍贯" mode="picker" picker-mode="region" value="{{homeTown}}" bind:input="inputHandler" input-type="homeTown" bind:del="pickerDel"/>
 
-    <profile-input title="现住址" place-holder="请输入您的现住址" value="{{address}}" bind:input="inputHandler" input-type="address" />
+    <profile-input title="现住址" place-holder="请输入您的现住址" asterisk="{{false}}" value="{{address}}" bind:input="inputHandler" input-type="address" />
 
     <block wx:for="{{degreeArray}}" wx:key="{{index}}">
       <view class="item-wrapper">
         <view class="item-title">学历信息 {{index + 1}}</view>
 
-        <profile-input title="班级" mode="picker" picker-mode="selector" picker-range="{{classNameArray}}" value="{{item.className}}" bind:input="setClassName" input-type="className" index="{{index}}" array-type="degreeArray" bind:del="classNamePickerDel"/>
+        <profile-input title="学历" mode="picker" picker-mode="selector" picker-range="{{degreeTypeArray}}" value="{{item.degree}}" bind:input="inputHandler" input-type="degree" index="{{index}}" array-type="degreeArray" bind:del="pickerDel"/>
+
+        <profile-input title="班级" mode="picker" picker-mode="multiSelector" picker-range="{{classNameArray}}" value="{{item.className}}" bind:input="setClassName" input-type="className" index="{{index}}" array-type="degreeArray" bind:del="classNamePickerDel" bind:columnchange="classNameColumnChange"/>
 
         <block wx:if="{{item.className === '其他班级'}}">
           <profile-input title="具体班级" place-holder="请输入班级名称" value="{{item.classNameExtra}}" bind:input="setClassNameExtra" input-type="className" index="{{index}}" array-type="degreeArray" />         
         </block>
 
-        <profile-input title="学历" mode="picker" picker-mode="selector" picker-range="{{degreeTypeArray}}" value="{{item.degree}}" bind:input="inputHandler" input-type="degree" index="{{index}}" array-type="degreeArray" bind:del="pickerDel"/>
+        <view class="hint hint-inline">注：如非本校，可以在“班级”选项中选择“其他班级”填写您的具体班级</view>
+
+        <profile-input title="学校" place-holder="请输入学校名称" value="{{item.college}}" bind:input="inputHandler" input-type="school" index="{{index}}" array-type="degreeArray" />
 
         <profile-input title="学院" place-holder="请输入学院名称" value="{{item.school}}" bind:input="inputHandler" input-type="school" index="{{index}}" array-type="degreeArray" />
 
@@ -43,7 +47,7 @@
         <profile-input title="毕业时间" asterisk="{{false}}" mode="picker" picker-fields="month" value="{{item.degreeEndTime}}" bind:input="inputHandler" input-type="degreeEndTime" index="{{index}}" array-type="degreeArray" bind:del="pickerDel"/>
 
         <form bindsubmit="getFormid" report-submit="true">
-          <button wx:if="{{index !== 0 || degreeArray.length !== 1 || mode === 'addProfileManage'}}" class="del-btn submit-no-style" data-type="degreeArray" bindtap="delBtn" data-index="{{index}}" form-type="submit">删除</button>
+          <button class="del-btn submit-no-style" data-type="degreeArray" bindtap="delBtn" data-index="{{index}}" form-type="submit">删除</button>
         </form>
       </view>
     </block>
@@ -78,6 +82,8 @@
 
     <profile-input title="微信号" asterisk="{{false}}" place-holder="请输入微信号（非昵称）" value="{{wechatId}}" bind:input="inputHandler" input-type="wechatId"/>
 
+    <profile-input title="E-mail" asterisk="{{false}}" place-holder="请输入E-mail" value="{{eMail}}" bind:input="inputHandler" input-type="eMail"/>
+
     <block wx:for="{{contactArray}}" wx:key="{{index}}">
       <view class="item-wrapper">
         <view class="item-title">联系方式 {{index + 1}}</view>
@@ -102,7 +108,7 @@
 
   </scroll-view>
   <form bindsubmit="getFormid" report-submit='true'>
-    <button class="submit {{canSubmit ? '': 'disabled'}}" bindtap="submit" form-type="submit">{{pagePos}}</button>
+    <button class="submit" bindtap="submit" form-type="submit">提交</button>
   </form>
 
 </view>
@@ -127,14 +133,16 @@
     <block wx:if="{{tmpInitProfile.length > 0}}">
       <view class="modal-hint">STEP 2: 预览并选取资料</view>
       <view class="find-result">
-        <radio-group bindchange="selectInitProfile">
-          <block wx:for="{{tmpInitProfile}}" wx:key="{{index}}">
-            <view class="result-wrap">
-              <settings-item class="result-item" url="../profile-other/profile-other?mode=tmpInitProfile&index={{index}}" title="{{item.realName}}" hint="预览" />
-              <radio value="{{item._id}}" />
-            </view>
-          </block>
-        </radio-group>
+        <scroll-view scroll-y="true" style="height: 270rpx" scroll-with-animation="true">
+          <radio-group bindchange="selectInitProfile">
+            <block wx:for="{{tmpInitProfile}}" wx:key="{{index}}">
+              <view class="result-wrap">
+                <settings-item class="result-item" url="../profile-other/profile-other?mode=tmpInitProfile&index={{index}}" title="{{item.realName}}" hint="预览" />
+                <radio value="{{item._id}}" />
+              </view>
+            </block>
+          </radio-group>
+        </scroll-view>
         <button class="select-btn" bind:tap="selectedProfile">使用所选资料</button>
       </view>
     </block>

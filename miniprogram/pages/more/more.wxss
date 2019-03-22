@@ -1,0 +1,46 @@
+/* miniprogram/pages/more/more.wxss */
+
+.more-swiper {
+  height: 72%;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.card-wrap {
+  width: 73%;
+  margin: 47rpx auto 10rpx;
+  box-shadow: 0 10rpx 70rpx 20rpx #ccc;
+  border: 2rpx #ddd solid;
+  height: 85%;
+  border-radius: 56rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.card-inner-wrap {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-inner-wrap .qr-code {
+  width: 250rpx;
+  height: 250rpx;
+  margin: 0 auto;
+}
+
+.card-inner-wrap .hint {
+  font-size: 30rpx;
+  margin: 10rpx auto 20rpx;
+  text-align: center;
+}
+
+.card-inner-wrap .intro {
+  width: 85%;
+  margin: 0 auto;
+  height: auto;
+  font-size: 33rpx;
+  text-align: center;
+  vertical-align: center;
+}
