@@ -1,6 +1,6 @@
 <!--components/profile-detail/profile-detail.wxml-->
 <block wx:for="{{userInfo}}" wx:key="{{index}}">
-  <block wx:if="{{isShowUserInfo[index]}}">
+  <block wx:if="{{mode === 'main' || isShowUserInfo[item.source]}}">
     <profile-item title="{{item.title}}" content="{{item.content}}" class="profile-item-wrapper"></profile-item>
   </block>
 </block>

@@ -295,6 +295,47 @@ const initValueGenerator = (schema, ignore) => {
   return initValue;
 }
 
+const defaultAllow = [ 'realName', 'degreeArray' ];
+
+const permissionGenerator = (schema, ignore, defaultAllow) => {
+  ignore.push('intro');
+  let permission = { isShowUserInfo: {} };
+  for (let key in schema) {
+    if (ignore.indexOf(key) >= 0) {
+      continue;
+    } else if (schema[key].type === 'Array') {
+      let newKey = key.replace(key[0], key[0].toUpperCase());
+      if (defaultAllow.indexOf(key) >= 0) {
+        permission[`isShow${newKey}`] = true;
+      } else {
+        permission[`isShow${newKey}`] = false;
+      }
+    } else {
+      if (defaultAllow.indexOf(key) >= 0) {
+        permission.isShowUserInfo[key] = true;
+      }
+    }
+  }
+  return permission;
+}
+
+const PERMISSION_STATUS = { ALL: 'ALL', SAME_CLASS: 'SAME_CLASS', ALL_NOT: 'ALL_NOT' }
+
+const permissionSettingGenerator = (schema, ignore, defaultAllow) => {
+  let permissionSetting = {};
+  ignore.push('intro');
+  for (let key in schema) {
+    if (ignore.indexOf(key) >= 0) {
+      continue;
+    } else if (defaultAllow.indexOf(key) >= 0) {
+      permissionSetting[key] = PERMISSION_STATUS.ALL;
+    } else {
+      permissionSetting[key] = PERMISSION_STATUS.ALL_NOT;
+    }
+  }
+  return permissionSetting;
+}
+
 
 const columnRank = [
   {
@@ -353,4 +394,8 @@ module.exports = {
   userInfo: profileModelGenerator(SCHEMA, ignore),
   columnRank,
   searchField: searchFieldGenerator(SCHEMA, rank),
+  permission: permissionGenerator(SCHEMA, ignore, defaultAllow),
+  permissionSetting: permissionSettingGenerator(SCHEMA, ignore, defaultAllow),
+  PERMISSION_STATUS,
+  SCHEMA,
 }

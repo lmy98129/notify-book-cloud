@@ -4,6 +4,8 @@ const profile = require("../../utils/profile");
 const toast = require("../../utils/message").toast;
 const bgImg = require("../../utils/bg-img");
 const contact = require("../../utils/contact");
+const settings = require("../../utils/settings");
+
 const app = getApp()
 import regeneratorRuntime, { async } from "../../utils/regenerator-runtime/runtime";
 
@@ -95,18 +97,20 @@ Page({
         profileStatus: "empty"
       })
     } else {
-      let isShowUserInfo = ["phoneNumber", "wechatId", "realName"], 
-        isShowContactArray = false, isShowJobArray = false, isShowDegreeArray = false;
+      let curSettings = await settings.download(curUserProfile);
+      let { isShowUserInfo, isShowContactArray, isShowDegreeArray, isShowJobArray } = curSettings;
+      // 如果是管理员在后台添加资料或修改资料，isShowUserInfo权限表不会生效。
       if (mode === "tmpInitProfile" || mode === "profileManageDataTmp") {
         isShowUserInfo = undefined;
         isShowContactArray = true;
         isShowJobArray = true;
         isShowDegreeArray = true;
       }
-      let decodeRes = profile.decode(curUserProfile, isShowUserInfo);
+      let decodeRes = profile.decode(curUserProfile);
       let { intro, profileStatus, ...profileData } = decodeRes;
       profileData = {
         ...profileData,
+        isShowUserInfo,
         isShowJobArray,
         isShowContactArray,
         isShowDegreeArray,

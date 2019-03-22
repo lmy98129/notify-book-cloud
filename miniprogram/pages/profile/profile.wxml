@@ -10,7 +10,7 @@
       <view class="main" id="global">
         <tab-bar class="tabbar-custom" tab-content="{{tabContent}}" tab-index="{{tabIndex}}" bind:change="tabHandler"/>
         <block wx:if="{{tabIndex === 0}}">
-          <profile-detail class="profile-wrapper main" profile-data="{{profileData}}"/>
+          <profile-detail class="profile-wrapper main" profile-data="{{profileData}}" mode="main"/>
         </block>
         <block wx:if="{{tabIndex === 1}}">
           <profile-intro intro="{{intro}}" mode="{{mode}}"/>

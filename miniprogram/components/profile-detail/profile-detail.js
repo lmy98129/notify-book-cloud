@@ -7,6 +7,10 @@ Component({
     profileData: {
       type: Object,
       default: {}
+    },
+    mode: {
+      type: String,
+      default: "main"
     }
   },
 

@@ -64,5 +64,17 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+
+  goPermissionSetting() {
+    if (wx.getStorageSync("curUserProfile").authStatus !== "authorized") {
+      wx.navigateTo({
+        url: "../auth/auth"
+      })
+    } else {
+      wx.navigateTo({
+        url: "../permission-setting/permission-setting"
+      })
+    }
   }
 })

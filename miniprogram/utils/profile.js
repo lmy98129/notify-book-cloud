@@ -29,15 +29,20 @@ const checkCloud = async () => {
 const download = async (that, callback) => {
   await wx.getUserInfo({
     success: async result => {
-
-      let curUserProfile = wx.getStorageSync("curUserProfile");
-      if (curUserProfile === undefined || curUserProfile === "") {
-        curUserProfile = app.globalData.DEFAULT_PROFILE;
-      }
-
-      let msg = "";
-      
       try {
+        // if (app.globalData.isProfilePageFirstLoad === undefined) {
+        //   app.globalData.isProfilePageFirstLoad = true;
+        // }
+        // if (app.globalData.isProfilePageFirstLoad) {
+        //   wx.showLoading({ title: "加载中" });
+        // }
+
+        let curUserProfile = wx.getStorageSync("curUserProfile");
+        if (curUserProfile === undefined || curUserProfile === "") {
+          curUserProfile = app.globalData.DEFAULT_PROFILE;
+        }
+  
+        let msg = "";
         // 获取本地存储的用户自身信息
 
         curUserProfile.nickName = result.userInfo.nickName;
@@ -122,8 +127,17 @@ const download = async (that, callback) => {
           await callback(that, curUserProfile);
         }
 
+        // if (app.globalData.isProfilePageFirstLoad) {
+        //   wx.hideLoading();
+        //   app.globalData.isProfilePageFirstLoad = false;
+        // }
+
         console.log("获取用户资料成功：", msg);
       } catch (e) {
+        // if (app.globalData.isProfilePageFirstLoad) {
+        //   wx.hideLoading();
+        //   app.globalData.isProfilePageFirstLoad = false;
+        // }
         // msg = e.message;
         console.log(e);
         // console.log("获取用户资料出错：", msg);
@@ -312,9 +326,8 @@ const decodeForEdit = (tmpUserInfo, initValue, initUserInfo, classNameArray, tha
   return tmpUserInfo;
 }
 
-const decode = (tmpUserInfo, tmpIsShowUserInfo) => {
+const decode = (tmpUserInfo) => {
   let tmpDate, tmpArray, newTmpArray, tmpObj, result = {};
-  let isShowUserInfo = [];
   delete tmpUserInfo._openid;
   delete tmpUserInfo._id;
   for (let item in tmpUserInfo) {
@@ -448,23 +461,9 @@ const decode = (tmpUserInfo, tmpIsShowUserInfo) => {
     }
   }
 
-  if (tmpIsShowUserInfo instanceof Array && tmpIsShowUserInfo.length > 0) {
-    for (let item of tmpArray) {
-      if (tmpIsShowUserInfo.findIndex(x => x === item.source) >= 0) {
-        isShowUserInfo.push(true);
-      } else {
-        isShowUserInfo.push(false);
-      }
-    }
-  } else {
-    for (let i=0; i<tmpArray.length; i++) {
-      isShowUserInfo.push(true);
-    }
-  }
 
   result.userInfo = tmpArray;
   result.profileStatus = "normal";
-  result.isShowUserInfo = isShowUserInfo;
 
   return result;
 

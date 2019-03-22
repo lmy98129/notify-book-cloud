@@ -3,6 +3,7 @@ const sys = require("../../utils/system");
 const profile = require("../../utils/profile");
 const bgImg = require("../../utils/bg-img");
 const login = require("../../utils/login");
+const toast = require("../../utils/message").toast;
 const app = getApp()
 import regeneratorRuntime, { async } from "../../utils/regenerator-runtime/runtime";
 

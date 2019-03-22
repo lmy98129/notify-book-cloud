@@ -1,0 +1,11 @@
+<top-widget mode="title" title="资料展示设置">
+</top-widget>
+<view class="settings-wrapper">
+  <block wx:for="{{permissionSetting}}" wx:key="{{index}}">
+    <settings-item mode="custom" title="{{item.name}}" bind:tapSettings="showEditModal" hint="{{item.valueName}}" setting-type="{{index}}"></settings-item>
+  </block>
+</view>
+
+<modal hidden="{{isEditModalHidden}}" title="资料项目展示设置" bindconfirm="edit" bindcancel="hideEditModal" catchtouchmove="modalTouchMove">
+  <profile-input title="访问权限" asterisk="{{false}}" mode="modal-picker" bind:input="inputHandler" picker-mode="selector" picker-range="{{permissionTypeArray}}" value="{{currentStatus}}"/>
+</modal>

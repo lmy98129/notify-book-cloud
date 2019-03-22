@@ -34,7 +34,7 @@
 
         <view class="hint hint-inline">注：如非本校，可以在“班级”选项中选择“其他班级”填写您的具体班级</view>
 
-        <profile-input title="学校" place-holder="请输入学校名称" value="{{item.college}}" bind:input="inputHandler" input-type="school" index="{{index}}" array-type="degreeArray" />
+        <profile-input title="学校" place-holder="请输入学校名称" value="{{item.college}}" bind:input="inputHandler" input-type="college" index="{{index}}" array-type="degreeArray" />
 
         <profile-input title="学院" place-holder="请输入学院名称" value="{{item.school}}" bind:input="inputHandler" input-type="school" index="{{index}}" array-type="degreeArray" />
 

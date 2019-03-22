@@ -21,7 +21,8 @@
     "pages/class-manage/class-manage",
     "pages/about/about",
     "pages/more/more",
-    "pages/start/start"
+    "pages/start/start",
+    "pages/permission-setting/permission-setting"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",

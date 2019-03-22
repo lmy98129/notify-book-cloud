@@ -19,6 +19,10 @@ Component({
     mode: {
       type: String,
       value: "default",
+    },
+    settingType: {
+      type: String,
+      value: "",
     }
   },
 
@@ -34,7 +38,10 @@ Component({
    */
   methods: {
     bindTap() {
-      this.triggerEvent("tapSettings");
+      let props = this.properties;
+      this.triggerEvent("tapSettings", {
+        settingType: props.settingType,
+      });
     }
   }
 })
