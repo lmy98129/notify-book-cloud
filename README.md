@@ -12,7 +12,9 @@ A wechat mini-program for students of Television School, Communication Universit
 - [x] address-book
 - [x] search-page
 - [x] notification
-- [ ] address-book add/delete/edit/search
 - [x] notification management
-- [ ] invite code management
+- [x] invite code management
+- [x] class-info management
+- [x] promotion page
+- [x] user profile permission setting
 - [ ] administrator management
