@@ -271,14 +271,15 @@ exports.main = async (event, context) => {
               userOpenid: item
             }).remove();
           }
-          await cloud.callFunction({
-            name: "notification",
-            data: {
-              $url: "sendTemplateMessage",
-              data,
-              openidList: res.extraUserOpenidList
-            }
-          });
+          // NOTE: 临时关闭发送推送消息以免扰民
+          // await cloud.callFunction({
+          //   name: "notification",
+          //   data: {
+          //     $url: "sendTemplateMessage",
+          //     data,
+          //     openidList: res.extraUserOpenidList
+          //   }
+          // });
           break;
         case 4:
           await db.collection("notification").doc(event.id).update({
@@ -379,14 +380,15 @@ exports.main = async (event, context) => {
         }
       }
 
-      await cloud.callFunction({
-        name: "notification",
-        data: {
-          $url: "sendTemplateMessage",
-          data,
-          openidList
-        }
-      });
+      // NOTE: 临时关闭发送推送消息以免扰民
+      // await cloud.callFunction({
+      //   name: "notification",
+      //   data: {
+      //     $url: "sendTemplateMessage",
+      //     data,
+      //     openidList
+      //   }
+      // });
       
       ctx.body = {
         code: 1

@@ -82,3 +82,7 @@
 .check-box {
   margin-right: 15rpx;
 }
+
+.notify-outer-wrap:last-child {
+  margin-bottom: 150rpx;
+}

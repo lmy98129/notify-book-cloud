@@ -1,4 +1,8 @@
 /* pages/notification-manage-edit/notification-manage-edit.wxss */
+page {
+  overflow: hidden;
+}
+
 
 .main {
   margin-top: 10rpx;

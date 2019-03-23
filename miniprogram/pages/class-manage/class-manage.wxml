@@ -52,6 +52,7 @@
 <modal hidden="{{isEditModalHidden}}" title="填写班级信息" bindconfirm="edit" bindcancel="hideEditModal" catchtouchmove="modalTouchMove">
   <profile-input title="班级名称" mode="modal-input" bind:input="inputHandler" value="{{className}}" place-holder="例如“10电编”" input-type="className"></profile-input>
   <profile-input title="对应专业" mode="modal-input" bind:input="inputHandler" value="{{major}}" place-holder="例如“电编”" input-type="major"></profile-input>  
+  <profile-input title="学校" mode="modal-input" bind:input="inputHandler" value="{{college}}" place-holder="请输入学校名称" input-type="school"></profile-input>
   <profile-input title="学院" mode="modal-input" bind:input="inputHandler" value="{{school}}" place-holder="请输入学院名称" input-type="school"></profile-input>
   <profile-input title="班主任" asterisk="{{false}}" mode="modal-input" bind:input="inputHandler" value="{{headteacher}}" place-holder="请输入班主任姓名" input-type="headteacher"></profile-input>
   <profile-input title="学历" mode="modal-picker" bind:input="inputHandler" picker-mode="selector" picker-range="{{degreeTypeArray}}" value="{{degreeForm}}" input-type="degree" bind:del="pickerDel"/>

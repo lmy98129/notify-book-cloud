@@ -14,8 +14,9 @@ Page({
     degreeStartTimeForm: "请选择入学时间",
     degreeEndTimeForm: "请选择毕业时间",
     degreeForm: "请选择学历",
+    college: "中国传媒大学",
     degree: "",
-    school: "",
+    school: "电视学院",
     className: "",
     major: "",
     headteacher: "",
@@ -136,7 +137,8 @@ Page({
         degreeStartTimeForm: "请选择入学时间",
         degreeEndTimeForm: "请选择毕业时间",
         degreeForm: "请选择学历",
-        school: "",
+        school: "电视学院",
+        college: "中国传媒大学",
         degree: "",
         className: "",
         major: "",
@@ -153,7 +155,8 @@ Page({
       degreeStartTimeForm: "请选择入学时间",
       degreeEndTimeForm: "请选择毕业时间",
       degreeForm: "请选择学历",
-      school: "",
+      school: "电视学院",
+      college: "中国传媒大学",
       degree: "",
       className: "",
       major: "",
@@ -195,6 +198,7 @@ Page({
       case "major":
       case "headteacher":
       case "school":
+      case "college":
         this.setData({
           [inputType]: value
         })
@@ -218,7 +222,7 @@ Page({
   },
 
   edit: async function() {
-    let { className, major, headteacher, school, degree, 
+    let { className, major, headteacher, school, degree, college,
         degreeStartTime, degreeEndTime, editingIndex, classArray } = this.data;
     let cloudRes;
     if (className === undefined || className === "") {
@@ -233,6 +237,10 @@ Page({
       toast("请输入学院名称", "none");
       return;
     }
+    if (college === undefined || college === "") {
+      toast("请输入学校名称", "none");
+      return;
+    }
     // 由于丢失的班主任信息较多，先不检查这个
     // if (headteacher === undefined || headteacher === "") {
     //   toast("请输入班级对应的班主任姓名", "none");
@@ -242,7 +250,7 @@ Page({
       toast("请选择学历", "none");
       return;
     }
-    let newClassInfo = { className, major, headteacher, degree, school, degreeStartTime, degreeEndTime };
+    let newClassInfo = { className, major, headteacher, degree, school, college, degreeStartTime, degreeEndTime };
 
     try {
       wx.showLoading({
