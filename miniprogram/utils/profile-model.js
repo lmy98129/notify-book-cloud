@@ -67,7 +67,7 @@ const SCHEMA = {
     type: "string",
     default: "",
     required: true,
-    name: "邮箱"
+    name: "E-mail"
   },
   wechatId: {
     type: "string",
@@ -336,6 +336,21 @@ const permissionSettingGenerator = (schema, ignore, defaultAllow) => {
   return permissionSetting;
 }
 
+const adminPermissionGenerator = (schema, ignore) => {
+  ignore.push('intro');
+  let permission = { isShowUserInfo: {} };
+  for (let key in schema) {
+    if (ignore.indexOf(key) >= 0) {
+      continue;
+    } else if (schema[key].type === 'Array') {
+      let newKey = key.replace(key[0], key[0].toUpperCase());
+      permission[`isShow${newKey}`] = true;
+    } else {
+      permission.isShowUserInfo[key] = true;
+    }
+  }
+  return permission;
+}
 
 const columnRank = [
   {
@@ -395,6 +410,7 @@ module.exports = {
   columnRank,
   searchField: searchFieldGenerator(SCHEMA, rank),
   permission: permissionGenerator(SCHEMA, ignore, defaultAllow),
+  adminPermission: adminPermissionGenerator(SCHEMA, ignore),
   permissionSetting: permissionSettingGenerator(SCHEMA, ignore, defaultAllow),
   PERMISSION_STATUS,
   SCHEMA,

@@ -5,6 +5,7 @@ const toast = require("../../utils/message").toast;
 const bgImg = require("../../utils/bg-img");
 const contact = require("../../utils/contact");
 const settings = require("../../utils/settings");
+const profModel = require('../../utils/profile-model');
 
 const app = getApp()
 import regeneratorRuntime, { async } from "../../utils/regenerator-runtime/runtime";
@@ -101,7 +102,7 @@ Page({
       let { isShowUserInfo, isShowContactArray, isShowDegreeArray, isShowJobArray } = curSettings;
       // 如果是管理员在后台添加资料或修改资料，isShowUserInfo权限表不会生效。
       if (mode === "tmpInitProfile" || mode === "profileManageDataTmp") {
-        isShowUserInfo = undefined;
+        isShowUserInfo = profModel.adminPermission.isShowUserInfo;
         isShowContactArray = true;
         isShowJobArray = true;
         isShowDegreeArray = true;
