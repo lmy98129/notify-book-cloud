@@ -43,6 +43,8 @@ Page({
       let curUserProfile = await profile.check();
       let { _openid } = curUserProfile;
       let permissionSetting = await settings.downloadSetting(_openid);
+      // 浅拷贝，直接修改了模块暴露的值本身，这里用JSON进行一次深拷贝
+      permissionSetting = JSON.parse(JSON.stringify(permissionSetting));
       for (let key in permissionSetting) {
         let { name } = schema[key];
         let value = permissionSetting[key];
@@ -82,7 +84,9 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-
+    this.setData({
+      permissionTypeArray: []
+    })
   },
 
   /**
